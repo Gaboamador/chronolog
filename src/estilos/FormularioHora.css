@@ -1,0 +1,6 @@
+.entrada-salida-inputs {
+display: flex;
+justify-content: space-evenly;
+margin: 1rem auto;
+max-width: 500px;
+}
