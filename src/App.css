@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
+
 .App {
   text-align: center;
 }
@@ -9,11 +11,16 @@
 .rdp-root {
   width:fit-content;
   margin: 0 auto;
-  /* border: 1px solid blue */
+  --rdp-accent-color: #ffa500 !important;
 }
 
 .container-main {
 padding: 1rem;
+}
+
+.container-main.calendar {
+  background-color: #fdf8ed;
+  border-bottom: 2px solid #008080;
 }
 
 @media(max-width: 350px){
@@ -29,6 +36,7 @@ padding: 1rem;
     max-height: 38px !important;
   }
 }
+
 @media(min-width: 350px) and (max-width: 400px){
   .container-main {
     font-size: .9rem;

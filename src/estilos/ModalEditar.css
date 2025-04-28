@@ -12,10 +12,10 @@
 }
 
 .content {
-    background: #fff;
-    padding: 2rem;
+    background: #f0f0f0;;
+    padding: 1rem .5rem;
     border-radius: 8px;
-    /* min-width: 300px; */
-    max-width: 90vw;
-    width: fit-content
-    }
+    width: 90vw;
+    min-width: 280px;
+    max-width: 350px;
+}

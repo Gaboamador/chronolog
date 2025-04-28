@@ -6,7 +6,7 @@ const ModalEditar = ({ isOpen, onClose, children }) => {
   return (
     <div className="overlay" onClick={onClose}>
       <div className="content" onClick={e => e.stopPropagation()}>
-        <button style={{ float: 'right' }} onClick={onClose}>×</button>
+        {/* <button style={{ float: 'right' }} onClick={onClose}>×</button> */}
         {children}
       </div>
     </div>

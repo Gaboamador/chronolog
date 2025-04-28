@@ -6,9 +6,24 @@
  
   .tabla-resumen-semana {
     width: 100%;
-    max-width: 400px;
+    max-width: 500px;
     border-collapse: collapse;
     margin: 0 auto;
+  }
+
+  .tabla-resumen-semana th {
+    color: whitesmoke;
+    background-color: #008080;
+  }
+
+  .tabla-resumen-semana tr:nth-last-child(2) {
+    color: #28282B;
+    background-color: #fdf8ed;
+  }
+  .tabla-resumen-semana tr:nth-last-child(1) {
+    color: #008080;
+    background-color: whitesmoke;
+    font-weight: 500;
   }
 
   .tabla-resumen-semana th, 
@@ -22,6 +37,24 @@
     text-align: left;
   }
 
+
+  .buttons-container {
+    display: flex;
+    margin-top: 1rem;
+    gap: 1rem;
+    justify-content: space-evenly;
+  }
+
+  .clear-entries-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    padding: .5rem;
+    border-radius: 8px;
+    background-color: #f0f0f0;
+  }
+
   .button-clear-entries {
     background-color: #e74c3c;
     color: white;
@@ -29,8 +62,44 @@
     border: none;
     border-radius: 4px;
     cursor: pointer;
+    font-size: 1rem;
+    line-height: 1rem;
   }
   
+.modal-title {
+    margin: 0 auto;
+    color: #28282B;
+    font-size: 1.2rem;
+    font-weight: 700;
+    padding: .25rem 0;
+    border-bottom: 2px double #008080;
+    border-top: 2px double #008080;
+    width: 100%
+}
+
   .editar-entrada {
     cursor: pointer;
+  }
+
+  .botones-modal-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    gap: .5rem;
+  }
+
+  .botones-modal-guardar-cancelar {
+    display: flex;
+    justify-content: space-between;
+    gap: .5rem;
+  }
+
+  /* .botones-modal-guardar-cancelar button {
+    font-size: .6rem;
+  } */
+
+  .entrada-salida-button-borrar {
+    color: #343434 !important;
+    background-color: #ffa500 !important;
+    border: 1px solid #008080 !important;
   }

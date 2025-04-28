@@ -1,0 +1,20 @@
+.importar-exportar-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: .5rem;
+  padding: .5rem;
+  border-radius: 8px;
+  background-color: #f0f0f0;
+}
+
+.button-import-export-json {
+  background-color: #008080;
+  color: white;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 700;
+  font-size: 1rem;
+}

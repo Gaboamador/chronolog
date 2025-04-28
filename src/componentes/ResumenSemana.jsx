@@ -1,9 +1,12 @@
 import React, { useContext, useMemo, useState } from 'react';
 import '../estilos/ResumenSemana.css';
 import Context from '../context';
-import { format, startOfWeek, addDays, isSameDay, differenceInMinutes, parse } from 'date-fns';
+import { format, startOfWeek, addDays, isSameDay, differenceInMinutes, parse, startOfMonth, endOfMonth, isWithinInterval, parseISO } from 'date-fns';
+import { es } from 'date-fns/locale'
 import { MdEdit } from "react-icons/md";
 import ModalEditar from './ModalEditar';
+import ImportarExportar from './ImportarExportar';
+import { MdDeleteForever } from "react-icons/md";
 
 const WEEK_DAYS = [
   'Lunes',
@@ -15,16 +18,10 @@ const WEEK_DAYS = [
 
 const WORKDAY_MINUTES = 8 * 60; // 8 hours
 
-// function getEntryForDate(entries, date) {
-//   return entries.find(e =>
-//     isSameDay(new Date(e.date), date)
-//   );
-// }
 function getEntryForDate(entries, date) {
   const dateStr = format(date, 'yyyy-MM-dd');
   return entries.find(e => e.date === dateStr);
 }
-
 
 function formatDuration(minutes) {
   const sign = minutes < 0 ? '-' : '+';
@@ -40,6 +37,27 @@ const ResumenSemana = () => {
    // Modal state
    const [modalOpen, setModalOpen] = useState(false);
 
+   const monthStart = startOfMonth(context.selectedDate);
+   const monthEnd = endOfMonth(context.selectedDate);
+   // Prepare monthly diff
+const entriesThisMonth = context.entries.filter(entry => {
+  const entryDate = parseISO(entry.date);
+  return isWithinInterval(entryDate, { start: monthStart, end: monthEnd });
+});
+
+// Now calculate total monthly diff
+let totalMonthlyDiff = 0;
+
+entriesThisMonth.forEach(entry => {
+  if (entry.start && entry.end) {
+    const startDate = parse(entry.start, 'HH:mm', parseISO(entry.date));
+    const endDate = parse(entry.end, 'HH:mm', parseISO(entry.date));
+    const duration = differenceInMinutes(endDate, startDate);
+    const diff = duration - WORKDAY_MINUTES;
+    totalMonthlyDiff += diff;
+  }
+});
+const selectedMonthName = format(context.selectedDate, 'MMMM', { locale: es });
 
   // State to track which date is being edited (string 'yyyy-MM-dd' or null)
   const [editDate, setEditDate] = useState(null);
@@ -48,6 +66,7 @@ const ResumenSemana = () => {
 
   // Calculate the week days (Monday to Friday)
   const weekDays = useMemo(() => {
+    if (!context.selectedDate) return [];
     const baseDate = new Date(context.selectedDate);
     const weekStart = startOfWeek(baseDate, { weekStartsOn: 1 });
     return Array.from({ length: 5 }, (_, i) => addDays(weekStart, i));
@@ -114,6 +133,23 @@ const ResumenSemana = () => {
     setEditEnd('');
   };
 
+    // Delete edited entry
+  const handleDeleteEdit = () => {
+    if (!editDate) return;
+  
+    if (window.confirm('¿Estás seguro de que quieres borrar esta entrada?')) {
+      const filteredEntries = context.entries.filter(e => e.date !== editDate);
+  
+      context.setEntries(filteredEntries);
+      localStorage.setItem('timeEntries', JSON.stringify(filteredEntries));
+  
+      setModalOpen(false);
+      setEditDate(null);
+      setEditStart('');
+      setEditEnd('');
+    }
+  };  
+
   // Cancel editing
   const handleCancelEdit = () => {
     setModalOpen(false);
@@ -146,6 +182,7 @@ const ResumenSemana = () => {
         </thead>
         <tbody>
         {tableRows.map((row) => {
+           if (!row.date) return null; // Skip empty rows
             const hasData = row.start && row.end;
             return (
               <tr key={row.dateStr}>
@@ -164,46 +201,63 @@ const ResumenSemana = () => {
               </tr>
             );
           })}
-                <tr style={{ fontWeight: 'bold', borderTop: '2px solid #333' }}>
-                <td>Total Semana</td>
-                <td></td>
-                <td></td>
+                <tr style={{ fontWeight: 'bold', borderTop: '1.5px solid #ffa500' }}>
+                <td colSpan={3}>Diferencia Semanal</td>
                 {/* <td>{formatDuration(totalMinutes)}</td> */}
-                <td>{formatDuration(totalDiff)}</td>
-                <td></td>
+                <td colSpan={2}>{formatDuration(totalDiff)}</td>
+          </tr>
+          <tr>
+            <td colSpan={3}>
+            Diferencia Mensual ({selectedMonthName})
+            </td>
+            <td colSpan={2}>
+            {formatDuration(totalMonthlyDiff)}
+            </td>
           </tr>
         </tbody>
       </table>
 
       <ModalEditar isOpen={modalOpen} onClose={handleCancelEdit}>
-        <h3>Editar</h3>
-        <div>
-          <label>Ingreso: </label>
-          <input
-            type="time"
-            value={editStart}
-            onChange={e => setEditStart(e.target.value)}
-          />
-        </div>
-        <div>
-          <label>Salida: </label>
-          <input
-            type="time"
-            value={editEnd}
-            onChange={e => setEditEnd(e.target.value)}
-          />
-        </div>
-        <div style={{ marginTop: '1rem' }}>
-          <button onClick={handleSaveEdit}>Guardar</button>
-          <button onClick={handleCancelEdit} style={{ marginLeft: '0.5rem' }}>Cancelar</button>
-        </div>
+        <div className="entrada-salida-container modal">
+          <div className="modal-title">EDITAR HORARIO</div>
+          <div className="entrada-salida-inputs">
+            <div className="entrada-salida-input-children">
+              <label>ENTRADA</label>
+              <input
+                type="time"
+                value={editStart}
+                onChange={e => setEditStart(e.target.value)}
+              />
+            </div>
+
+            <div className="entrada-salida-input-children">
+              <label>SALIDA</label>
+              <input
+                type="time"
+                value={editEnd}
+                onChange={e => setEditEnd(e.target.value)}
+              />
+            </div>
+          </div>
+
+          <div className="botones-modal-container">
+            <div className="botones-modal-guardar-cancelar">
+              <button onClick={handleSaveEdit}>GUARDAR</button>
+              <button onClick={handleCancelEdit}>CANCELAR</button>
+            </div>
+              <button className="entrada-salida-button-borrar" onClick={handleDeleteEdit}>BORRAR</button>
+            </div>
+          </div>
       </ModalEditar>
       </div>
 
-      <div style={{ padding: '1rem' }}>
-        <button className="button-clear-entries" onClick={handleClearEntries}>
-          Borrar todas las entradas
-        </button>
+      <div className="buttons-container">
+          <ImportarExportar/>
+          <div className="clear-entries-container">
+            <button className="button-clear-entries" onClick={handleClearEntries}>
+            <MdDeleteForever/>
+            </button>
+          </div>
       </div>
 
     </div>
