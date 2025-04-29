@@ -1,15 +1,16 @@
 {
   "files": {
-    "main.css": "/control-horario/static/css/main.0d718336.css",
-    "main.js": "/control-horario/static/js/main.4e92e8bb.js",
+    "main.css": "/control-horario/static/css/main.fc02bd46.css",
+    "main.js": "/control-horario/static/js/main.388f98a0.js",
     "static/js/453.88071d91.chunk.js": "/control-horario/static/js/453.88071d91.chunk.js",
+    "static/media/logo.svg": "/control-horario/static/media/logo.9da7f047580ec8bc536a72d6cd2f1e3b.svg",
     "index.html": "/control-horario/index.html",
-    "main.0d718336.css.map": "/control-horario/static/css/main.0d718336.css.map",
-    "main.4e92e8bb.js.map": "/control-horario/static/js/main.4e92e8bb.js.map",
+    "main.fc02bd46.css.map": "/control-horario/static/css/main.fc02bd46.css.map",
+    "main.388f98a0.js.map": "/control-horario/static/js/main.388f98a0.js.map",
     "453.88071d91.chunk.js.map": "/control-horario/static/js/453.88071d91.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.0d718336.css",
-    "static/js/main.4e92e8bb.js"
+    "static/css/main.fc02bd46.css",
+    "static/js/main.388f98a0.js"
   ]
 }
