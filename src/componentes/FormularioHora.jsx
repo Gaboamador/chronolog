@@ -34,7 +34,17 @@ const FormularioHora = () => {
     }
   }, [context.entries, context.selectedDate]);
 
+  const [showValidation, setShowValidation] = useState(false);
+
   const handleSave = () => {
+    if (!startTime || !endTime) {
+      setShowValidation(true);
+      alert('Debe ingresar una hora válida tanto para ENTRADA como para SALIDA.');
+      return;
+    }
+      // Proceed with saving
+    setShowValidation(false); // reset on successful save
+
     const newEntry = {
       date: format(context.selectedDate, 'yyyy-MM-dd'),
       start: startTime,
@@ -50,13 +60,24 @@ const FormularioHora = () => {
     setEndTime('17:00');
   };
   
+  const customEs = {
+    ...es,
+    localize: {
+      ...es.localize,
+      month: (n, opts) => {
+        const original = es.localize.month(n, opts);
+        return original.charAt(0).toUpperCase() + original.slice(1);
+      }
+    }
+  };
+  
 
   return (
     <div className="container-main calendar">
       {/* <h2>Agregar entrada de tiempo</h2> */}
 
       <DayPicker
-        locale={es}
+        locale={customEs}
         animate
         mode="single"
         selected={context.selectedDate}
@@ -75,12 +96,12 @@ const FormularioHora = () => {
 
         <div className="entrada-salida-input-children">
           <label>ENTRADA</label>
-          <input type="time" value={startTime} onChange={e => setStartTime(e.target.value)} />
+          <input type="time" value={startTime} onChange={e => setStartTime(e.target.value)} className={showValidation && !startTime ? 'input-error' : ''}/>
         </div>
 
         <div className="entrada-salida-input-children">
           <label>SALIDA</label>
-          <input type="time" value={endTime} onChange={e => setEndTime(e.target.value)} />
+          <input type="time" value={endTime} onChange={e => setEndTime(e.target.value)} className={showValidation && !endTime ? 'input-error' : ''}/>
         </div>
 
         <button
@@ -90,7 +111,7 @@ const FormularioHora = () => {
         </button>
 
       </div>
-      <button onClick={handleSave}>Guardar</button>
+      <button onClick={handleSave}>GUARDAR</button>
     </div>
     }
 

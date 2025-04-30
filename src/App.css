@@ -1,7 +1,25 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
 
+@font-face {
+  font-family: 'MuseoSans300';
+  src: url('./fonts/MuseoSans_300.otf') format('opentype');
+}
+@font-face {
+  font-family: 'MuseoSans500';
+  src: url('./fonts/MuseoSans_500.otf') format('opentype');
+}
+@font-face {
+  font-family: 'MuseoSans700';
+  src: url('./fonts/MuseoSans_700.otf') format('opentype');
+}
+@font-face {
+  font-family: 'MuseoSans900';
+  src: url('./fonts/MuseoSans_900.otf') format('opentype');
+}
+
 .App {
   text-align: center;
+  font-family: 'MuseoSans300', 'Roboto', sans-serif;
 }
 
 .body {

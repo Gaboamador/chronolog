@@ -185,7 +185,7 @@ const selectedMonthName = format(context.selectedDate, 'MMMM', { locale: es });
            if (!row.date) return null; // Skip empty rows
             const hasData = row.start && row.end;
             return (
-              <tr key={row.dateStr}>
+              <tr key={row.dateStr} className={isSameDay(row.date, context.selectedDate) ? 'selected' : ''}>
                 <td>{row.day} {row.date.getDate()}</td>
                 <td>{hasData ? row.start : null}</td>
                 <td>{hasData ? row.end : null}</td>
@@ -242,10 +242,10 @@ const selectedMonthName = format(context.selectedDate, 'MMMM', { locale: es });
 
           <div className="botones-modal-container">
             <div className="botones-modal-guardar-cancelar">
-              <button onClick={handleSaveEdit}>GUARDAR</button>
+              <button onClick={handleDeleteEdit}>ELIMINAR</button>
               <button onClick={handleCancelEdit}>CANCELAR</button>
             </div>
-              <button className="entrada-salida-button-borrar" onClick={handleDeleteEdit}>BORRAR</button>
+              <button className="entrada-salida-button-borrar" onClick={handleSaveEdit}>GUARDAR</button>
             </div>
           </div>
       </ModalEditar>

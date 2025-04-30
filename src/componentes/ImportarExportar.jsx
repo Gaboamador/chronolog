@@ -3,6 +3,9 @@ import React, { useContext, useRef } from 'react';
 import '../estilos/ImportarExportar.css';
 import Context from '../context';
 import { CiExport, CiImport } from "react-icons/ci";
+import { IoSaveOutline } from "react-icons/io5";
+
+
 
 const ImportarExportar = () => {
   const context = useContext(Context);
@@ -54,7 +57,7 @@ const ImportarExportar = () => {
   return (
     <div className="importar-exportar-container">
       <button onClick={handleExport} className="button-import-export-json">
-        <CiExport/>
+        <IoSaveOutline/>
       </button>
 
       <button onClick={handleImportClick} className="button-import-export-json">

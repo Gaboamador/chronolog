@@ -32,6 +32,11 @@ padding: 1.2rem;
     gap: 10px;
 }
 
+input.input-error {
+    border: 2px solid red;
+    outline: none;
+}
+
 .entrada-salida-input-children label {
     font-weight: 700;
     color: #008080;
@@ -59,6 +64,7 @@ padding: 1.2rem;
    border-left: 2px solid #ffa500;
    line-height: .5rem;
 }
+
 
 @media(max-width: 350px){
     .entrada-salida-container,
