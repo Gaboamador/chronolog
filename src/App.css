@@ -17,6 +17,20 @@
   src: url('./fonts/MuseoSans_900.otf') format('opentype');
 }
 
+:root {
+  --color-primary: #008080;
+  --color-secondary: #ffa500;
+  --color-secondary-rgb: 255, 165, 0;
+  --color-tertiary: #fdf8ed;
+  --color-quaternary: #fdfbf4;
+  --color-pale-gray: #f0f0f0;
+  --color-dark-text: #28282B;
+  --color-light-text: whitesmoke;
+  --color-table-border: #ddd;
+  --color-clear-button: #e74c3c;
+  --color-logo-gray: #a6a6a6;
+}
+
 .App {
   text-align: center;
   font-family: 'MuseoSans300', 'Roboto', sans-serif;
@@ -29,16 +43,16 @@
 .rdp-root {
   width:fit-content;
   margin: 0 auto;
-  --rdp-accent-color: #ffa500 !important;
+  --rdp-accent-color: var(--color-secondary) !important;
 }
 
 .container-main {
-padding: 1rem;
+  padding: 1rem;
 }
 
 .container-main.calendar {
-  background-color: #fdf8ed;
-  border-bottom: 2px solid #008080;
+  background-color: var(--color-tertiary);
+  border-bottom: 2px solid var(--color-primary);
 }
 
 @media(max-width: 350px){

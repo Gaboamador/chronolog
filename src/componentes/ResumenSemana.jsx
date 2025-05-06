@@ -184,8 +184,14 @@ const selectedMonthName = format(context.selectedDate, 'MMMM', { locale: es });
         {tableRows.map((row) => {
            if (!row.date) return null; // Skip empty rows
             const hasData = row.start && row.end;
+            const isSelected = isSameDay(row.date, context.selectedDate);
             return (
-              <tr key={row.dateStr} className={isSameDay(row.date, context.selectedDate) ? 'selected' : ''}>
+              <tr
+              key={row.dateStr}
+              className={isSelected ? 'selected' : ''}
+              onClick={() => context.setSelectedDate(row.date)}
+              style={{ cursor: 'pointer' }}      
+              >
                 <td>{row.day} {row.date.getDate()}</td>
                 <td>{hasData ? row.start : null}</td>
                 <td>{hasData ? row.end : null}</td>
@@ -201,21 +207,21 @@ const selectedMonthName = format(context.selectedDate, 'MMMM', { locale: es });
               </tr>
             );
           })}
-                <tr style={{ fontWeight: 'bold', borderTop: '1.5px solid #ffa500' }}>
-                <td colSpan={3}>Diferencia Semanal</td>
-                {/* <td>{formatDuration(totalMinutes)}</td> */}
-                <td colSpan={2}>{formatDuration(totalDiff)}</td>
-          </tr>
-          <tr>
-            <td colSpan={3}>
-            Diferencia Mensual ({selectedMonthName})
-            </td>
-            <td colSpan={2}>
-            {formatDuration(totalMonthlyDiff)}
-            </td>
-          </tr>
-        </tbody>
-      </table>
+              <tr className="tabla-resumen-subfooter">
+                  <td colSpan={3}>Diferencia Semanal</td>
+                  {/* <td>{formatDuration(totalMinutes)}</td> */}
+                  <td colSpan={2}>{formatDuration(totalDiff)}</td>
+              </tr>
+              <tr>
+                <td colSpan={3}>
+                Diferencia Mensual ({selectedMonthName})
+                </td>
+                <td colSpan={2}>
+                {formatDuration(totalMonthlyDiff)}
+                </td>
+              </tr>
+            </tbody>
+          </table>
 
       <ModalEditar isOpen={modalOpen} onClose={handleCancelEdit}>
         <div className="entrada-salida-container modal">

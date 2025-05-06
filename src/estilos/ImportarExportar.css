@@ -5,11 +5,11 @@
   gap: .5rem;
   padding: .5rem;
   border-radius: 8px;
-  background-color: #f0f0f0;
+  background-color: var(--color-pale-gray);
 }
 
 .button-import-export-json {
-  background-color: #008080;
+  background-color: var(--color-primary);
   color: white;
   padding: 0.5rem 1rem;
   border: none;

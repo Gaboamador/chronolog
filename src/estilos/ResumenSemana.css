@@ -12,24 +12,24 @@
   }
 
   .tabla-resumen-semana th {
-    color: whitesmoke;
-    background-color: #008080;
+    color: var(--color-light-text);
+    background-color: var(--color-primary);
   }
 
   .tabla-resumen-semana tr:nth-last-child(2) {
-    color: #28282B;
-    background-color: #fdf8ed;
+    color: var(--color-dark-text);
+    background-color: var(--color-tertiary);
   }
   .tabla-resumen-semana tr:nth-last-child(1) {
-    color: #008080;
-    background-color: whitesmoke;
+    color: var(--color-primary);
+    background-color: var(--color-light-text);
     font-weight: 500;
   }
 
   .tabla-resumen-semana th, 
   .tabla-resumen-semana td {
     padding: 8px;
-    border: 1px solid #ddd;
+    border: 1px solid var(--color-table-border);
   }
 
   .tabla-resumen-semana th:first-child, 
@@ -37,7 +37,11 @@
     text-align: left;
   }
   .tabla-resumen-semana tr.selected{
-    background-color: rgba(255, 165, 0, .25);
+    background-color: rgba(var(--color-secondary-rgb), .25);
+  }
+
+  .tabla-resumen-subfooter {
+    border-top: 1.5px solid var(--color-secondary);
   }
 
   .buttons-container {
@@ -54,11 +58,11 @@
     gap: 1rem;
     padding: .5rem;
     border-radius: 8px;
-    background-color: #f0f0f0;
+    background-color: var(--color-pale-gray);
   }
 
   .button-clear-entries {
-    background-color: #e74c3c;
+    background-color: var(--color-clear-button);
     color: white;
     padding: 0.5rem 1rem;
     border: none;
@@ -70,12 +74,12 @@
   
 .modal-title {
     margin: 0 auto;
-    color: #28282B;
+    color: var(--color-dark-text);
     font-size: 1.2rem;
     font-weight: 700;
     padding: .25rem 0;
-    border-bottom: 2px double #008080;
-    border-top: 2px double #008080;
+    border-bottom: 2px double var(--color-primary);
+    border-top: 2px double var(--color-primary);
     width: 100%
 }
 
@@ -96,12 +100,8 @@
     gap: .5rem;
   }
 
-  /* .botones-modal-guardar-cancelar button {
-    font-size: .6rem;
-  } */
-
   .entrada-salida-button-borrar {
-    color: #343434 !important;
-    background-color: #ffa500 !important;
-    border: 1px solid #008080 !important;
+    color: var(--color-dark-text) !important;
+    background-color: var(--color-secondary) !important;
+    border: 1px solid var(--color-primary) !important;
   }

@@ -6,6 +6,7 @@ import { DayPicker } from 'react-day-picker';
 import { es } from 'date-fns/locale';
 import 'react-day-picker/dist/style.css';
 import { MdAutoAwesome } from "react-icons/md";
+import { getDefaultWorkTime } from '../utils/HorarioUtils';
 
 const FormularioHora = () => {
   const context = useContext(Context)
@@ -36,29 +37,79 @@ const FormularioHora = () => {
 
   const [showValidation, setShowValidation] = useState(false);
 
+  // const handleSave = () => {
+  //   if (!startTime || !endTime) {
+  //     setShowValidation(true);
+  //     alert('Debe ingresar una hora válida tanto para ENTRADA como para SALIDA.');
+  //     return;
+  //   } setShowValidation(false);
+
+  //   const newEntry = {
+  //     date: format(context.selectedDate, 'yyyy-MM-dd'),
+  //     start: startTime,
+  //     end: endTime
+  //   };
+  //   context.setEntries(prev => [...prev.filter(e => e.date !== newEntry.date), newEntry]);
+  //   setStartTime('');
+  //   setEndTime('');
+  // };
   const handleSave = () => {
-    if (!startTime || !endTime) {
+    // Case: only endTime is filled (invalid)
+    if (!startTime && endTime) {
       setShowValidation(true);
       alert('Debe ingresar una hora válida tanto para ENTRADA como para SALIDA.');
       return;
     }
-      // Proceed with saving
-    setShowValidation(false); // reset on successful save
-
+  
+    // Case: both are empty (invalid)
+    if (!startTime && !endTime) {
+      setShowValidation(true);
+      alert('Debe ingresar una hora válida tanto para ENTRADA como para SALIDA.');
+      return;
+    }
+  
+    // Case: only startTime is filled (auto-fill endTime)
+    if (startTime && !endTime) {
+      const [hour, minute] = startTime.split(':').map(Number);
+      const startDate = new Date();
+      startDate.setHours(hour, minute, 0, 0);
+      startDate.setHours(startDate.getHours() + 8);
+  
+      const pad = (n) => String(n).padStart(2, '0');
+      const autoEnd = `${pad(startDate.getHours())}:${pad(startDate.getMinutes())}`;
+  
+      setEndTime(autoEnd);
+      alert('SALIDA se completó automáticamente (+8h). Pulse GUARDAR nuevamente para confirmar.');
+      return;
+    }
+  
+    // Case: both times present, proceed with save
+    setShowValidation(false);
+  
     const newEntry = {
       date: format(context.selectedDate, 'yyyy-MM-dd'),
       start: startTime,
       end: endTime
     };
-    context.setEntries(prev => [...prev.filter(e => e.date !== newEntry.date), newEntry]);
+  
+    context.setEntries(prev => [
+      ...prev.filter(e => e.date !== newEntry.date),
+      newEntry
+    ]);
+  
     setStartTime('');
     setEndTime('');
   };
-
+  
   const handleAutoFillDefault = () => {
-    setStartTime('09:00');
-    setEndTime('17:00');
-  };
+    const { defaultPersonalStartTime, defaultPersonalEndTime } = getDefaultWorkTime();
+    setStartTime(defaultPersonalStartTime);
+    setEndTime(defaultPersonalEndTime);
+  }; 
+  // const handleAutoFillDefault = () => {
+  //   setStartTime('09:00');
+  //   setEndTime('17:00');
+  // };
   
   const customEs = {
     ...es,
