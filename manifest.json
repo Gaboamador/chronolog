@@ -8,12 +8,12 @@
       "type": "image/x-icon"
     },
     {
-      "src": "logo_con_fondo192.png",
+      "src": "isotipo_circular_192.png",
       "type": "image/png",
       "sizes": "192x192"
     },
     {
-      "src": "logo_con_fondo512.png",
+      "src": "isotipo_circular_512.png",
       "type": "image/png",
       "sizes": "512x512"
     }
