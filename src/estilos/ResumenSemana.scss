@@ -1,3 +1,5 @@
+@use '../estilos/variables.scss' as *;
+
 .table-responsive {
     width: 100%;
     max-width: 100vw;
@@ -6,42 +8,40 @@
  
   .tabla-resumen-semana {
     width: 100%;
-    max-width: 500px;
+    max-width: 480px;
     border-collapse: collapse;
     margin: 0 auto;
   }
 
   .tabla-resumen-semana th {
-    color: var(--color-light-text);
-    background-color: var(--color-primary);
+    color: $color-texto-claro;
+    background-color: $color-primario;
   }
 
   .tabla-resumen-semana tr:nth-last-child(2) {
-    color: var(--color-dark-text);
-    background-color: var(--color-tertiary);
+    background-color: $color-primario-fondo;
   }
   .tabla-resumen-semana tr:nth-last-child(1) {
-    color: var(--color-primary);
-    background-color: var(--color-light-text);
+    background-color: $color-primario-fondo-claro;
     font-weight: 500;
   }
 
   .tabla-resumen-semana th, 
   .tabla-resumen-semana td {
     padding: 8px;
-    border: 1px solid var(--color-table-border);
+    border: 1px solid $color-bordes-tabla;
   }
 
   .tabla-resumen-semana th:first-child, 
   .tabla-resumen-semana td:first-child {
     text-align: left;
   }
-  .tabla-resumen-semana tr.selected{
-    background-color: rgba(var(--color-secondary-rgb), .25);
+  .tabla-resumen-semana tr.selected {
+    background-color: rgba($color-secundario, .25);
   }
 
   .tabla-resumen-subfooter {
-    border-top: 1.5px solid var(--color-secondary);
+    border-top: 1.5px solid $color-secundario;
   }
 
   .buttons-container {
@@ -58,28 +58,31 @@
     gap: 1rem;
     padding: .5rem;
     border-radius: 8px;
-    background-color: var(--color-pale-gray);
+    background-color: $color-neutro;
   }
 
   .button-clear-entries {
-    background-color: var(--color-clear-button);
-    color: white;
-    padding: 0.5rem 1rem;
+    background-color: $color-peligro;
+    color: $color-texto-claro;
+    padding: 0.6rem 1rem;
     border: none;
     border-radius: 4px;
     cursor: pointer;
     font-size: 1rem;
     line-height: 1rem;
+    display: flex;
+    align-items: center;
   }
   
 .modal-title {
     margin: 0 auto;
-    color: var(--color-dark-text);
+    color: $color-texto-oscuro;
+    font-family: $fuente-titulos;
     font-size: 1.2rem;
     font-weight: 700;
     padding: .25rem 0;
-    border-bottom: 2px double var(--color-primary);
-    border-top: 2px double var(--color-primary);
+    border-bottom: 2px double $color-primario;
+    border-top: 2px double $color-primario;
     width: 100%
 }
 
@@ -94,14 +97,14 @@
     gap: .5rem;
   }
 
-  .botones-modal-guardar-cancelar {
+  .botones-modal-eliminar-cancelar {
     display: flex;
     justify-content: space-between;
     gap: .5rem;
   }
 
-  .entrada-salida-button-borrar {
-    color: var(--color-dark-text) !important;
-    background-color: var(--color-secondary) !important;
-    border: 1px solid var(--color-primary) !important;
+  .botones-modal-guardar {
+    color: $color-texto-oscuro !important;
+    background-color: $color-secundario !important;
+    border: 1px solid $color-primario !important;
   }

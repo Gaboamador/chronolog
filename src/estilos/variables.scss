@@ -1,0 +1,47 @@
+@use 'sass:color';
+
+// Core
+$color-primario: #121c29;
+$color-secundario: #C79A7B;
+$color-neutro: #f0f0f0;
+
+// Variants
+$color-primario-claro: color.mix(white, $color-primario, 50%);
+$color-secundario-fondo: color.mix(white, $color-secundario, 80%);
+$color-primario-fondo: color.mix(white, $color-primario, 75%);
+$color-primario-fondo-claro: color.mix(white, $color-primario, 85%);
+
+// Other UI colors
+$color-texto-oscuro: #28282B;
+$color-texto-claro: whitesmoke;
+$color-bordes-tabla: #dddddd;
+$color-peligro: mix(black, $color-secundario, 25%);
+
+// Colores logo
+$color-logo1: #52c2e5;
+$color-logo2: #0d77a6;
+$color-logo3: #013f61;
+$color-logo4: #898e94;
+
+//Tipografías
+@import url('https://fonts.googleapis.com/css2?family=Audiowide&family=Figtree:ital,wght@0,300..900;1,300..900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
+
+@font-face {
+  font-family: 'MuseoSans300';
+  src: url('../fonts/MuseoSans_300.otf') format('opentype');
+}
+@font-face {
+  font-family: 'MuseoSans500';
+  src: url('../fonts/MuseoSans_500.otf') format('opentype');
+}
+@font-face {
+  font-family: 'MuseoSans700';
+  src: url('../fonts/MuseoSans_700.otf') format('opentype');
+}
+@font-face {
+  font-family: 'MuseoSans900';
+  src: url('../fonts/MuseoSans_900.otf') format('opentype');
+}
+
+$fuente-titulos: "Figtree", sans-serif;
+$fuente-contenidos: 'MuseoSans300', 'Roboto', sans-serif;

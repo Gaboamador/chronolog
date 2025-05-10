@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import Context from '../context';
-import '../estilos/FormularioHora.css';
+import '../estilos/FormularioHora.scss';
 import { format } from 'date-fns';
 import { DayPicker } from 'react-day-picker';
 import { es } from 'date-fns/locale';

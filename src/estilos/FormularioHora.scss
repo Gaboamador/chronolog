@@ -1,0 +1,84 @@
+@use '../estilos/variables.scss' as *;
+
+
+.entrada-salida-container {
+  border:1px inset $color-primario;
+  border-radius: 8px;
+  padding: 1rem;
+  margin: 1rem auto;
+  margin-bottom: 0;
+  max-width: 300px;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  background-color: $color-neutro;
+  position: relative;
+}
+
+.entrada-salida-container.modal {
+  margin: 0 auto;
+  padding: 1.2rem;
+  border: 2px double $color-primario;
+}
+
+.entrada-salida-inputs {
+  display: flex;
+  justify-content: space-evenly;
+}
+
+.entrada-salida-input-children {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: fit-content;
+  gap: 10px;
+}
+
+input.input-error {
+  border: 2px solid $color-peligro;
+  outline: none;
+  border-radius: 5px;
+}
+
+.entrada-salida-input-children label {
+  font-weight: 700;
+  color: $color-primario;
+}
+
+.entrada-salida-container button {
+  background-color: $color-primario;
+  color: $color-texto-claro;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.entrada-salida-inputs button {
+  position: absolute;
+  right: 0;
+  top: 0;
+  padding: .5rem;
+  border-radius: 0;
+  border-top-right-radius: 7px;
+  border-bottom-left-radius: 5px;
+  border-bottom: 2px solid $color-secundario;
+  border-left: 2px solid $color-secundario;
+  line-height: .5rem;
+}
+
+
+@media(max-width: 350px){
+    .entrada-salida-container,
+    .entrada-salida-container button {
+      font-size: .7rem;
+    }
+  }
+  @media(min-width: 350px) and (max-width: 400px){
+    .entrada-salida-container,
+    .entrada-salida-container button {
+      font-size: .9rem;
+    }
+  }

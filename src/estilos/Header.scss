@@ -1,0 +1,155 @@
+@use '../estilos/variables.scss' as *;
+
+.app-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background-color: $color-primario;
+  color: $color-texto-claro;
+  box-shadow: 0 2px 5px $color-primario-claro;
+  z-index: 1000;
+  height: 60px;
+  align-content: center;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  justify-content: space-between;
+}
+
+.header-content {
+  display: flex;
+    align-items: end;
+    justify-content: space-between;
+    width: 100%;
+    margin: 0 auto;
+    max-width: 480px;
+}
+
+.app-logo-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  // margin-left: 5px;
+  width: 60px;
+  height: 60px;
+}
+
+.logo {
+  width: 40px;
+  height: 40px;
+  padding: 2px;
+  vertical-align: middle;
+  background-color: $color-secundario-fondo;
+  border-radius: 50px;
+  box-shadow: 0px 0px 5px 2px rgba($color-secundario, 0.25);
+}
+
+.isologo {
+  width: 100%;
+  max-height: 50px; 
+}
+
+.isologo-container {
+padding: 5px;
+  display: flex;
+  align-items: center;
+}
+
+.app-title {
+  font-family: "MuseoSans700", "Roboto", sans-serif;
+  font-size: 1.5rem;
+  font-weight: 700;
+  text-shadow: $color-secundario 1px 1px 2px;
+}
+
+.settings-button {
+  margin-left: auto;
+  font-size: 1.5rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  line-height: 1rem;
+  
+}
+
+.settings-icon {
+  // color: $color-texto-claro;
+    color: $color-texto-oscuro;
+  font-size: 1.5rem;
+  // margin-right: .5rem;
+}
+
+
+
+
+/**/
+
+.menu-button-container {
+  position: relative;
+}
+
+.menu-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+}
+
+.menu-icon {
+  font-size: 1.5rem;
+  // color: $color-primario-claro;
+  color: $color-logo4;
+}
+
+.menu-dropdown {
+  position: absolute;
+  top: 2.5rem;
+  right: .5rem;
+  background-color: $color-neutro;
+  border: 1px solid $color-bordes-tabla;
+  border-radius: 8px;
+  list-style: none;
+  padding: .25rem .5rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  z-index: 1000;
+  
+
+  li {
+    color: $color-texto-oscuro;
+    padding: 0.5rem;
+    cursor: pointer;
+    &:hover {
+      background-color: $color-neutro;
+    }
+    display: flex;
+    gap: 5px;
+    align-items: center;
+  }
+}
+
+/**/
+
+@media (max-width: 380px) {
+  .app-title {
+    font-size: 1.3rem;
+  }
+  .settings-icon,
+  .menu-icon {
+    font-size: 1.3rem;
+  }
+}
+
+@media(max-width: 350px){
+  .settings-icon,
+  .menu-dropdown {
+    font-size: .7rem;
+  }
+}
+
+@media(min-width: 350px) and (max-width: 400px){
+  .settings-icon,
+  .menu-dropdown {
+    font-size: .9rem;
+  }
+}

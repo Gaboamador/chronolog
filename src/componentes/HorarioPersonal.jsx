@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import ModalEditar from './ModalEditar';
 import { getDefaultWorkTime, setDefaultWorkTime } from '../utils/HorarioUtils';
-import '../estilos/ModalEditar.css'; // Reuse existing styles
+import '../estilos/ModalEditar.scss'; // Reuse existing styles
 
 const HorarioPersonal = ({ onClose }) => {
   const { defaultPersonalStartTime, defaultPersonalEndTime } = getDefaultWorkTime();
@@ -38,10 +38,10 @@ const HorarioPersonal = ({ onClose }) => {
         </div>
 
         <div className="botones-modal-container">
-          <div className="botones-modal-guardar-cancelar">
+          <div className="botones-modal-eliminar-cancelar">
             <button onClick={onClose}>CANCELAR</button>
           </div>
-          <button className="entrada-salida-button-borrar" onClick={handleSaveDefaults}>
+          <button className="botones-modal-guardar" onClick={handleSaveDefaults}>
             GUARDAR
           </button>
         </div>

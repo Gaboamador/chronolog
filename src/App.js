@@ -1,6 +1,5 @@
-import React, { useState } from 'react';
-import './App.css';
-import { BrowserRouter, useLocation } from 'react-router-dom';
+import React from 'react';
+import './App.scss';
 import GlobalState from './globalState';
 import Header from './componentes/Header';
 import FormularioHora from './componentes/FormularioHora';

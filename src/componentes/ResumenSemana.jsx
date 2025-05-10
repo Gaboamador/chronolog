@@ -1,5 +1,5 @@
 import React, { useContext, useMemo, useState } from 'react';
-import '../estilos/ResumenSemana.css';
+import '../estilos/ResumenSemana.scss';
 import Context from '../context';
 import { format, startOfWeek, addDays, isSameDay, differenceInMinutes, parse, startOfMonth, endOfMonth, isWithinInterval, parseISO } from 'date-fns';
 import { es } from 'date-fns/locale'
@@ -99,7 +99,6 @@ const selectedMonthName = format(context.selectedDate, 'MMMM', { locale: es });
   });
 
   // Calculate totals only for days with data
-  const totalMinutes = tableRows.reduce((sum, row) => sum + (row.duration > 0 ? row.duration : 0), 0);
   const totalDiff = tableRows.reduce((sum, row) => sum + (row.duration > 0 ? row.diff : 0), 0);
 
   // Start editing a row by date
@@ -247,11 +246,11 @@ const selectedMonthName = format(context.selectedDate, 'MMMM', { locale: es });
           </div>
 
           <div className="botones-modal-container">
-            <div className="botones-modal-guardar-cancelar">
+            <div className="botones-modal-eliminar-cancelar">
               <button onClick={handleDeleteEdit}>ELIMINAR</button>
               <button onClick={handleCancelEdit}>CANCELAR</button>
             </div>
-              <button className="entrada-salida-button-borrar" onClick={handleSaveEdit}>GUARDAR</button>
+              <button className="botones-modal-guardar" onClick={handleSaveEdit}>GUARDAR</button>
             </div>
           </div>
       </ModalEditar>

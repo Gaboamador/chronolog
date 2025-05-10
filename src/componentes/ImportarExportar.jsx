@@ -1,9 +1,9 @@
 // BackupRestore.jsx
 import React, { useContext, useRef } from 'react';
-import '../estilos/ImportarExportar.css';
+import '../estilos/ImportarExportar.scss';
 import Context from '../context';
-import { CiExport, CiImport } from "react-icons/ci";
-import { IoSaveOutline } from "react-icons/io5";
+import { CiImport } from "react-icons/ci";
+import { IoSaveOutline, IoFolderOpenOutline } from "react-icons/io5";
 
 
 
@@ -13,13 +13,18 @@ const ImportarExportar = () => {
 
 
   const handleExport = () => {
+    const now = new Date();
+    const pad = (n) => n.toString().padStart(2, '0');
+    const timestamp = `${now.getFullYear()}${pad(now.getMonth() + 1)}${pad(now.getDate())}_${pad(now.getHours())}${pad(now.getMinutes())}${pad(now.getSeconds())}`;
+    const filename = `horarios_${timestamp}.json`;
+
     const dataStr = JSON.stringify(context.entries, null, 2);
     const blob = new Blob([dataStr], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
 
     const a = document.createElement('a');
     a.href = url;
-    a.download = 'horarios.json';
+    a.download = filename;
     a.click();
 
     URL.revokeObjectURL(url);
@@ -61,7 +66,7 @@ const ImportarExportar = () => {
       </button>
 
       <button onClick={handleImportClick} className="button-import-export-json">
-        <CiImport />
+        <IoFolderOpenOutline />
       </button>
 
       <input

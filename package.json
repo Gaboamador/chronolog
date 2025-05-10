@@ -1,7 +1,7 @@
 {
-  "name": "control-horario",
+  "name": "chronolog",
   "version": "0.1.0",
-  "homepage": "https://gaboamador.github.io/control-horario",
+  "homepage": "https://gaboamador.github.io/chronolog",
   "private": true,
   "dependencies": {
     "@testing-library/dom": "^10.4.0",
@@ -46,6 +46,8 @@
     ]
   },
   "devDependencies": {
-    "gh-pages": "^6.3.0"
+    "gh-pages": "^6.3.0",
+    "sass": "^1.87.0",
+    "sass-loader": "^13.3.3"
   }
 }

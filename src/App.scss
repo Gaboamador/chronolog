@@ -1,0 +1,48 @@
+@use './estilos/variables.scss' as *;
+
+.App {
+  text-align: center;
+  font-family: $fuente-contenidos;
+}
+
+.body {
+  margin-top: 60px;
+}
+
+.rdp-root {
+  width:fit-content;
+  margin: 0 auto;
+  --rdp-accent-color: #{$color-secundario} !important;
+}
+// .rdp-selected{
+// color: $color-secundario !important;
+// }
+
+.container-main {
+  padding: 1rem;
+}
+
+.container-main.calendar {
+  background-color: $color-secundario-fondo;
+  border-bottom: 2px solid $color-primario;
+}
+
+@media(max-width: 350px){
+  .container-main {
+    font-size: .7rem;
+  }
+  .rdp-selected {
+    font-size: .8rem !important;
+  }
+  .rdp-day_button,
+  .rdp-day {
+    max-width: 38px !important;
+    max-height: 38px !important;
+  }
+}
+
+@media(min-width: 350px) and (max-width: 400px){
+  .container-main {
+    font-size: .9rem;
+  }
+}
