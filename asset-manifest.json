@@ -1,20 +1,21 @@
 {
   "files": {
-    "main.css": "/control-horario/static/css/main.d0d1a867.css",
-    "main.js": "/control-horario/static/js/main.ba669be2.js",
+    "main.css": "/control-horario/static/css/main.29c37664.css",
+    "main.js": "/control-horario/static/js/main.0b761f7d.js",
     "static/js/453.88071d91.chunk.js": "/control-horario/static/js/453.88071d91.chunk.js",
     "static/media/MuseoSans_900.otf": "/control-horario/static/media/MuseoSans_900.0574e80a2483be7b033e.otf",
     "static/media/MuseoSans_700.otf": "/control-horario/static/media/MuseoSans_700.80acced0ba3630ee652b.otf",
     "static/media/MuseoSans_300.otf": "/control-horario/static/media/MuseoSans_300.34274fbfb2f270b8d53b.otf",
     "static/media/MuseoSans_500.otf": "/control-horario/static/media/MuseoSans_500.8ccea4947561e7008d19.otf",
-    "static/media/logo.svg": "/control-horario/static/media/logo.775ca27dbfb98851f584007b07352ad1.svg",
+    "static/media/isologo.svg": "/control-horario/static/media/isologo.f60f1392b18b0b434ef491e29f6b51b6.svg",
+    "static/media/logo.svg": "/control-horario/static/media/logo.61d7c5cd9ff99c083bcbd2accf58d0ae.svg",
     "index.html": "/control-horario/index.html",
-    "main.d0d1a867.css.map": "/control-horario/static/css/main.d0d1a867.css.map",
-    "main.ba669be2.js.map": "/control-horario/static/js/main.ba669be2.js.map",
+    "main.29c37664.css.map": "/control-horario/static/css/main.29c37664.css.map",
+    "main.0b761f7d.js.map": "/control-horario/static/js/main.0b761f7d.js.map",
     "453.88071d91.chunk.js.map": "/control-horario/static/js/453.88071d91.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.d0d1a867.css",
-    "static/js/main.ba669be2.js"
+    "static/css/main.29c37664.css",
+    "static/js/main.0b761f7d.js"
   ]
 }
