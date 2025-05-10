@@ -1,21 +1,20 @@
 {
   "files": {
-    "main.css": "/control-horario/static/css/main.29c37664.css",
-    "main.js": "/control-horario/static/js/main.0b761f7d.js",
-    "static/js/453.88071d91.chunk.js": "/control-horario/static/js/453.88071d91.chunk.js",
-    "static/media/MuseoSans_900.otf": "/control-horario/static/media/MuseoSans_900.0574e80a2483be7b033e.otf",
-    "static/media/MuseoSans_700.otf": "/control-horario/static/media/MuseoSans_700.80acced0ba3630ee652b.otf",
-    "static/media/MuseoSans_300.otf": "/control-horario/static/media/MuseoSans_300.34274fbfb2f270b8d53b.otf",
-    "static/media/MuseoSans_500.otf": "/control-horario/static/media/MuseoSans_500.8ccea4947561e7008d19.otf",
-    "static/media/isologo.svg": "/control-horario/static/media/isologo.f60f1392b18b0b434ef491e29f6b51b6.svg",
-    "static/media/logo.svg": "/control-horario/static/media/logo.61d7c5cd9ff99c083bcbd2accf58d0ae.svg",
-    "index.html": "/control-horario/index.html",
-    "main.29c37664.css.map": "/control-horario/static/css/main.29c37664.css.map",
-    "main.0b761f7d.js.map": "/control-horario/static/js/main.0b761f7d.js.map",
-    "453.88071d91.chunk.js.map": "/control-horario/static/js/453.88071d91.chunk.js.map"
+    "main.css": "/chronolog/static/css/main.7ecc4d53.css",
+    "main.js": "/chronolog/static/js/main.95c31f19.js",
+    "static/js/453.1becbc97.chunk.js": "/chronolog/static/js/453.1becbc97.chunk.js",
+    "static/media/MuseoSans_900.otf": "/chronolog/static/media/MuseoSans_900.0574e80a2483be7b033e.otf",
+    "static/media/MuseoSans_700.otf": "/chronolog/static/media/MuseoSans_700.80acced0ba3630ee652b.otf",
+    "static/media/MuseoSans_300.otf": "/chronolog/static/media/MuseoSans_300.34274fbfb2f270b8d53b.otf",
+    "static/media/MuseoSans_500.otf": "/chronolog/static/media/MuseoSans_500.8ccea4947561e7008d19.otf",
+    "static/media/isologo.svg": "/chronolog/static/media/isologo.f60f1392b18b0b434ef491e29f6b51b6.svg",
+    "index.html": "/chronolog/index.html",
+    "main.7ecc4d53.css.map": "/chronolog/static/css/main.7ecc4d53.css.map",
+    "main.95c31f19.js.map": "/chronolog/static/js/main.95c31f19.js.map",
+    "453.1becbc97.chunk.js.map": "/chronolog/static/js/453.1becbc97.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.29c37664.css",
-    "static/js/main.0b761f7d.js"
+    "static/css/main.7ecc4d53.css",
+    "static/js/main.95c31f19.js"
   ]
 }
