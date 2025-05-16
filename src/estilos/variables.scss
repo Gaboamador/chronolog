@@ -7,6 +7,7 @@ $color-neutro: #f0f0f0;
 
 // Variants
 $color-primario-claro: color.mix(white, $color-primario, 50%);
+$color-primario-oscuro: color.mix(black, $color-primario, 75%);
 $color-secundario-fondo: color.mix(white, $color-secundario, 80%);
 $color-primario-fondo: color.mix(white, $color-primario, 75%);
 $color-primario-fondo-claro: color.mix(white, $color-primario, 85%);

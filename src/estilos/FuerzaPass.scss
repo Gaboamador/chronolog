@@ -1,0 +1,26 @@
+@use '../estilos/variables.scss' as *;
+
+.password-strength {
+  margin-top: 8px;
+//   border: 1px solid black;
+//   border-radius: 8px;
+}
+
+.strength-bar {
+  height: 6px;
+  border-radius: 4px;
+  background-color: lightgray;
+  transition: width 0.3s;
+}
+
+.strength-0 { width: 25%; background-color: #e53935; }
+.strength-1 { width: 40%; background-color: #ef5350; }
+.strength-2 { width: 60%; background-color: #fdd835; }
+.strength-3 { width: 80%; background-color: #43a047; }
+.strength-4 { width: 100%; background-color: #2e7d32; }
+
+.strength-label {
+  margin-top: 4px;
+  font-size: 0.85rem;
+  font-weight: bold;
+}

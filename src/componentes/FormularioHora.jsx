@@ -6,7 +6,6 @@ import { DayPicker } from 'react-day-picker';
 import { es } from 'date-fns/locale';
 import 'react-day-picker/dist/style.css';
 import { MdAutoAwesome } from "react-icons/md";
-import { getDefaultWorkTime } from '../utils/HorarioUtils';
 
 const FormularioHora = () => {
   const context = useContext(Context)
@@ -18,14 +17,14 @@ const FormularioHora = () => {
   // });
   const [entryExists, setEntryExists] = useState(false);
 
-  useEffect(() => {
-    const saved = localStorage.getItem('timeEntries');
-    if (saved) context.setEntries(JSON.parse(saved));
-  }, []);
+  // useEffect(() => {
+  //   const saved = localStorage.getItem('timeEntries');
+  //   if (saved) context.setEntries(JSON.parse(saved));
+  // }, []);
 
-  useEffect(() => {
-    localStorage.setItem('timeEntries', JSON.stringify(context.entries));
-  }, [context.entries]);
+  // useEffect(() => {
+  //   localStorage.setItem('timeEntries', JSON.stringify(context.entries));
+  // }, [context.entries]);
 
   // Check if an entry already exists for selectedDate
   useEffect(() => {
@@ -102,10 +101,10 @@ const FormularioHora = () => {
   };
   
   const handleAutoFillDefault = () => {
-    const { defaultPersonalStartTime, defaultPersonalEndTime } = getDefaultWorkTime();
-    setStartTime(defaultPersonalStartTime);
-    setEndTime(defaultPersonalEndTime);
-  }; 
+  const { defaultPersonalStartTime, defaultPersonalEndTime } = context.defaultWorkTime;
+  setStartTime(defaultPersonalStartTime);
+  setEndTime(defaultPersonalEndTime);
+};
   // const handleAutoFillDefault = () => {
   //   setStartTime('09:00');
   //   setEndTime('17:00');

@@ -1,0 +1,172 @@
+@use '../estilos/variables.scss' as *;
+@use 'sass:color';
+
+.auth-container {
+  padding: 2rem;
+  max-width: 400px;
+  margin: 0 auto;
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+}
+
+.auth-title {
+  font-family: $fuente-titulos;
+  text-align: center;
+  font-size: 1.75rem;
+  font-weight: 600;
+  margin-bottom: 2rem;
+  color: #333;
+}
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.auth-input-group {
+    position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  
+  .auth-label {
+    position: absolute;
+    top: 50%;
+    left: 1rem;
+    transform: translateY(-50%);
+    color: #888;
+    font-size: 1rem;
+    pointer-events: none;
+    transition: all 0.2s ease;
+  }
+
+  &.focused .auth-label {
+    top: 0;
+    left: 0;
+    font-size: 0.75rem;
+    color: $color-logo1;
+    background-color: white;
+    padding: 0 0.25rem;
+    font-weight: 600;
+  }
+
+  .auth-input {
+    width: 100%;
+    padding: 1rem;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    font-size: 1rem;
+    transition: border-color 0.3s;
+    font-family: $fuente-titulos;
+
+    &:focus {
+      border-color: $color-logo1;
+      outline: none;
+    }
+  }
+}
+
+
+.checkbox-container {
+  margin-bottom: 1rem;
+  font-size: 0.95rem;
+
+  label {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+
+    input[type="checkbox"] {
+      transform: scale(1.2);
+      cursor: pointer;
+    }
+  }
+}
+
+
+.toggle-password {
+  position: absolute;
+  right: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  color: #888;
+
+  &:hover {
+    color: #555;
+  }
+}
+
+.eye-icon {
+  font-size: 1.2rem;
+  margin-left: 5px;
+  color:var(--color-terciario-oscuro);
+  cursor: pointer;
+}
+
+.auth-button {
+  background-color: $color-primario;
+  color: white;
+  border: none;
+  padding: 0.75rem;
+  border-radius: 8px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s;
+
+  &:hover {
+    background-color: color.mix(white, $color-primario, 20%);;
+  }
+}
+
+.auth-success {
+  color: #1a8f38;
+  margin-top: 0.5rem;
+  font-size: 0.95rem;
+}
+
+.auth-error {
+  color: #e63946;
+  margin-top: 0.5rem;
+  font-size: 0.95rem;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+
+  span {
+    width: fit-content;
+    margin: 0 auto;
+  }
+}
+
+.auth-link {
+  color: #7b3fe4;
+  cursor: pointer;
+  text-decoration: underline;
+  margin-left: 5px;
+}
+
+
+.auth-switch-text {
+  margin-top: 1.5rem;
+  font-size: 0.95rem;
+  text-align: center;
+  color: #333;
+}
+
+.auth-switch-button {
+  background: none;
+  border: none;
+  color: $color-primario;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 0.95rem;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+

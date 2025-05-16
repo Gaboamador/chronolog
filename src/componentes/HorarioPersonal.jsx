@@ -1,15 +1,27 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
+import Context from '../context';
 import ModalEditar from './ModalEditar';
-import { getDefaultWorkTime, setDefaultWorkTime } from '../utils/HorarioUtils';
 import '../estilos/ModalEditar.scss'; // Reuse existing styles
+import { guardarHorarioPorDefecto } from '../firebaseUtils';
 
 const HorarioPersonal = ({ onClose }) => {
-  const { defaultPersonalStartTime, defaultPersonalEndTime } = getDefaultWorkTime();
-  const [defaultStart, setDefaultStart] = useState(defaultPersonalStartTime);
-  const [defaultEnd, setDefaultEnd] = useState(defaultPersonalEndTime);
+  const context = useContext(Context);
+const { user, defaultWorkTime, setDefaultWorkTime } = context;
 
-  const handleSaveDefaults = () => {
-    setDefaultWorkTime(defaultStart, defaultEnd);
+  const [defaultStart, setDefaultStart] = useState(defaultWorkTime.defaultPersonalStartTime);
+  const [defaultEnd, setDefaultEnd] = useState(defaultWorkTime.defaultPersonalEndTime);
+
+  const handleSaveDefaults = async () => {
+    const nuevosValores = {
+      defaultPersonalStartTime: defaultStart,
+      defaultPersonalEndTime: defaultEnd,
+    };
+    setDefaultWorkTime(nuevosValores);
+
+    if (user) {
+      await guardarHorarioPorDefecto(user.uid, defaultStart, defaultEnd);
+    }
+
     onClose();
   };
 

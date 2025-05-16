@@ -46,7 +46,7 @@ const ImportarExportar = () => {
         const importedData = JSON.parse(e.target.result);
         if (Array.isArray(importedData)) {
           context.setEntries(importedData);
-          localStorage.setItem('timeEntries', JSON.stringify(importedData));
+          // localStorage.setItem('timeEntries', JSON.stringify(importedData));
           alert('Importación exitosa.');
         } else {
           alert('El archivo no tiene el formato correcto.');

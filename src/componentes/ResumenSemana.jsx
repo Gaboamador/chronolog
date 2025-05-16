@@ -125,7 +125,7 @@ const selectedMonthName = format(context.selectedDate, 'MMMM', { locale: es });
     }
 
     context.setEntries(filteredEntries);
-    localStorage.setItem('timeEntries', JSON.stringify(filteredEntries));
+    // localStorage.setItem('timeEntries', JSON.stringify(filteredEntries));
     setModalOpen(false);
     setEditDate(null);
     setEditStart('');
@@ -140,7 +140,7 @@ const selectedMonthName = format(context.selectedDate, 'MMMM', { locale: es });
       const filteredEntries = context.entries.filter(e => e.date !== editDate);
   
       context.setEntries(filteredEntries);
-      localStorage.setItem('timeEntries', JSON.stringify(filteredEntries));
+      // localStorage.setItem('timeEntries', JSON.stringify(filteredEntries));
   
       setModalOpen(false);
       setEditDate(null);
