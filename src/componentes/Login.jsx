@@ -41,10 +41,10 @@ const firebaseErrorMessages = {
     e.preventDefault();
     setError("");
 
-    if (!email || !password) {
-      setError("Debes completar todos los campos.");
-      return;
-    }
+  if (!email || (isLogin ? !password : !newPassword || !repeatPassword)) {
+    setError("Debes completar todos los campos.");
+    return;
+  }
 
     if (!isLogin && newPassword !== repeatPassword) {
       setError("Las contraseñas no coinciden.");
