@@ -26,9 +26,17 @@ const { user, defaultWorkTime, setDefaultWorkTime } = context;
   };
 
   return (
-    <ModalEditar isOpen={true} onClose={onClose}>
+    <ModalEditar isOpen={true} onClose={onClose} permitirCerrar={!context.necesitaConfigurarHorario}>
       <div className="entrada-salida-container modal">
         <div className="modal-title">HORARIO POR DEFECTO</div>
+
+        {context.necesitaConfigurarHorario && (
+        <div className="modal-alerta">
+          Antes de comenzar, por favor configurá tu horario por defecto.<br />
+          Luego podrás modificarlo desde la sección de ajustes.
+        </div>
+        )}
+
         <div className="entrada-salida-inputs">
           <div className="entrada-salida-input-children">
             <label>ENTRADA</label>
@@ -50,9 +58,11 @@ const { user, defaultWorkTime, setDefaultWorkTime } = context;
         </div>
 
         <div className="botones-modal-container">
-          <div className="botones-modal-eliminar-cancelar">
-            <button onClick={onClose}>CANCELAR</button>
-          </div>
+          {!context.necesitaConfigurarHorario && (
+            <div className="botones-modal-eliminar-cancelar">
+              <button onClick={onClose}>CANCELAR</button>
+            </div>
+          )}
           <button className="botones-modal-guardar" onClick={handleSaveDefaults}>
             GUARDAR
           </button>

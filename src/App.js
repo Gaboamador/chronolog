@@ -7,6 +7,7 @@ import FormularioHora from './componentes/FormularioHora';
 import ResumenSemana from './componentes/ResumenSemana';
 import Auth from './componentes/Auth';
 import Loader from './componentes/Loader';
+import HorarioPersonal from './componentes/HorarioPersonal';
 
 function AppContent() {
   const context = useContext(Context)
@@ -38,8 +39,25 @@ function AppContent() {
     <div className="App">
       <Header />
       <div className="body">
+
+      {context.mostrarModalHorario && (
+      <HorarioPersonal
+        onClose={() => {
+          context.setNecesitaConfigurarHorario(false);
+          context.setMostrarModalHorario(false);
+        }}
+      />
+    )}
+
+    {!context.necesitaConfigurarHorario && (
+      <>
         <FormularioHora />
         <ResumenSemana />
+      </>
+    )}
+
+        {/* <FormularioHora />
+        <ResumenSemana /> */}
       </div>
     </div>
   );

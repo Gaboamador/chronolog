@@ -20,6 +20,10 @@ function GlobalState(props){
       defaultPersonalStartTime: '09:00',
       defaultPersonalEndTime: '17:00',
     });
+    const [necesitaConfigurarHorario, setNecesitaConfigurarHorario] = useState(false);
+    const [mostrarModalHorario, setMostrarModalHorario] = useState(false);
+
+
 
     const getInitialDate = () => {
         const today = new Date();
@@ -69,7 +73,13 @@ function GlobalState(props){
     if (user) {
       setUser(user);
       const firestoreDefaults = await obtenerHorarioPorDefecto(user.uid);
-      setDefaultWorkTime(firestoreDefaults);
+      // setDefaultWorkTime(firestoreDefaults);
+      if (firestoreDefaults) {
+        setDefaultWorkTime(firestoreDefaults);
+      } else {
+        setNecesitaConfigurarHorario(true);
+        setMostrarModalHorario(true);
+      }
 
       const localData = localStorage.getItem('timeEntries');
       const localEntries = localData ? JSON.parse(localData) : [];
@@ -195,6 +205,10 @@ const logout = async () => {
             loading,
             defaultWorkTime,
             setDefaultWorkTime,
+            necesitaConfigurarHorario,
+            setNecesitaConfigurarHorario,
+            mostrarModalHorario,
+            setMostrarModalHorario,
         }}>
             {props.children}
         </Context.Provider>

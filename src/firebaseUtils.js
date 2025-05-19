@@ -57,15 +57,17 @@ export const obtenerHorarioPorDefecto = async (uid) => {
     if (snap.exists()) {
       return snap.data();
     }
-    return {
-      defaultPersonalStartTime: '09:00',
-      defaultPersonalEndTime: '17:00',
-    };
+    return null
+    // return {
+    //   defaultPersonalStartTime: '09:00',
+    //   defaultPersonalEndTime: '17:00',
+    // };
   } catch (error) {
     console.error('Error al obtener el horario por defecto:', error);
-    return {
-      defaultPersonalStartTime: '09:00',
-      defaultPersonalEndTime: '17:00',
-    };
+    return null
+    // return {
+    //   defaultPersonalStartTime: '09:00',
+    //   defaultPersonalEndTime: '17:00',
+    // };
   }
 };

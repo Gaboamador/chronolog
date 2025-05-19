@@ -9,22 +9,13 @@ import { MdAutoAwesome } from "react-icons/md";
 
 const FormularioHora = () => {
   const context = useContext(Context)
-  const [startTime, setStartTime] = useState('');
-  const [endTime, setEndTime] = useState('');
-  // const [entries, setEntries] = useState(() => {
-  //   const saved = localStorage.getItem('timeEntries');
-  //   return saved ? JSON.parse(saved) : [];
-  // });
+  // const [startTime, setStartTime] = useState('');
+  // const [endTime, setEndTime] = useState('');
+  const { defaultPersonalStartTime, defaultPersonalEndTime } = context.defaultWorkTime;
+  const [startTime, setStartTime] = useState(defaultPersonalStartTime);
+  const [endTime, setEndTime] = useState(defaultPersonalEndTime);
+
   const [entryExists, setEntryExists] = useState(false);
-
-  // useEffect(() => {
-  //   const saved = localStorage.getItem('timeEntries');
-  //   if (saved) context.setEntries(JSON.parse(saved));
-  // }, []);
-
-  // useEffect(() => {
-  //   localStorage.setItem('timeEntries', JSON.stringify(context.entries));
-  // }, [context.entries]);
 
   // Check if an entry already exists for selectedDate
   useEffect(() => {
@@ -36,22 +27,6 @@ const FormularioHora = () => {
 
   const [showValidation, setShowValidation] = useState(false);
 
-  // const handleSave = () => {
-  //   if (!startTime || !endTime) {
-  //     setShowValidation(true);
-  //     alert('Debe ingresar una hora válida tanto para ENTRADA como para SALIDA.');
-  //     return;
-  //   } setShowValidation(false);
-
-  //   const newEntry = {
-  //     date: format(context.selectedDate, 'yyyy-MM-dd'),
-  //     start: startTime,
-  //     end: endTime
-  //   };
-  //   context.setEntries(prev => [...prev.filter(e => e.date !== newEntry.date), newEntry]);
-  //   setStartTime('');
-  //   setEndTime('');
-  // };
   const handleSave = () => {
     // Case: only endTime is filled (invalid)
     if (!startTime && endTime) {
@@ -105,10 +80,6 @@ const FormularioHora = () => {
   setStartTime(defaultPersonalStartTime);
   setEndTime(defaultPersonalEndTime);
 };
-  // const handleAutoFillDefault = () => {
-  //   setStartTime('09:00');
-  //   setEndTime('17:00');
-  // };
   
   const customEs = {
     ...es,
@@ -124,7 +95,6 @@ const FormularioHora = () => {
 
   return (
     <div className="container-main calendar">
-      {/* <h2>Agregar entrada de tiempo</h2> */}
 
       <DayPicker
         locale={customEs}
@@ -154,11 +124,11 @@ const FormularioHora = () => {
           <input type="time" value={endTime} onChange={e => setEndTime(e.target.value)} className={showValidation && !endTime ? 'input-error' : ''}/>
         </div>
 
-        <button
+        {/* <button
         onClick={handleAutoFillDefault}
         className="auto-complete-button">
           <MdAutoAwesome/>
-        </button>
+        </button> */}
 
       </div>
       <button onClick={handleSave}>GUARDAR</button>
