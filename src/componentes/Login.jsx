@@ -2,8 +2,10 @@ import React, { useState, useEffect, useRef } from "react";
 import {
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
+  updateProfile,
+  sendEmailVerification
 } from "firebase/auth";
-import { FaEye, FaEyeSlash, FaSignInAlt, FaUserPlus } from "react-icons/fa";
+import { FaSignInAlt, FaUserPlus } from "react-icons/fa";
 import { auth } from "../firebase";
 import zxcvbn from 'zxcvbn';
 import "../estilos/Auth.scss";
@@ -12,6 +14,8 @@ import "../estilos/FuerzaPass.scss"
 const Login = ({ isLogin, setIsLogin, setShowRecovery }) => {
 
   const [email, setEmail] = useState("");
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
   const [password, setPassword] = useState("");
   const [repeatPassword, setRepeatPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -41,7 +45,7 @@ const firebaseErrorMessages = {
     e.preventDefault();
     setError("");
 
-  if (!email || (isLogin ? !password : !newPassword || !repeatPassword)) {
+  if (!email || (isLogin ? !password : !newPassword || !repeatPassword || !firstName || !lastName)) {
     setError("Debes completar todos los campos.");
     return;
   }
@@ -55,7 +59,13 @@ const firebaseErrorMessages = {
       if (isLogin) {
         await signInWithEmailAndPassword(auth, email, password);
       } else {
-        await createUserWithEmailAndPassword(auth, email, newPassword);
+        const userCredential = await createUserWithEmailAndPassword(auth, email, newPassword);
+        const user = userCredential.user;
+        // Configurar displayName
+          const fullName = `${firstName.trim()} ${lastName.trim()}`;
+          await updateProfile(user, { displayName: fullName });
+        // Enviar correo de verificación
+          await sendEmailVerification(user);
       }
     } catch (err) {
       const code = err.code;
@@ -97,6 +107,7 @@ const firebaseErrorMessages = {
   };
 
 
+
   return (
     <div className="auth-container">
       <div className="auth-title">
@@ -116,6 +127,7 @@ const firebaseErrorMessages = {
     onChange={(e) => setEmail(e.target.value)}
       onFocus={() => setFocused('email')}
     onBlur={() => setFocused('')}
+    required
   />
 </div>
 
@@ -135,6 +147,31 @@ const firebaseErrorMessages = {
 
 {!isLogin && (
   <>
+<div className={`auth-input-group ${focused === 'firstName' || firstName ? 'focused' : ''}`}>
+      <label className="auth-label">Nombre</label>
+      <input
+        type="text"
+        className="auth-input"
+        value={firstName}
+        onChange={(e) => setFirstName(e.target.value)}
+        onFocus={() => setFocused('firstName')}
+        onBlur={() => setFocused('')}
+        required
+      />
+    </div>
+    <div className={`auth-input-group ${focused === 'lastName' || lastName ? 'focused' : ''}`}>
+      <label className="auth-label">Apellido</label>
+      <input
+        type="text"
+        className="auth-input"
+        value={lastName}
+        onChange={(e) => setLastName(e.target.value)}
+        onFocus={() => setFocused('lastName')}
+        onBlur={() => setFocused('')}
+        required
+      />
+    </div>
+
   <div className={`auth-input-group ${focused === 'newPassword' || newPassword ? 'focused' : ''}`}>
   <label className="auth-label">Crear contraseña</label>
   <input
@@ -142,8 +179,9 @@ const firebaseErrorMessages = {
     className="auth-input"
     value={newPassword}
     onChange={handlePasswordChange}
-onFocus={() => setFocused('newPassword')}
+    onFocus={() => setFocused('newPassword')}
     onBlur={() => setFocused('')}
+    required
   />
 </div>
 
@@ -156,6 +194,7 @@ onFocus={() => setFocused('newPassword')}
       onChange={(e) => setRepeatPassword(e.target.value)}
       onFocus={() => setFocused('repeat')}
       onBlur={() => setFocused('')}
+      required
     />
   </div>
     {newPassword && (
@@ -181,7 +220,10 @@ onFocus={() => setFocused('newPassword')}
           </div>
         </div>
 
-        <button type="submit" className="auth-button">
+        <button
+        type="submit"
+        className="button"
+        >
           {isLogin ? "Entrar" : "Crear cuenta"}
         </button>
       </form>

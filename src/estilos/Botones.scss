@@ -1,0 +1,41 @@
+@use '../estilos/variables.scss' as *;
+@use 'sass:color';
+
+
+// Mixin para reutilizar estilos (opcional pero recomendado)
+@mixin button-base {
+  background-color: $color-primario;
+  color: $color-texto-claro;
+  border: none;
+  padding: 0.75rem;
+  border-radius: 8px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  width: 100%; // Opcional (para consistencia en anchos)
+  text-align: center;
+
+  &:hover:not(:disabled) {
+    background-color: color.mix(white, $color-primario, 20%);
+  }
+
+  &:disabled {
+    background-color: $color-logo4;
+    cursor: not-allowed;
+  }
+}
+
+// Clase principal
+.button {
+  @include button-base; // Hereda todos los estilos base
+
+  // Modificador para botones "Guardar" (color secundario)
+  &.button--save {
+    background-color: $color-secundario;
+    color: darken($color-secundario, 80%); // Asegura contraste en texto
+
+    &:hover:not(:disabled) {
+      background-color: color.mix(white, $color-secundario, 20%);
+    }
+  }
+}

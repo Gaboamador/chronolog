@@ -1,5 +1,6 @@
 import React, { useContext, useMemo, useState } from 'react';
 import '../estilos/ResumenSemana.scss';
+import '../estilos/Botones.scss';
 import Context from '../context';
 import { format, startOfWeek, addDays, isSameDay, differenceInMinutes, parse, startOfMonth, endOfMonth, isWithinInterval, parseISO } from 'date-fns';
 import { es } from 'date-fns/locale'
@@ -258,10 +259,10 @@ const selectedMonthName = format(context.selectedDate, 'MMMM', { locale: es });
 
           <div className="botones-modal-container">
             <div className="botones-modal-eliminar-cancelar">
-              <button onClick={handleDeleteEdit} disabled={isSaving}>{isSaving ? 'BORRANDO...' : 'ELIMINAR'}</button>
-              <button onClick={handleCancelEdit}>CANCELAR</button>
+              <button onClick={handleDeleteEdit} disabled={isSaving} className={`button ${isSaving ? 'disabled' : ''}`}>{isSaving ? 'BORRANDO...' : 'ELIMINAR'}</button>
+              <button onClick={handleCancelEdit}className="button">CANCELAR</button>
             </div>
-              <button className="botones-modal-guardar" onClick={handleSaveEdit}>GUARDAR</button>
+              <button className="button button--save" onClick={handleSaveEdit}>GUARDAR</button>
             </div>
           </div>
       </ModalEditar>

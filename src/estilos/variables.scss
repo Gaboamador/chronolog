@@ -1,9 +1,23 @@
 @use 'sass:color';
 
+// Colores logo
+$color-logo1: #52c2e5;
+$color-logo2: #0d77a6;
+$color-logo3: #013f61;
+$color-logo4: #898e94;
+
 // Core
-$color-primario: #121c29;
+// $color-primario: #121c29;
 $color-secundario: #C79A7B;
+$color-primario: color.mix(black, $color-logo3, 50%);
+// $color-secundario: adjust-hue($color-primario, 180deg);
 $color-neutro: #f0f0f0;
+
+// $color-primario-menu-back: #1e2c3b;
+// $color-primario-menu-hover: #2d3d4d;
+// $dropdown-bg: scale-color($color-primario, $lightness: +18%, $saturation: -12%);
+
+// $dropdown-hover: scale-color($dropdown-bg, $lightness: +7%);
 
 // Variants
 $color-primario-claro: color.mix(white, $color-primario, 50%);
@@ -17,12 +31,8 @@ $color-texto-oscuro: #28282B;
 $color-texto-claro: whitesmoke;
 $color-bordes-tabla: #dddddd;
 $color-peligro: mix(black, $color-secundario, 25%);
-
-// Colores logo
-$color-logo1: #52c2e5;
-$color-logo2: #0d77a6;
-$color-logo3: #013f61;
-$color-logo4: #898e94;
+$dropdown-bg: $color-logo3;
+$dropdown-hover: color.mix(white, $color-logo3, 20%);
 
 //Tipografías
 @import url('https://fonts.googleapis.com/css2?family=Audiowide&family=Figtree:ital,wght@0,300..900;1,300..900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');

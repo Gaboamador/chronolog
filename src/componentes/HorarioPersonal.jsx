@@ -1,7 +1,8 @@
 import React, { useState, useContext } from 'react';
 import Context from '../context';
 import ModalEditar from './ModalEditar';
-import '../estilos/ModalEditar.scss'; // Reuse existing styles
+import '../estilos/ModalEditar.scss';
+import '../estilos/Botones.scss';
 import { guardarHorarioPorDefecto } from '../firebaseUtils';
 
 const HorarioPersonal = ({ onClose }) => {
@@ -58,14 +59,17 @@ const { user, defaultWorkTime, setDefaultWorkTime } = context;
         </div>
 
         <div className="botones-modal-container">
+          <button className="button button--save" onClick={handleSaveDefaults}>
+            Guardar
+          </button>
           {!context.necesitaConfigurarHorario && (
             <div className="botones-modal-eliminar-cancelar">
-              <button onClick={onClose}>CANCELAR</button>
+              <button className="button" onClick={onClose}>
+                Cancelar
+              </button>
             </div>
           )}
-          <button className="botones-modal-guardar" onClick={handleSaveDefaults}>
-            GUARDAR
-          </button>
+
         </div>
       </div>
     </ModalEditar>

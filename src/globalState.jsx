@@ -201,6 +201,7 @@ const logout = async () => {
             entries,
             setEntries,
             user,
+            setUser,
             logout,
             loading,
             defaultWorkTime,

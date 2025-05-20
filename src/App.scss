@@ -21,9 +21,6 @@
   margin: 0 auto;
   --rdp-accent-color: #{$color-secundario} !important;
 }
-// .rdp-selected{
-// color: $color-secundario !important;
-// }
 
 .container-main {
   padding: 1rem;
@@ -52,4 +49,16 @@
   .container-main {
     font-size: .9rem;
   }
+}
+
+.verification-error {
+  color: #e63946;
+  font-size: 0.95rem;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: left;
+  gap: 10px;
+  margin-bottom: 2rem;
 }

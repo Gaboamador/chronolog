@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import Context from '../context';
 import '../estilos/FormularioHora.scss';
+import '../estilos/Botones.scss';
 import { format } from 'date-fns';
 import { DayPicker } from 'react-day-picker';
 import { es } from 'date-fns/locale';
@@ -131,7 +132,7 @@ const FormularioHora = () => {
         </button> */}
 
       </div>
-      <button onClick={handleSave}>GUARDAR</button>
+      <button className="button" onClick={handleSave}>GUARDAR</button>
     </div>
     }
 

@@ -45,6 +45,14 @@ export const eliminarEntrada = async (uid, dateStr) => {
   }
 };
 
+
+/** Guarda datos del perfil de usuario en Firestore */
+export const guardarDatosPerfil = async (uid, firstName, lastName) => {
+  const userRef = doc(db, 'users', uid);
+  await setDoc(userRef, { firstName, lastName }, { merge: true });
+};
+
+
 /** Guarda el horario personal por defecto en Firestore */
 export const guardarHorarioPorDefecto = async (uid, start, end) => {
   try {

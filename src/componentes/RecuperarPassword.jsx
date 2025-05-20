@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { sendPasswordResetEmail, fetchSignInMethodsForEmail } from "firebase/auth";
+import { sendPasswordResetEmail } from "firebase/auth";
 import { auth } from "../firebase";
 import "../estilos/Auth.scss";
 
@@ -39,7 +39,7 @@ const RecuperarPassword = ({ onBackToLogin }) => {
         />
         </div>
 
-        <button className="auth-button" type="submit">
+        <button className="button" type="submit">
           Enviar enlace
         </button>
       
