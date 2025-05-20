@@ -7,6 +7,7 @@ import { MdEdit } from "react-icons/md";
 import ModalEditar from './ModalEditar';
 import ImportarExportar from './ImportarExportar';
 import { MdDeleteForever } from "react-icons/md";
+import { eliminarEntrada } from '../firebaseUtils';
 
 const WEEK_DAYS = [
   'Lunes',
@@ -63,6 +64,7 @@ const selectedMonthName = format(context.selectedDate, 'MMMM', { locale: es });
   const [editDate, setEditDate] = useState(null);
   const [editStart, setEditStart] = useState('');
   const [editEnd, setEditEnd] = useState('');
+  const [isSaving, setIsSaving] = useState(false);
 
   // Calculate the week days (Monday to Friday)
   const weekDays = useMemo(() => {
@@ -133,20 +135,29 @@ const selectedMonthName = format(context.selectedDate, 'MMMM', { locale: es });
   };
 
     // Delete edited entry
-  const handleDeleteEdit = () => {
+  const handleDeleteEdit = async () => {
     if (!editDate) return;
   
     if (window.confirm('¿Estás seguro de que quieres borrar esta entrada?')) {
-      const filteredEntries = context.entries.filter(e => e.date !== editDate);
-  
-      context.setEntries(filteredEntries);
-      // localStorage.setItem('timeEntries', JSON.stringify(filteredEntries));
-  
-      setModalOpen(false);
-      setEditDate(null);
-      setEditStart('');
-      setEditEnd('');
-    }
+      setIsSaving(true);
+    try {
+          const filteredEntries = context.entries.filter(e => e.date !== editDate);    
+          context.setEntries(filteredEntries);
+
+          if (context.user) {
+          await eliminarEntrada(context.user.uid, editDate);
+          }
+      
+          setModalOpen(false);
+          setEditDate(null);
+          setEditStart('');
+          setEditEnd('');
+        } catch (error) {
+          console.error('Error al eliminar entrada:', error);
+        } finally {
+          setIsSaving(false);
+        }
+      }
   };  
 
   // Cancel editing
@@ -247,7 +258,7 @@ const selectedMonthName = format(context.selectedDate, 'MMMM', { locale: es });
 
           <div className="botones-modal-container">
             <div className="botones-modal-eliminar-cancelar">
-              <button onClick={handleDeleteEdit}>ELIMINAR</button>
+              <button onClick={handleDeleteEdit} disabled={isSaving}>{isSaving ? 'BORRANDO...' : 'ELIMINAR'}</button>
               <button onClick={handleCancelEdit}>CANCELAR</button>
             </div>
               <button className="botones-modal-guardar" onClick={handleSaveEdit}>GUARDAR</button>

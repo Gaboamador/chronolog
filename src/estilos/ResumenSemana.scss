@@ -112,6 +112,11 @@
     display: flex;
     justify-content: space-between;
     gap: .5rem;
+
+    & button:disabled {
+      background-color: $color-logo4;
+      cursor: default;
+    }
   }
 
   .botones-modal-guardar {

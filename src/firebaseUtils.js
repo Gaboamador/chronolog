@@ -1,6 +1,6 @@
 // src/firebaseUtils.js
 import { db } from './firebase';
-import { doc, setDoc, getDoc, getDocs, collection } from 'firebase/firestore';
+import { doc, setDoc, getDoc, deleteDoc, getDocs, collection } from 'firebase/firestore';
 
 /**
  * Guarda una entrada de tiempo por fecha en la subcolección 'entries' del usuario.
@@ -35,6 +35,15 @@ export const obtenerEntradas = async (uid) => {
   }
 };
 
+// Elimina una entrada por fecha
+export const eliminarEntrada = async (uid, dateStr) => {
+  try {
+    const docRef = doc(db, 'users', uid, 'entries', dateStr);
+    await deleteDoc(docRef);
+  } catch (error) {
+    console.error('Error al eliminar la entrada:', error);
+  }
+};
 
 /** Guarda el horario personal por defecto en Firestore */
 export const guardarHorarioPorDefecto = async (uid, start, end) => {
