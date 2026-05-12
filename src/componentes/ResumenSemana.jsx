@@ -33,6 +33,13 @@ function formatDuration(minutes) {
   return `${sign}${h}h ${m}m`;
 }
 
+function formatDurationPlain(minutes) {
+  const abs = Math.abs(minutes);
+  const h = Math.floor(abs / 60);
+  const m = abs % 60;
+  return `${h}h ${m}m`;
+}
+
 const ResumenSemana = () => {
   const context = useContext(Context);
 
@@ -184,11 +191,12 @@ const selectedMonthName = format(context.selectedDate, 'MMMM', { locale: es });
         <thead>
           <tr>
             <th>Día</th>
-            <th>Ingreso</th>
-            <th>Salida</th>
+            <th>Ing.</th>
+            <th>Sal.</th>
             {/* <th>Duración</th> */}
-            <th>Diferencia</th>
-            <th>Editar</th>
+            <th>Dife.</th>
+            <th>Dur.</th>
+            <th>Edit</th>
           </tr>
         </thead>
         <tbody>
@@ -208,6 +216,7 @@ const selectedMonthName = format(context.selectedDate, 'MMMM', { locale: es });
                 <td>{hasData ? row.end : null}</td>
                 {/* <td>{hasData ? (row.duration > 0 ? formatDuration(row.duration) : '+0m') : null}</td> */}
                 <td>{hasData ? formatDuration(row.diff) : null}</td>
+                <td className={hasData && row.duration < 440 ? "observado": ""}>{hasData ? formatDurationPlain(row.duration) : null}</td>
                 <td>
                   {hasData && (
                     <div className="editar-entrada" onClick={() => handleEditClick(row.dateStr, row.start, row.end)}>
@@ -219,12 +228,12 @@ const selectedMonthName = format(context.selectedDate, 'MMMM', { locale: es });
             );
           })}
               <tr className="tabla-resumen-subfooter">
-                  <td colSpan={3}>Diferencia Semanal</td>
+                  <td colSpan={4}>Diferencia Semanal</td>
                   {/* <td>{formatDuration(totalMinutes)}</td> */}
                   <td colSpan={2}>{formatDuration(totalDiff)}</td>
               </tr>
               <tr>
-                <td colSpan={3}>
+                <td colSpan={4}>
                 Diferencia Mensual ({selectedMonthName})
                 </td>
                 <td colSpan={2}>

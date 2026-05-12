@@ -11,6 +11,7 @@
     max-width: 480px;
     border-collapse: collapse;
     margin: 0 auto;
+    font-size: 0.9rem;
   }
 
   .tabla-resumen-semana th {
@@ -42,6 +43,11 @@
 
   .tabla-resumen-subfooter {
     border-top: 1.5px solid $color-secundario;
+  }
+
+  .observado {
+    color: $color-danger;
+    // background: rgba($color-danger, 0.2);
   }
 
   .buttons-container {
