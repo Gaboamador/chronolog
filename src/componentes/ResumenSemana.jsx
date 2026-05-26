@@ -6,8 +6,6 @@ import { format, startOfWeek, addDays, isSameDay, differenceInMinutes, parse, st
 import { es } from 'date-fns/locale'
 import { MdEdit } from "react-icons/md";
 import ModalEditar from './ModalEditar';
-import ImportarExportar from './ImportarExportar';
-import { MdDeleteForever } from "react-icons/md";
 import { eliminarEntrada } from '../firebaseUtils';
 
 const WEEK_DAYS = [
@@ -40,6 +38,16 @@ function formatDurationPlain(minutes) {
   return `${h}h ${m}m`;
 }
 
+function averageDuration(totalMinutes, count) {
+  if (!count) return 0;
+  return Math.round(totalMinutes / count);
+}
+
+function averageRealDuration(totalDiffMinutes, count) {
+  if (!count) return 0;
+  return WORKDAY_MINUTES + Math.round(totalDiffMinutes / count);
+}
+
 const ResumenSemana = () => {
   const context = useContext(Context);
 
@@ -56,16 +64,31 @@ const entriesThisMonth = context.entries.filter(entry => {
 
 // Now calculate total monthly diff
 let totalMonthlyDiff = 0;
+let validMonthlyEntriesCount = 0;
 
 entriesThisMonth.forEach(entry => {
   if (entry.start && entry.end) {
-    const startDate = parse(entry.start, 'HH:mm', parseISO(entry.date));
-    const endDate = parse(entry.end, 'HH:mm', parseISO(entry.date));
+    const entryDate = parseISO(entry.date);
+    const startDate = parse(entry.start, 'HH:mm', entryDate);
+    const endDate = parse(entry.end, 'HH:mm', entryDate);
     const duration = differenceInMinutes(endDate, startDate);
     const diff = duration - WORKDAY_MINUTES;
+
     totalMonthlyDiff += diff;
+    validMonthlyEntriesCount += 1;
   }
 });
+
+const averageMonthlyDiff = averageDuration(
+  totalMonthlyDiff,
+  validMonthlyEntriesCount
+);
+
+const averageMonthlyDuration = averageRealDuration(
+  totalMonthlyDiff,
+  validMonthlyEntriesCount
+);
+
 const selectedMonthName = format(context.selectedDate, 'MMMM', { locale: es });
 
   // State to track which date is being edited (string 'yyyy-MM-dd' or null)
@@ -109,7 +132,16 @@ const selectedMonthName = format(context.selectedDate, 'MMMM', { locale: es });
   });
 
   // Calculate totals only for days with data
+  const weeklyEntriesCount = tableRows.filter(row => row.duration > 0).length;
+
   const totalDiff = tableRows.reduce((sum, row) => sum + (row.duration > 0 ? row.diff : 0), 0);
+
+  const averageWeeklyDiff = averageDuration(totalDiff, weeklyEntriesCount);
+
+  const averageWeeklyDuration = averageRealDuration(
+    totalDiff,
+    weeklyEntriesCount
+  );
 
   // Start editing a row by date
   const handleEditClick = (dateStr, start, end) => {
@@ -176,27 +208,31 @@ const selectedMonthName = format(context.selectedDate, 'MMMM', { locale: es });
     setEditEnd('');
   };
 
-  const handleClearEntries = () => {
-    if (window.confirm('¿Estás seguro que quieres borrar todas las entradas? Esta acción no se puede deshacer.')) {
-      context.setEntries([]);
-      localStorage.removeItem('timeEntries'); // Optional, since context.setEntries([]) will sync localStorage if you do it in context provider
-    }
-  };
+  // const handleClearEntries = () => {
+  //   if (window.confirm('¿Estás seguro que quieres borrar todas las entradas? Esta acción no se puede deshacer.')) {
+  //     context.setEntries([]);
+  //     localStorage.removeItem('timeEntries'); // Optional, since context.setEntries([]) will sync localStorage if you do it in context provider
+  //   }
+  // };
   
 
   return (
   <div className="container-main">
+    <div className="titleWrapper">
+      <span className="title">Promedio {selectedMonthName}</span>
+      <span className="average">{formatDurationPlain(averageMonthlyDuration)}</span>
+    </div>
     <div className="table-responsive">
       <table className="tabla-resumen-semana">
         <thead>
           <tr>
             <th>Día</th>
-            <th>Ing.</th>
-            <th>Sal.</th>
+            <th>Ingreso</th>
+            <th>Salida</th>
             {/* <th>Duración</th> */}
-            <th>Dife.</th>
-            <th>Dur.</th>
-            <th>Edit</th>
+            <th>Diferencia</th>
+            {/* <th>Dur.</th> */}
+            <th>Editar</th>
           </tr>
         </thead>
         <tbody>
@@ -216,7 +252,7 @@ const selectedMonthName = format(context.selectedDate, 'MMMM', { locale: es });
                 <td>{hasData ? row.end : null}</td>
                 {/* <td>{hasData ? (row.duration > 0 ? formatDuration(row.duration) : '+0m') : null}</td> */}
                 <td>{hasData ? formatDuration(row.diff) : null}</td>
-                <td className={hasData && row.duration < 440 ? "observado": ""}>{hasData ? formatDurationPlain(row.duration) : null}</td>
+                {/* <td className={hasData && row.duration < 440 ? "observado": ""}>{hasData ? formatDurationPlain(row.duration) : null}</td> */}
                 <td>
                   {hasData && (
                     <div className="editar-entrada" onClick={() => handleEditClick(row.dateStr, row.start, row.end)}>
@@ -227,19 +263,35 @@ const selectedMonthName = format(context.selectedDate, 'MMMM', { locale: es });
               </tr>
             );
           })}
+
               <tr className="tabla-resumen-subfooter">
-                  <td colSpan={4}>Diferencia Semanal</td>
-                  {/* <td>{formatDuration(totalMinutes)}</td> */}
-                  <td colSpan={2}>{formatDuration(totalDiff)}</td>
-              </tr>
-              <tr>
-                <td colSpan={4}>
-                Diferencia Mensual ({selectedMonthName})
+                <td colSpan={3}>
+                  {/* Diferencia Mensual ({selectedMonthName}) */}
+                  Diferencia Mensual
                 </td>
                 <td colSpan={2}>
-                {formatDuration(totalMonthlyDiff)}
+                  {formatDuration(totalMonthlyDiff)}
                 </td>
               </tr>
+
+              {/* <tr>
+                <td colSpan={4}>
+                  Promedio Mensual
+                </td>
+                <td colSpan={2}>
+                  {formatDurationPlain(averageMonthlyDuration)}
+                </td>
+              </tr> */}
+
+              <tr className="tabla-resumen-secondary-row">
+                <td colSpan={3}>Diferencia Semanal</td>
+                <td colSpan={2}>{formatDuration(totalDiff)}</td>
+              </tr>
+
+              {/* <tr >
+                <td colSpan={4}>Promedio Semanal</td>
+                <td colSpan={2}>{formatDurationPlain(averageWeeklyDuration)}</td>
+              </tr> */}
             </tbody>
           </table>
 
@@ -276,16 +328,6 @@ const selectedMonthName = format(context.selectedDate, 'MMMM', { locale: es });
           </div>
       </ModalEditar>
       </div>
-
-      <div className="buttons-container">
-          <ImportarExportar/>
-          <div className="clear-entries-container">
-            <button className="button-clear-entries" onClick={handleClearEntries}>
-            <MdDeleteForever/>
-            </button>
-          </div>
-      </div>
-
     </div>
 );
 };

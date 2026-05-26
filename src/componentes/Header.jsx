@@ -4,8 +4,9 @@ import '../estilos/Header.scss';
 import isologo from '../isologo.svg'
 import HorarioPersonal from '../componentes/HorarioPersonal'
 import ActualizarPerfil from './ActualizarPerfil';
+import MenuDataActions from './MenuDataActions';
 import { IoMdSettings } from "react-icons/io";
-import { FiMenu, FiLogOut, FiX } from "react-icons/fi";
+import { FiLogOut } from "react-icons/fi";
 import { FaUserEdit } from "react-icons/fa";
 
 
@@ -27,25 +28,16 @@ const Header = () => {
 
     {context.user && (
       <div className="menu-button-container">
-<button
-  onClick={() => setMenuOpen(prev => !prev)}
-  className="menu-button"
->
-  <div className={`hamburger ${menuOpen ? "is-active" : ""}`}>
-    <span className="hamburger-line"></span>
-    <span className="hamburger-line"></span>
-    <span className="hamburger-line"></span>
-  </div>
-</button>
-        {/* <button
-          onClick={() => setMenuOpen(prev => !prev)}
-          className="menu-button"
-        >
-        <div className={`menu-icon-container ${menuOpen ? "active" : ""}`}>
-          <FiMenu className="menu-icon" />
-          <FiX className="close-icon" />
+      <button
+        onClick={() => setMenuOpen(prev => !prev)}
+        className="menu-button"
+      >
+        <div className={`hamburger ${menuOpen ? "is-active" : ""}`}>
+          <span className="hamburger-line"></span>
+          <span className="hamburger-line"></span>
+          <span className="hamburger-line"></span>
         </div>
-        </button> */}
+      </button>
 
         {menuOpen && (
           <ul className="menu-dropdown">
@@ -60,11 +52,19 @@ const Header = () => {
               <IoMdSettings className="settings-icon" />
               Ajustes
             </li>
-            <li onClick={() => setShowPerfilModal(true)}>
+            <li
+              className="bottom-divider"
+              onClick={() => {
+                setShowPerfilModal(true);
+                setMenuOpen(false);
+              }}
+            >
               <FaUserEdit className="settings-icon" />
               Actualizar perfil
-              </li>
+            </li>
+            <MenuDataActions onActionComplete={() => setMenuOpen(false)} />
             <li
+              className="divider-above"
               onClick={() => {
                 context.logout();
                 setMenuOpen(false);

@@ -32,7 +32,7 @@
   // Modificador para botones "Guardar" (color secundario)
   &.button--save {
     background-color: $color-secundario;
-    color: darken($color-secundario, 80%); // Asegura contraste en texto
+    color: color.adjust($color-secundario, $lightness: -80%); // Asegura contraste en texto
 
     &:hover:not(:disabled) {
       background-color: color.mix(white, $color-secundario, 20%);

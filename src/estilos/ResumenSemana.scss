@@ -1,4 +1,30 @@
 @use '../estilos/variables.scss' as *;
+@use 'sass:color';
+
+.titleWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 10px;
+  margin-bottom: 10px;
+  font-family: $fuente-contenidos;
+}
+
+.title {
+  color: $color-primario;
+  text-transform: uppercase;
+  font-weight: 600;
+}
+
+.average {
+  color: $color-primario;
+  font-family: $fuente-contenidos;
+  background: $color-secundario-fondo;
+  border: 1px solid $color-secundario;
+  border-radius: 20px;
+  padding: 2px 6px;
+  font-weight: 700;
+}
 
 .table-responsive {
     width: 100%;
@@ -19,14 +45,6 @@
     background-color: $color-primario;
   }
 
-  .tabla-resumen-semana tr:nth-last-child(2) {
-    background-color: $color-primario-fondo;
-  }
-  .tabla-resumen-semana tr:nth-last-child(1) {
-    background-color: $color-primario-fondo-claro;
-    font-weight: 500;
-  }
-
   .tabla-resumen-semana th, 
   .tabla-resumen-semana td {
     padding: 8px;
@@ -43,6 +61,11 @@
 
   .tabla-resumen-subfooter {
     border-top: 1.5px solid $color-secundario;
+    background-color: $color-primario-fondo;
+  }
+
+  .tabla-resumen-secondary-row td {
+    background: color.mix($color-secundario-fondo, white, 50%);
   }
 
   .observado {
@@ -135,5 +158,5 @@
   font-size: 1rem;
   cursor: pointer;
   transition: background-color 0.3s;
-  &:hover{background-color: mix(white, $color-secundario, 20%)!important;}
+  &:hover{background-color: color.mix(white, $color-secundario, 20%)!important;}
   }

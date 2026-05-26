@@ -1,4 +1,5 @@
 @use '../estilos/variables.scss' as *;
+@use 'sass:color';
 
 .app-header {
   position: fixed;
@@ -168,54 +169,11 @@ padding: 5px;
   }
 }
 
-// .menu-icon-container {
-//   position: relative;
-//   width: 1.5rem;
-//   height: 1.5rem;
-  
-//   .menu-icon, .close-icon {
-//     position: absolute;
-//     top: 0;
-//     left: 0;
-//     font-size: 1.5rem;
-//     color: $color-logo4;
-//     transition: all 0.3s ease;
-    
-//     &:hover {
-//       color: $color-logo2;
-//     }
-//   }
-  
-//   .menu-icon {
-//     opacity: 1;
-//     transform: rotate(0deg);
-//   }
-  
-//   .close-icon {
-//     opacity: 0;
-//     transform: rotate(-90deg);
-//   }
-  
-//   &.active {
-//     .menu-icon {
-//       opacity: 0;
-//       transform: rotate(90deg);
-//     }
-    
-//     .close-icon {
-//       opacity: 1;
-//       transform: rotate(0deg);
-//       color: $color-logo1;
-//     }
-//   }
-// }
-
 .menu-dropdown {
   position: absolute;
   text-align: left;
   top: 20px;
   right: 5px;
-  // background-color: $color-neutro;
   border: 1px inset $color-bordes-tabla;
   background-color: $dropdown-bg;
   border-radius: 15px;
@@ -224,20 +182,19 @@ padding: 5px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
   z-index: 1000;
   
-li:first-child {
-  &:hover {background-color: transparent;}
-  cursor: auto;
-}
+  li:first-child {
+    &:hover {background-color: transparent;}
+    cursor: auto;
+  }
 
-li:nth-child(2) {
-  &:hover {background-color: transparent;}
-  cursor: auto;
+  li:nth-child(2) {
+    &:hover {background-color: transparent;}
+    cursor: auto;
 
-  border-bottom: 1px solid $color-logo4;
-  // border-radius: 8px 8px 0 0;
-  border-radius: 0;
-  margin-bottom: 5px;
-}
+    border-bottom: 1px solid $color-logo4;
+    border-radius: 0;
+    margin-bottom: 5px;
+  }
 
   li {
     color: $color-neutro;
@@ -250,6 +207,20 @@ li:nth-child(2) {
     gap: 5px;
     align-items: center;
     border-radius: 8px;
+  }
+
+  li.bottom-divider {
+    border-bottom: 1px solid $color-logo4;
+    border-radius: 8px 8px 0 0;
+    margin-bottom: 5px 0;
+  }
+
+  li.divider-above {
+    border-radius: 0 0 8px 8px;
+  }
+
+  li.danger:hover {
+    background-color: color.mix($color-danger, black, 50%);
   }
 }
 

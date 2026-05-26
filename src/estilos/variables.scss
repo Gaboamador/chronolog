@@ -31,7 +31,7 @@ $color-primario-fondo-claro: color.mix(white, $color-primario, 85%);
 $color-texto-oscuro: #28282B;
 $color-texto-claro: whitesmoke;
 $color-bordes-tabla: #dddddd;
-$color-peligro: mix(black, $color-secundario, 25%);
+$color-peligro: color.mix(black, $color-secundario, 25%);
 $dropdown-bg: $color-logo3;
 $dropdown-hover: color.mix(white, $color-logo3, 20%);
 
