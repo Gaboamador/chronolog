@@ -1,11 +1,13 @@
-import React, { useContext, useRef } from 'react';
+import React, { useContext, useRef, useState } from 'react';
 import Context from '../context';
+import ConfirmModal from './ConfirmModal';
 import '../estilos/Header.scss';
 import { LuDownload, LuUpload, LuTrash2 } from "react-icons/lu";
 
 const MenuDataActions = ({ onActionComplete }) => {
   const context = useContext(Context);
   const fileInputRef = useRef(null);
+  const [confirmClearOpen, setConfirmClearOpen] = useState(false);
 
   const closeMenu = () => {
     if (typeof onActionComplete === 'function') {
@@ -67,21 +69,22 @@ const MenuDataActions = ({ onActionComplete }) => {
   };
 
   const handleClearEntries = () => {
-    if (
-      window.confirm(
-        '¿Estás seguro que querés borrar todos los registros? Esta acción no se puede deshacer.'
-      )
-    ) {
-      context.setEntries([]);
-      localStorage.removeItem('timeEntries');
-      closeMenu();
-    }
+    setConfirmClearOpen(true);
+  };
+  const handleConfirmClearEntries = () => {
+    context.setEntries([]);
+    localStorage.removeItem('timeEntries');
+    setConfirmClearOpen(false);
+    closeMenu();
+  };
+
+  const handleCancelClearEntries = () => {
+    setConfirmClearOpen(false);
   };
 
   return (
     <>
       <li
-        className="divider-above"
         onClick={handleDownloadBackup}>
         <LuDownload className="settings-icon" />
         Descargar backup
@@ -105,6 +108,16 @@ const MenuDataActions = ({ onActionComplete }) => {
         accept=".json"
         style={{ display: 'none' }}
         onChange={handleRestoreBackup}
+      />
+      <ConfirmModal
+        isOpen={confirmClearOpen}
+        title="Borrar registros"
+        message="¿Estás seguro de que querés borrar todos los registros? El cambio quedará pendiente hasta que cargues los cambios."
+        confirmText="Borrar"
+        cancelText="Cancelar"
+        danger
+        onConfirm={handleConfirmClearEntries}
+        onCancel={handleCancelClearEntries}
       />
     </>
   );

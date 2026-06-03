@@ -9,6 +9,7 @@ import ResumenSemana from './componentes/ResumenSemana';
 import Auth from './componentes/Auth';
 import Loader from './componentes/Loader';
 import HorarioPersonal from './componentes/HorarioPersonal';
+import {ToastProvider} from './context/ToastContext';
 
 function AppContent() {
   const context = useContext(Context)
@@ -120,7 +121,9 @@ const handleResendVerification = async () => {
 function App() {
    return (
     <GlobalState>
-      <AppContent />
+      <ToastProvider>
+        <AppContent />
+      </ToastProvider>
     </GlobalState>
   );
 }

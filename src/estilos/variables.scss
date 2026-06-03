@@ -7,18 +7,10 @@ $color-logo3: #013f61;
 $color-logo4: #898e94;
 
 // Core
-// $color-primario: #121c29;
-$color-secundario: #C79A7B;
 $color-primario: color.mix(black, $color-logo3, 50%);
-// $color-secundario: adjust-hue($color-primario, 180deg);
+$color-secundario: #C79A7B;
 $color-neutro: #f0f0f0;
 $color-danger: #cc0000;
-
-// $color-primario-menu-back: #1e2c3b;
-// $color-primario-menu-hover: #2d3d4d;
-// $dropdown-bg: scale-color($color-primario, $lightness: +18%, $saturation: -12%);
-
-// $dropdown-hover: scale-color($dropdown-bg, $lightness: +7%);
 
 // Variants
 $color-primario-claro: color.mix(white, $color-primario, 50%);

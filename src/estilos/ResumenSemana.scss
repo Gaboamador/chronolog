@@ -6,8 +6,10 @@
   align-items: center;
   justify-content: flex-start;
   gap: 10px;
+  margin: 0 auto;
   margin-bottom: 10px;
   font-family: $fuente-contenidos;
+  max-width: 480px;
 }
 
 .title {
@@ -75,9 +77,12 @@
 
   .buttons-container {
     display: flex;
+    margin: 0 auto;
     margin-top: 1rem;
     gap: 1rem;
     justify-content: space-evenly;
+    max-width: 480px;
+
   }
 
   .clear-entries-container {
@@ -160,3 +165,57 @@
   transition: background-color 0.3s;
   &:hover{background-color: color.mix(white, $color-secundario, 20%)!important;}
   }
+
+.buttonUpload {
+  position: relative;
+  isolation: isolate;
+  overflow: visible;
+  background: $color-logo2 !important;
+  padding: 6px 12px !important;
+  width: fit-content !important;
+  border-radius: 6px !important;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition:
+    opacity 0.2s ease,
+    filter 0.2s ease,
+    transform 0.2s ease,
+    background-color 0.2s ease;
+}
+
+.buttonUpload:disabled {
+  opacity: 0.45;
+  filter: grayscale(0.45);
+  cursor: not-allowed;
+  pointer-events: none;
+  box-shadow: none;
+  transform: none;
+}
+
+.buttonUpload.dirty {
+  box-shadow: 0 0 0 2px rgba($color-logo2, 0.25);
+}
+
+.dirtyDot {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: $color-secundario;
+  box-shadow: 0 0 0 2px white;
+  pointer-events: none;
+}
+
+.dirtyDotRipple {
+  position: absolute;
+  inset: -2px;
+  border-radius: inherit;
+  border: 2px solid $color-danger;
+  background: $color-secundario;
+  z-index: -1;
+  pointer-events: none;
+  
+}

@@ -2,21 +2,48 @@ import React, { useContext, useMemo, useState } from 'react';
 import '../estilos/ResumenSemana.scss';
 import '../estilos/Botones.scss';
 import Context from '../context';
-import { format, startOfWeek, addDays, isSameDay, differenceInMinutes, parse, startOfMonth, endOfMonth, isWithinInterval, parseISO } from 'date-fns';
-import { es } from 'date-fns/locale'
+import ConfirmModal from './ConfirmModal';
+import { motion } from "framer-motion";
+import {
+  format,
+  startOfWeek,
+  addDays,
+  isSameDay,
+  differenceInMinutes,
+  parse,
+  startOfMonth,
+  endOfMonth,
+  isWithinInterval,
+  parseISO,
+} from 'date-fns';
+import { es } from 'date-fns/locale';
 import { MdEdit } from "react-icons/md";
 import ModalEditar from './ModalEditar';
-import { eliminarEntrada } from '../firebaseUtils';
+import { useToast } from '../context/ToastContext';
+import {
+  ABSENCE_REASONS,
+  ABSENCE_REASON_LABELS,
+  ENTRY_TYPES,
+  countsForAverage,
+  getAbsenceReasonLabel,
+  isJustifiedAbsenceEntry,
+  isResolvedEntry,
+  isWorkedEntry,
+} from '../utils/entries/entriesStatus';
+import {
+  buildJustifiedAbsenceEntry,
+  buildWorkedEntry,
+} from '../utils/entries/buildEntries';
 
 const WEEK_DAYS = [
   'Lunes',
   'Martes',
   'Miércoles',
   'Jueves',
-  'Viernes'
+  'Viernes',
 ];
 
-const WORKDAY_MINUTES = 8 * 60; // 8 hours
+const WORKDAY_MINUTES = 8 * 60;
 
 function getEntryForDate(entries, date) {
   const dateStr = format(date, 'yyyy-MM-dd');
@@ -38,298 +65,433 @@ function formatDurationPlain(minutes) {
   return `${h}h ${m}m`;
 }
 
-function averageDuration(totalMinutes, count) {
-  if (!count) return 0;
-  return Math.round(totalMinutes / count);
-}
-
 function averageRealDuration(totalDiffMinutes, count) {
   if (!count) return 0;
   return WORKDAY_MINUTES + Math.round(totalDiffMinutes / count);
 }
 
+function getWorkedEntryDiff(entry) {
+  if (!isWorkedEntry(entry)) return 0;
+
+  const entryDate = parseISO(entry.date);
+  const startDate = parse(entry.start, 'HH:mm', entryDate);
+  const endDate = parse(entry.end, 'HH:mm', entryDate);
+  const duration = differenceInMinutes(endDate, startDate);
+
+  return duration - WORKDAY_MINUTES;
+}
+
+function getWorkedEntryDuration(entry, fallbackDate) {
+  if (!isWorkedEntry(entry)) return 0;
+
+  const entryDate = entry.date ? parseISO(entry.date) : fallbackDate;
+  const startDate = parse(entry.start, 'HH:mm', entryDate);
+  const endDate = parse(entry.end, 'HH:mm', entryDate);
+
+  return differenceInMinutes(endDate, startDate);
+}
+
 const ResumenSemana = () => {
   const context = useContext(Context);
+  const { showToast } = useToast();
+  const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
 
-   // Modal state
-   const [modalOpen, setModalOpen] = useState(false);
-
-   const monthStart = startOfMonth(context.selectedDate);
-   const monthEnd = endOfMonth(context.selectedDate);
-   // Prepare monthly diff
-const entriesThisMonth = context.entries.filter(entry => {
-  const entryDate = parseISO(entry.date);
-  return isWithinInterval(entryDate, { start: monthStart, end: monthEnd });
-});
-
-// Now calculate total monthly diff
-let totalMonthlyDiff = 0;
-let validMonthlyEntriesCount = 0;
-
-entriesThisMonth.forEach(entry => {
-  if (entry.start && entry.end) {
-    const entryDate = parseISO(entry.date);
-    const startDate = parse(entry.start, 'HH:mm', entryDate);
-    const endDate = parse(entry.end, 'HH:mm', entryDate);
-    const duration = differenceInMinutes(endDate, startDate);
-    const diff = duration - WORKDAY_MINUTES;
-
-    totalMonthlyDiff += diff;
-    validMonthlyEntriesCount += 1;
-  }
-});
-
-const averageMonthlyDiff = averageDuration(
-  totalMonthlyDiff,
-  validMonthlyEntriesCount
-);
-
-const averageMonthlyDuration = averageRealDuration(
-  totalMonthlyDiff,
-  validMonthlyEntriesCount
-);
-
-const selectedMonthName = format(context.selectedDate, 'MMMM', { locale: es });
-
-  // State to track which date is being edited (string 'yyyy-MM-dd' or null)
+  const [modalOpen, setModalOpen] = useState(false);
   const [editDate, setEditDate] = useState(null);
+  const [editMode, setEditMode] = useState(null);
+
   const [editStart, setEditStart] = useState('');
   const [editEnd, setEditEnd] = useState('');
-  const [isSaving, setIsSaving] = useState(false);
 
-  // Calculate the week days (Monday to Friday)
+  const [editAbsenceReason, setEditAbsenceReason] = useState(ABSENCE_REASONS.VACATION);
+
+  const monthStart = startOfMonth(context.selectedDate);
+  const monthEnd = endOfMonth(context.selectedDate);
+
+  const entriesThisMonth = context.entries.filter(entry => {
+    const entryDate = parseISO(entry.date);
+    return isWithinInterval(entryDate, { start: monthStart, end: monthEnd });
+  });
+
+  let totalMonthlyDiff = 0;
+  let validMonthlyEntriesCount = 0;
+
+  entriesThisMonth.forEach(entry => {
+    if (countsForAverage(entry)) {
+      totalMonthlyDiff += getWorkedEntryDiff(entry);
+      validMonthlyEntriesCount += 1;
+    }
+  });
+
+  const averageMonthlyDuration = averageRealDuration(
+    totalMonthlyDiff,
+    validMonthlyEntriesCount
+  );
+
+  const selectedMonthName = format(context.selectedDate, 'MMMM', { locale: es });
+
   const weekDays = useMemo(() => {
     if (!context.selectedDate) return [];
+
     const baseDate = new Date(context.selectedDate);
     const weekStart = startOfWeek(baseDate, { weekStartsOn: 1 });
+
     return Array.from({ length: 5 }, (_, i) => addDays(weekStart, i));
   }, [context.selectedDate]);
 
-  // Prepare rows with data and date string
   const tableRows = weekDays.map((date, idx) => {
     const entry = getEntryForDate(context.entries, date);
-    let duration = 0;
-    let start = '';
-    let end = '';
 
-    if (entry && entry.start && entry.end) {
-      const startDate = parse(entry.start, 'HH:mm', date);
-      const endDate = parse(entry.end, 'HH:mm', date);
-      duration = differenceInMinutes(endDate, startDate);
-      start = entry.start;
-      end = entry.end;
-    }
+    const worked = isWorkedEntry(entry);
+    const justifiedAbsence = isJustifiedAbsenceEntry(entry);
+    const resolved = isResolvedEntry(entry);
+
+    const duration = worked ? getWorkedEntryDuration(entry, date) : 0;
+    const diff = worked ? duration - WORKDAY_MINUTES : 0;
 
     return {
       day: WEEK_DAYS[idx],
-      start,
-      end,
+      start: worked ? entry.start : '',
+      end: worked ? entry.end : '',
       duration,
-      diff: duration - WORKDAY_MINUTES,
+      diff,
       date,
-      dateStr: format(date, 'yyyy-MM-dd')
+      dateStr: format(date, 'yyyy-MM-dd'),
+      entry,
+      worked,
+      justifiedAbsence,
+      resolved,
+      absenceLabel: justifiedAbsence
+        ? getAbsenceReasonLabel(entry.absenceReason)
+        : '',
     };
   });
 
-  // Calculate totals only for days with data
-  const weeklyEntriesCount = tableRows.filter(row => row.duration > 0).length;
+  const totalDiff = tableRows.reduce((sum, row) => {
+    return sum + (row.worked ? row.diff : 0);
+  }, 0);
 
-  const totalDiff = tableRows.reduce((sum, row) => sum + (row.duration > 0 ? row.diff : 0), 0);
+  const resetEditState = () => {
+    setModalOpen(false);
+    setEditDate(null);
+    setEditMode(null);
+    setEditStart('');
+    setEditEnd('');
+    setEditAbsenceReason(ABSENCE_REASONS.VACATION);
+  };
 
-  const averageWeeklyDiff = averageDuration(totalDiff, weeklyEntriesCount);
+  const handleEditClick = (row) => {
+    setEditDate(row.dateStr);
 
-  const averageWeeklyDuration = averageRealDuration(
-    totalDiff,
-    weeklyEntriesCount
-  );
+    if (row.justifiedAbsence) {
+      setEditMode(ENTRY_TYPES.JUSTIFIED_ABSENCE);
+      setEditAbsenceReason(row.entry.absenceReason || ABSENCE_REASONS.VACATION);
+      setEditStart('');
+      setEditEnd('');
+    } else {
+      setEditMode(ENTRY_TYPES.WORKED);
+      setEditStart(row.start);
+      setEditEnd(row.end);
+      setEditAbsenceReason(ABSENCE_REASONS.VACATION);
+    }
 
-  // Start editing a row by date
-  const handleEditClick = (dateStr, start, end) => {
-    setEditDate(dateStr);
-    setEditStart(start);
-    setEditEnd(end);
     setModalOpen(true);
   };
 
-  // Save edited entry
   const handleSaveEdit = () => {
     if (!editDate) return;
 
-    // Validate times (optional)
-    // For example: start and end should be non-empty and start < end
-
-    // Remove old entry for this date if exists
     const filteredEntries = context.entries.filter(e => e.date !== editDate);
 
-    // Add updated entry only if both start and end are set (optional: you can allow empty to delete)
-    if (editStart && editEnd) {
-      filteredEntries.push({ date: editDate, start: editStart, end: editEnd });
+    if (editMode === ENTRY_TYPES.WORKED) {
+      if (!editStart || !editEnd) {
+        showToast('Completá entrada y salida para guardar el horario.', 'warning');
+        return;
+      }
+
+    filteredEntries.push(
+      buildWorkedEntry({
+        date: editDate,
+        start: editStart,
+        end: editEnd,
+      })
+    );
+    }
+
+    if (editMode === ENTRY_TYPES.JUSTIFIED_ABSENCE) {
+    filteredEntries.push(
+      buildJustifiedAbsenceEntry({
+        date: editDate,
+        absenceReason: editAbsenceReason,
+      })
+    );
     }
 
     context.setEntries(filteredEntries);
-    // localStorage.setItem('timeEntries', JSON.stringify(filteredEntries));
-    setModalOpen(false);
-    setEditDate(null);
-    setEditStart('');
-    setEditEnd('');
+    resetEditState();
   };
 
-    // Delete edited entry
-  const handleDeleteEdit = async () => {
+  const handleDeleteEdit = () => {
     if (!editDate) return;
-  
-    if (window.confirm('¿Estás seguro de que quieres borrar esta entrada?')) {
-      setIsSaving(true);
-    try {
-          const filteredEntries = context.entries.filter(e => e.date !== editDate);    
-          context.setEntries(filteredEntries);
 
-          if (context.user) {
-          await eliminarEntrada(context.user.uid, editDate);
-          }
-      
-          setModalOpen(false);
-          setEditDate(null);
-          setEditStart('');
-          setEditEnd('');
-        } catch (error) {
-          console.error('Error al eliminar entrada:', error);
-        } finally {
-          setIsSaving(false);
-        }
-      }
-  };  
+    setConfirmDeleteOpen(true);
+  };
+  const handleConfirmDeleteEdit = () => {
+    if (!editDate) return;
 
-  // Cancel editing
-  const handleCancelEdit = () => {
-    setModalOpen(false);
-    setEditDate(null);
-    setEditStart('');
-    setEditEnd('');
+    const filteredEntries = context.entries.filter(e => e.date !== editDate);
+
+    context.setEntries(filteredEntries);
+
+    showToast(
+      editMode === ENTRY_TYPES.JUSTIFIED_ABSENCE
+        ? 'Ausencia eliminada. Cargá cambios para sincronizar.'
+        : 'Entrada eliminada. Cargá cambios para sincronizar.',
+      'success'
+    );
+
+    setConfirmDeleteOpen(false);
+    resetEditState();
   };
 
-  // const handleClearEntries = () => {
-  //   if (window.confirm('¿Estás seguro que quieres borrar todas las entradas? Esta acción no se puede deshacer.')) {
-  //     context.setEntries([]);
-  //     localStorage.removeItem('timeEntries'); // Optional, since context.setEntries([]) will sync localStorage if you do it in context provider
-  //   }
-  // };
-  
+  const handleCancelDeleteEdit = () => {
+    setConfirmDeleteOpen(false);
+  };
+
+  const handleCancelEdit = () => {
+    resetEditState();
+  };
+
+  const handleUploadEntries = async () => {
+    try {
+      const result = await context.uploadEntriesToFirebase();
+
+      const savedCount = result?.savedCount || 0;
+      const deletedCount = result?.deletedCount || 0;
+      const changedCount = savedCount + deletedCount;
+
+      if (changedCount === 0) {
+        showToast('No hay cambios pendientes para cargar.', 'info');
+        return;
+      }
+
+      showToast('Cambios cargados correctamente.', 'success');
+    } catch (error) {
+      console.error('Error al cargar cambios:', error);
+      showToast('No se pudieron cargar los cambios. Intentá nuevamente.', 'error');
+    }
+  };
+
+  const isEditingWorkedEntry = editMode === ENTRY_TYPES.WORKED;
+  const isEditingAbsence = editMode === ENTRY_TYPES.JUSTIFIED_ABSENCE;
 
   return (
-  <div className="container-main">
-    <div className="titleWrapper">
-      <span className="title">Promedio {selectedMonthName}</span>
-      <span className="average">{formatDurationPlain(averageMonthlyDuration)}</span>
-    </div>
-    <div className="table-responsive">
-      <table className="tabla-resumen-semana">
-        <thead>
-          <tr>
-            <th>Día</th>
-            <th>Ingreso</th>
-            <th>Salida</th>
-            {/* <th>Duración</th> */}
-            <th>Diferencia</th>
-            {/* <th>Dur.</th> */}
-            <th>Editar</th>
-          </tr>
-        </thead>
-        <tbody>
-        {tableRows.map((row) => {
-           if (!row.date) return null; // Skip empty rows
-            const hasData = row.start && row.end;
-            const isSelected = isSameDay(row.date, context.selectedDate);
-            return (
-              <tr
-              key={row.dateStr}
-              className={isSelected ? 'selected' : ''}
-              onClick={() => context.setSelectedDate(row.date)}
-              style={{ cursor: 'pointer' }}      
-              >
-                <td>{row.day} {row.date.getDate()}</td>
-                <td>{hasData ? row.start : null}</td>
-                <td>{hasData ? row.end : null}</td>
-                {/* <td>{hasData ? (row.duration > 0 ? formatDuration(row.duration) : '+0m') : null}</td> */}
-                <td>{hasData ? formatDuration(row.diff) : null}</td>
-                {/* <td className={hasData && row.duration < 440 ? "observado": ""}>{hasData ? formatDurationPlain(row.duration) : null}</td> */}
-                <td>
-                  {hasData && (
-                    <div className="editar-entrada" onClick={() => handleEditClick(row.dateStr, row.start, row.end)}>
-                      <MdEdit/>
-                    </div>
+    <div className="container-main">
+      <div className="titleWrapper">
+        <span className="title">Promedio {selectedMonthName}</span>
+        <span className="average">{formatDurationPlain(averageMonthlyDuration)}</span>
+      </div>
+
+      <div className="table-responsive">
+        <table className="tabla-resumen-semana">
+          <thead>
+            <tr>
+              <th>Día</th>
+              <th>Ingreso</th>
+              <th>Salida</th>
+              <th>Diferencia</th>
+              <th>Editar</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            {tableRows.map((row) => {
+              if (!row.date) return null;
+
+              const isSelected = isSameDay(row.date, context.selectedDate);
+
+              return (
+                <tr
+                  key={row.dateStr}
+                  className={isSelected ? 'selected' : ''}
+                  onClick={() => context.setSelectedDate(row.date)}
+                  style={{ cursor: 'pointer' }}
+                >
+                  <td>{row.day} {row.date.getDate()}</td>
+
+                  {row.justifiedAbsence ? (
+                    <>
+                      <td colSpan={2}>
+                        {row.absenceLabel}
+                      </td>
+                      <td>—</td>
+                    </>
+                  ) : (
+                    <>
+                      <td>{row.worked ? row.start : null}</td>
+                      <td>{row.worked ? row.end : null}</td>
+                      <td>{row.worked ? formatDuration(row.diff) : null}</td>
+                    </>
                   )}
-                </td>
-              </tr>
-            );
-          })}
 
-              <tr className="tabla-resumen-subfooter">
-                <td colSpan={3}>
-                  {/* Diferencia Mensual ({selectedMonthName}) */}
-                  Diferencia Mensual
-                </td>
-                <td colSpan={2}>
-                  {formatDuration(totalMonthlyDiff)}
-                </td>
-              </tr>
+                  <td>
+                    {row.resolved && (
+                      <div
+                        className="editar-entrada"
+                        onClick={(event) => {
+                          event.stopPropagation();
+                          handleEditClick(row);
+                        }}
+                      >
+                        <MdEdit />
+                      </div>
+                    )}
+                  </td>
+                </tr>
+              );
+            })}
 
-              {/* <tr>
-                <td colSpan={4}>
-                  Promedio Mensual
-                </td>
-                <td colSpan={2}>
-                  {formatDurationPlain(averageMonthlyDuration)}
-                </td>
-              </tr> */}
+            <tr className="tabla-resumen-subfooter">
+              <td colSpan={3}>
+                Diferencia Mensual
+              </td>
+              <td colSpan={2}>
+                {formatDuration(totalMonthlyDiff)}
+              </td>
+            </tr>
 
-              <tr className="tabla-resumen-secondary-row">
-                <td colSpan={3}>Diferencia Semanal</td>
-                <td colSpan={2}>{formatDuration(totalDiff)}</td>
-              </tr>
+            {/* <tr className="tabla-resumen-secondary-row">
+              <td colSpan={3}>Diferencia Semanal</td>
+              <td colSpan={2}>{formatDuration(totalDiff)}</td>
+            </tr> */}
+          </tbody>
+        </table>
 
-              {/* <tr >
-                <td colSpan={4}>Promedio Semanal</td>
-                <td colSpan={2}>{formatDurationPlain(averageWeeklyDuration)}</td>
-              </tr> */}
-            </tbody>
-          </table>
+      <div className="buttons-container">
+        <button
+          className={`button buttonUpload ${
+            context.hasPendingEntriesChanges ? "dirty" : ""
+          }`}
+          onClick={handleUploadEntries}
+          disabled={
+            context.isUploadingEntries ||
+            !context.hasPendingEntriesChanges
+          }
+          title={
+            context.hasPendingEntriesChanges
+              ? "Hay cambios pendientes de cargar"
+              : "No hay cambios pendientes"
+          }
+        >
+          {context.isUploadingEntries ? "CARGANDO..." : "CARGAR CAMBIOS"}
 
-      <ModalEditar isOpen={modalOpen} onClose={handleCancelEdit}>
-        <div className="entrada-salida-container modal">
-          <div className="modal-title">EDITAR HORARIO</div>
-          <div className="entrada-salida-inputs">
-            <div className="entrada-salida-input-children">
-              <label>ENTRADA</label>
-              <input
-                type="time"
-                value={editStart}
-                onChange={e => setEditStart(e.target.value)}
+          {context.hasPendingEntriesChanges && !context.isUploadingEntries && (
+            <span className="dirtyDot" aria-hidden="true">
+              <motion.span
+                className="dirtyDotRipple"
+                initial={{ scale: 1, opacity: 0 }}
+                animate={{
+                  scale: [1, 1.8, 2.6],
+                  opacity: [0, 0.45, 0],
+                }}
+                transition={{
+                  duration: 1.8,
+                  repeat: Infinity,
+                  ease: "easeOut",
+                  times: [0, 0.15, 1],
+                }}
               />
+            </span>
+          )}
+        </button>
+      </div>
+
+        <ModalEditar isOpen={modalOpen} onClose={handleCancelEdit}>
+          <div className="entrada-salida-container modal">
+            <div className="modal-title">
+              {isEditingAbsence ? 'EDITAR AUSENCIA' : 'EDITAR HORARIO'}
             </div>
 
-            <div className="entrada-salida-input-children">
-              <label>SALIDA</label>
-              <input
-                type="time"
-                value={editEnd}
-                onChange={e => setEditEnd(e.target.value)}
-              />
+            {isEditingWorkedEntry && (
+              <div className="entrada-salida-inputs">
+                <div className="entrada-salida-input-children">
+                  <label>ENTRADA</label>
+                  <input
+                    type="time"
+                    value={editStart}
+                    onChange={e => setEditStart(e.target.value)}
+                  />
+                </div>
+
+                <div className="entrada-salida-input-children">
+                  <label>SALIDA</label>
+                  <input
+                    type="time"
+                    value={editEnd}
+                    onChange={e => setEditEnd(e.target.value)}
+                  />
+                </div>
+              </div>
+            )}
+
+            {isEditingAbsence && (
+              <div className="absence-form">
+                <div className="absence-field">
+                  <label>Motivo</label>
+
+                  <select
+                    value={editAbsenceReason}
+                    onChange={(event) => setEditAbsenceReason(event.target.value)}
+                  >
+                    {Object.values(ABSENCE_REASONS).map((reason) => (
+                      <option key={reason} value={reason}>
+                        {ABSENCE_REASON_LABELS[reason]}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+              </div>
+            )}
+
+            <div className="botones-modal-container">
+              <div className="botones-modal-eliminar-cancelar">
+                <button onClick={handleDeleteEdit} className="button">
+                  ELIMINAR
+                </button>
+
+                <button onClick={handleCancelEdit} className="button">
+                  CANCELAR
+                </button>
+              </div>
+
+              <button className="button button--save" onClick={handleSaveEdit}>
+                GUARDAR
+              </button>
             </div>
           </div>
-
-          <div className="botones-modal-container">
-            <div className="botones-modal-eliminar-cancelar">
-              <button onClick={handleDeleteEdit} disabled={isSaving} className={`button ${isSaving ? 'disabled' : ''}`}>{isSaving ? 'BORRANDO...' : 'ELIMINAR'}</button>
-              <button onClick={handleCancelEdit}className="button">CANCELAR</button>
-            </div>
-              <button className="button button--save" onClick={handleSaveEdit}>GUARDAR</button>
-            </div>
-          </div>
-      </ModalEditar>
+        </ModalEditar>
+        <ConfirmModal
+          isOpen={confirmDeleteOpen}
+          title={
+            editMode === ENTRY_TYPES.JUSTIFIED_ABSENCE
+              ? 'Eliminar ausencia'
+              : 'Eliminar entrada'
+          }
+          message={
+            editMode === ENTRY_TYPES.JUSTIFIED_ABSENCE
+              ? '¿Estás seguro de que querés borrar esta ausencia? El cambio quedará pendiente hasta que cargues los cambios.'
+              : '¿Estás seguro de que querés borrar esta entrada? El cambio quedará pendiente hasta que cargues los cambios.'
+          }
+          confirmText="Eliminar"
+          cancelText="Cancelar"
+          danger
+          onConfirm={handleConfirmDeleteEdit}
+          onCancel={handleCancelDeleteEdit}
+        />
       </div>
     </div>
-);
+  );
 };
 
 export default ResumenSemana;

@@ -5,6 +5,8 @@ import isologo from '../isologo.svg'
 import HorarioPersonal from '../componentes/HorarioPersonal'
 import ActualizarPerfil from './ActualizarPerfil';
 import MenuDataActions from './MenuDataActions';
+import CargaAusencias from './CargaAusencias';
+import { MdEventBusy } from 'react-icons/md';
 import { IoMdSettings } from "react-icons/io";
 import { FiLogOut } from "react-icons/fi";
 import { FaUserEdit } from "react-icons/fa";
@@ -15,6 +17,7 @@ const Header = () => {
   const context = useContext(Context)
   const [showHorarioModal, setShowHorarioModal] = useState(false);
   const [showPerfilModal, setShowPerfilModal] = useState(false);
+  const [showCargaAusenciasModal, setShowCargaAusenciasModal] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
 
 
@@ -62,6 +65,16 @@ const Header = () => {
               <FaUserEdit className="settings-icon" />
               Actualizar perfil
             </li>
+            <li
+              className="divider-above"
+              onClick={() => {
+                setShowCargaAusenciasModal(true);
+                setMenuOpen(false);
+              }}
+            >
+              <MdEventBusy className="settings-icon" />
+              Cargar ausencias
+            </li>
             <MenuDataActions onActionComplete={() => setMenuOpen(false)} />
             <li
               className="divider-above"
@@ -84,6 +97,10 @@ const Header = () => {
 
     {showPerfilModal && (
       <ActualizarPerfil onClose={() => setShowPerfilModal(false)} />
+    )}
+
+    {showCargaAusenciasModal && (
+      <CargaAusencias onClose={() => setShowCargaAusenciasModal(false)} />
     )}
 
   </div>

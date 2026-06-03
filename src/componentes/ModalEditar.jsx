@@ -1,20 +1,60 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { AnimatePresence, motion } from 'framer-motion';
 import '../estilos/ModalEditar.scss';
 
-const ModalEditar = ({ isOpen, onClose, children, permitirCerrar = true }) => {
-  if (!isOpen) return null;
+const ModalEditar = ({
+  isOpen,
+  onClose,
+  children,
+  permitirCerrar = true,
+}) => {
+  useEffect(() => {
+    if (!isOpen || !permitirCerrar) return;
+
+    const handleKeyDown = (event) => {
+      if (event.key === 'Escape') {
+        onClose?.();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [isOpen, permitirCerrar, onClose]);
+
+  const handleOverlayClick = () => {
+    if (permitirCerrar) {
+      onClose?.();
+    }
+  };
+
   return (
-    <div
-    className="overlay"
-    // onClick={onClose}
-    onClick={() => {
-    if (permitirCerrar) onClose();
-  }}
-    >
-      <div className="content" onClick={e => e.stopPropagation()}>
-        {children}
-      </div>
-    </div>
+    <AnimatePresence>
+      {isOpen && (
+        <motion.div
+          className="overlay"
+          onClick={handleOverlayClick}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+        >
+          <motion.div
+            className="content"
+            onClick={(event) => event.stopPropagation()}
+            role="dialog"
+            aria-modal="true"
+            initial={{ opacity: 0, scale: 0.96, y: 12 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.96, y: 12 }}
+            transition={{ duration: 0.16, ease: 'easeOut' }}
+          >
+            {children}
+          </motion.div>
+        </motion.div>
+      )}
+    </AnimatePresence>
   );
 };
 

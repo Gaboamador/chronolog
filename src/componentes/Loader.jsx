@@ -5,7 +5,7 @@ function Loader() {
   return (
     <div className="loader-container">
       <div className="spinner" />
-      <p className="loader-text">Cargando datos...</p>
+      <p className="loader-text">Verificando sesión...</p>
     </div>
   );
 }
