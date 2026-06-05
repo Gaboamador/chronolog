@@ -1,9 +1,9 @@
-import Context from "./context";
+import Context from "@/context";
 
-import { useAuth } from "./hooks/useAuth";
-import { useEntries } from "./hooks/useEntries";
-import { useSelectedDate } from "./hooks/useSelectedDate";
-import { useDefaultWorkTime } from "./hooks/useDefaultWorkTime";
+import { useAuth } from "@/hooks/useAuth";
+import { useEntries } from "@/hooks/useEntries";
+import { useSelectedDate } from "@/hooks/useSelectedDate";
+import { useDefaultWorkTime } from "@/hooks/useDefaultWorkTime";
 
 function GlobalState(props) {
   const {

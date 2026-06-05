@@ -1,5 +1,5 @@
 // src/firebaseUtils.js
-import { db } from './firebase';
+import { db } from '@/firebase';
 import { doc, setDoc, getDoc, deleteDoc, getDocs, collection } from 'firebase/firestore';
 
 /**

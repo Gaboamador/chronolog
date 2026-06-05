@@ -1,6 +1,6 @@
-import { db } from '../../firebase';
+import { db } from '@/firebase';
 import { doc, setDoc, getDocs, deleteDoc, collection } from 'firebase/firestore';
-import { flattenFirestoreEntries } from '../../utils/entries/flattenFirestoreEntries';
+import { flattenFirestoreEntries } from '@/utils/entries/flattenFirestoreEntries';
 
 /**
  * Guarda una entrada de tiempo por fecha en la subcolección 'entries' del usuario.

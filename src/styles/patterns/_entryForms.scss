@@ -1,0 +1,138 @@
+@use '@/styles/variables.scss' as *;
+
+%timeEntryContainer {
+  border: 1px solid $color-bordes-tabla;
+  border-radius: 10px;
+  padding: 0.75rem;
+  // margin: 1rem auto;
+  margin-bottom: 0;
+  // max-width: 300px;
+  width: 100%;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  background-color: $color-neutro;
+  position: relative;
+  box-shadow: 0 8px 22px rgba($color-primario, 0.08);
+}
+
+%timeEntryContainerModal {
+  margin: 0 auto;
+  padding: 1.2rem;
+  border: 1px solid $color-bordes-tabla;
+}
+
+%timeEntryInputs {
+  display: flex;
+  justify-content: stretch;
+  width: 100%;
+}
+
+%timeEntryInputGroup {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  gap: 10px;
+}
+
+%editButtonsContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.75rem;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+}
+
+%inputError {
+  border: 1px solid $color-danger;
+  outline: none;
+  border-radius: 8px;
+  box-shadow: 0 0 0 3px rgba($color-danger, 0.12);
+}
+
+%timeEntryInputLabel {
+  font-weight: 700;
+  color: $color-primario;
+}
+
+%timeEntryButton {
+  font-weight: 700;
+}
+
+%timeEntryInputsButton {
+  position: absolute;
+  right: 0;
+  top: 0;
+  padding: .5rem;
+  border-radius: 0 9px 0 8px;
+  border-bottom: 1px solid $color-secundario;
+  border-left: 1px solid $color-secundario;
+  line-height: .5rem;
+}
+
+%entryStatusMessage {
+  color: $color-primario;
+  font-weight: 700;
+  text-align: center;
+}
+
+%absenceForm {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+%absenceField {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+
+  label {
+    font-weight: 700;
+    color: $color-primario;
+  }
+
+  select,
+  input {
+    padding: 0.55rem 0.65rem;
+    border: 1px solid $color-bordes-tabla;
+    border-radius: 8px;
+    font-family: $fuente-contenidos;
+    background-color: white;
+  }
+}
+
+%absenceError {
+  color: $color-danger;
+  font-weight: 700;
+  text-align: center;
+  background-color: rgba($color-danger, 0.08);
+  border: 1px solid rgba($color-danger, 0.2);
+  border-radius: 8px;
+  padding: 0.5rem;
+}
+
+%absencePreview {
+  color: $color-primario;
+  font-weight: 700;
+  text-align: center;
+  background-color: $color-secundario-fondo;
+  border: 1px solid $color-secundario;
+  border-radius: 10px;
+  padding: 0.5rem;
+}
+
+%justifiedAbsenceDay {
+  color: $color-logo2 !important;
+  font-weight: 800;
+}
+
+%justifiedAbsenceDayButton {
+  border: 1px solid rgba($color-logo2, 0.45);
+  background-color: rgba($color-secundario, 0.1);
+}

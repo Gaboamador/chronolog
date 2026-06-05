@@ -1,8 +1,12 @@
-@use './estilos/variables.scss' as *;
+@use '@/styles/variables.scss' as *;
 
 .App {
   text-align: center;
   font-family: $fuente-contenidos;
+  font-size: $font-size-md;
+  color: $color-texto-oscuro;
+  background-color: $color-primario-fondo-claro;
+  min-height: 100vh;
 }
 
 .body {
@@ -11,9 +15,9 @@
 
 .loading {
   padding: 3rem;
-  font-size: 1.5rem;
+  font-size: $font-size-lg;
   text-align: center;
-  color: #888;
+  color: $color-logo4;
 }
 
 .rdp-root {
@@ -22,22 +26,16 @@
   --rdp-accent-color: #{$color-secundario} !important;
 }
 
-.container-main {
+.containerMain {
   padding: 1rem;
 }
 
-.container-main.calendar {
-  background-color: $color-secundario-fondo;
-  border-bottom: 2px solid $color-primario;
+.containerMain.calendar {
+  background-color: $color-primario-fondo;
+  border-bottom: 1px solid $color-bordes-tabla;
 }
 
 @media(max-width: 350px){
-  .container-main {
-    font-size: .7rem;
-  }
-  .rdp-selected {
-    font-size: .8rem !important;
-  }
   .rdp-day_button,
   .rdp-day {
     max-width: 38px !important;
@@ -45,15 +43,9 @@
   }
 }
 
-@media(min-width: 350px) and (max-width: 400px){
-  .container-main {
-    font-size: .9rem;
-  }
-}
-
-.verification-error {
+.verificationError {
   color: #e63946;
-  font-size: 0.95rem;
+  font-size: $font-size-sm;
   text-align: center;
   display: flex;
   flex-direction: column;

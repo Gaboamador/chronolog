@@ -1,0 +1,233 @@
+@use '@/styles/variables.scss' as *;
+@use 'sass:color';
+
+.appHeader {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background-color: $color-primario;
+  color: $color-texto-claro;
+  box-shadow: 0 10px 30px rgba($color-primario, 0.18);
+  z-index: 1000;
+  height: 60px;
+  align-content: center;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  justify-content: space-between;
+}
+
+.headerContent {
+  display: flex;
+    align-items: end;
+    justify-content: space-between;
+    width: 100%;
+    margin: 0 auto;
+    max-width: 480px;
+}
+
+.appLogoContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  // margin-left: 5px;
+  width: 60px;
+  height: 60px;
+}
+
+.logo {
+  width: 40px;
+  height: 40px;
+  padding: 2px;
+  vertical-align: middle;
+  background-color: $color-secundario-fondo;
+  border-radius: 50px;
+  box-shadow: 0 8px 20px rgba($color-secundario, 0.22);
+}
+
+.isologo {
+  width: 100%;
+  max-height: 50px; 
+}
+
+.isologoContainer {
+padding: 5px;
+  display: flex;
+  align-items: center;
+}
+
+.appTitle {
+  font-family: "MuseoSans700", "Roboto", sans-serif;
+  font-size: $font-size-lg;
+  font-weight: 700;
+  text-shadow: $color-secundario 1px 1px 2px;
+}
+
+.settingsButton {
+  margin-left: auto;
+  font-size: $font-size-lg;
+  background: none;
+  border: none;
+  cursor: pointer;
+  line-height: 1rem;
+  
+}
+
+.settingsIcon {
+  // color: $color-texto-claro;
+    color: $color-texto-claro;
+  font-size: $font-size-lg;
+  // margin-right: .5rem;
+}
+
+
+
+
+/**/
+
+.menuButtonContainer {
+  position: relative;
+}
+
+// .menuButton {
+//   background: none;
+//   border: none;
+//   cursor: pointer;
+//   display: flex;
+  
+//   &:focus {
+//     outline: none;
+//   }
+// }
+.menuButton {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  margin: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
+  &:focus {
+    outline: none;
+  }
+}
+
+.hamburger {
+  width: 1.5rem;
+  height: 1rem;
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.hamburgerLine {
+  display: block;
+  width: 100%;
+  height: 2px;
+  background: rgba($color-texto-claro, 0.72);
+  position: absolute;
+  left: 0;
+  transition: all 0.3s ease;
+  transform-origin: center;
+
+  &:nth-child(1) {
+    top: 0;
+  }
+  &:nth-child(2) {
+    top: 50%;
+    transform: translateY(-50%);
+  }
+  &:nth-child(3) {
+    bottom: 0;
+  }
+
+  .hamburger:hover & {
+    background: $color-logo2;
+  }
+}
+
+// Estado activo (X)
+.hamburger.isActive {
+  .hamburgerLine {
+    background: $color-logo1;
+    
+    &:nth-child(1) {
+      top: 50%;
+      transform: translateY(-50%) rotate(45deg);
+    }
+    &:nth-child(2) {
+      opacity: 0;
+      transform: translateY(-50%) scaleX(0);
+    }
+    &:nth-child(3) {
+      bottom: unset;
+      top: 50%;
+      transform: translateY(-50%) rotate(-45deg);
+    }
+  }
+}
+
+.menuDropdown {
+  position: absolute;
+  text-align: left;
+  top: 28px;
+  right: 5px;
+  border: 1px solid rgba($color-texto-claro, 0.12);
+  background-color: $dropdown-bg;
+  border-radius: 12px;
+  list-style: none;
+  padding: .5rem;
+  box-shadow: 0 18px 38px rgba($color-primario-oscuro, 0.32);
+  z-index: 1000;
+  
+  li:first-child {
+    &:hover {background-color: transparent;}
+    cursor: auto;
+  }
+
+  li:nth-child(2) {
+    &:hover {background-color: transparent;}
+    cursor: auto;
+
+    border-bottom: 1px solid rgba($color-texto-claro, 0.16);
+    border-radius: 0;
+    margin-bottom: 5px;
+  }
+
+  li {
+    color: $color-neutro;
+    padding: 0.5rem;
+    cursor: pointer;
+    &:hover {
+      background-color: $dropdown-hover;
+    }
+    display: flex;
+    gap: 5px;
+    align-items: center;
+    border-radius: 8px;
+  }
+
+  li.bottomDivider {
+    border-bottom: 1px solid rgba($color-texto-claro, 0.16);
+    border-radius: 8px 8px 0 0;
+    margin-bottom: 5px 0;
+  }
+
+  li.dividerAbove {
+    border-radius: 0 0 8px 8px;
+  }
+
+  li.danger:hover {
+    background-color: color.mix($color-danger, $color-primario-oscuro, 55%);
+  }
+}
+
+/**/
+
+@media(max-width: 400px){
+  .menuDropdown {
+    font-size: $font-size-sm;
+  }
+}

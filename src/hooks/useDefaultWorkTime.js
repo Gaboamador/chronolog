@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { obtenerHorarioPorDefecto } from "../services/firebase/userSettingsService";
+import { obtenerHorarioPorDefecto } from "@/services/firebase/userSettingsService";
 
 const DEFAULT_WORK_TIME = {
   defaultPersonalStartTime: "09:00",

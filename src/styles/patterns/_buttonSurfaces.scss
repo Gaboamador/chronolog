@@ -1,0 +1,17 @@
+@use '@/styles/variables.scss' as *;
+@use 'sass:color';
+
+%darkButtonSurface {
+  --button-primary-bg: #{$color-secundario};
+  --button-primary-color: #{$color-primario-oscuro};
+  --button-primary-border: #{rgba($color-secundario, 0.78)};
+  --button-primary-hover-bg: #{color.mix(white, $color-secundario, 14%)};
+  --button-primary-shadow: 0 8px 18px #{rgba($color-secundario, 0.18)};
+  --button-primary-hover-shadow: 0 10px 22px #{rgba($color-secundario, 0.24)};
+  --button-secondary-bg: #{rgba($color-texto-claro, 0.08)};
+  --button-secondary-color: #{$color-texto-claro};
+  --button-secondary-border: #{rgba($color-texto-claro, 0.3)};
+  --button-secondary-hover-bg: #{rgba($color-texto-claro, 0.14)};
+  --button-secondary-hover-border: #{rgba($color-secundario, 0.52)};
+  --button-danger-border: #{rgba($color-texto-claro, 0.28)};
+}

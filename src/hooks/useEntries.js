@@ -6,17 +6,17 @@ import {
   parseISO,
 } from "date-fns";
 
-import { auth } from "../firebase";
+import { auth } from "@/firebase";
 
 import {
   eliminarEntrada,
   guardarEntrada,
   obtenerEntradas,
-} from "../services/firebase/entriesService";
+} from "@/services/firebase/entriesService";
 
-import { sortEntriesByDate } from "../utils/entries/sortEntriesByDate";
-import { getChangedEntryDates } from "../utils/entries/getChangedEntryDates";
-import { buildEntryPayloadForDate } from "../utils/entries/buildEntryPayloadForDate";
+import { sortEntriesByDate } from "@/utils/entries/sortEntriesByDate";
+import { getChangedEntryDates } from "@/utils/entries/getChangedEntryDates";
+import { buildEntryPayloadForDate } from "@/utils/entries/buildEntryPayloadForDate";
 
 const LOCAL_ENTRIES_STORAGE_KEY = "timeEntries";
 const PENDING_ENTRIES_STORAGE_KEY = "pendingTimeEntries";
@@ -153,6 +153,8 @@ export function useEntries(user, authLoading) {
   );
 
   const hasPendingEntriesChanges = useMemo(() => {
+    if (!entriesHydrated) return false;
+
     const fechasModificadas = getChangedEntryDates(
       prevEntriesRef.current,
       entries
@@ -171,7 +173,7 @@ export function useEntries(user, authLoading) {
       .map((payload) => payload.date);
 
     return payloadsToSave.length > 0 || datesToDelete.length > 0;
-  }, [entries, confirmedEntriesSignature]);
+  }, [entries, entriesHydrated, confirmedEntriesSignature]);
 
   const setEntries = (newEntriesOrUpdater) => {
     hasUserEditedEntriesRef.current = true;

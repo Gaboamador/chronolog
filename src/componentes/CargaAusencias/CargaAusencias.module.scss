@@ -1,0 +1,25 @@
+@use '@/styles/patterns/entryForms' as *;
+
+.timeEntryContainer {
+  @extend %timeEntryContainer;
+}
+
+.timeEntryContainerModal {
+  @extend %timeEntryContainerModal;
+}
+
+.absenceForm {
+  @extend %absenceForm;
+}
+
+.absenceField {
+  @extend %absenceField;
+}
+
+.absenceError {
+  @extend %absenceError;
+}
+
+.absencePreview {
+  @extend %absencePreview;
+}

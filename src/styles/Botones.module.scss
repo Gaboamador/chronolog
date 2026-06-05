@@ -1,0 +1,70 @@
+@use '@/styles/variables.scss' as *;
+@use 'sass:color';
+
+.button {
+  border: 1px solid;
+  padding: 8px 14px;
+  border-radius: 10px;
+  font-size: $font-size-md;
+  cursor: pointer;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease,
+    filter 0.2s ease,
+    opacity 0.2s ease,
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+  text-align: center;
+  font-family: $fuente-contenidos;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  width: fit-content;
+
+  &:hover:not(:disabled) {
+    transform: translateY(-1px);
+  }
+
+  &:disabled {
+    background-color: $color-logo4;
+    color: $color-texto-claro;
+    cursor: not-allowed;
+    opacity: 0.55;
+    transform: none;
+  }
+}
+
+.primary {
+  background-color: var(--button-primary-bg, #{$color-primario});
+  color: var(--button-primary-color, #{$color-texto-claro});
+  border-color: var(--button-primary-border, #{rgba($color-secundario, 0.45)});
+  box-shadow: var(--button-primary-shadow, 0 8px 18px #{rgba($color-primario, 0.18)});
+
+  &:hover:not(:disabled) {
+    background-color: var(--button-primary-hover-bg, #{color.mix(white, $color-primario, 18%)});
+    box-shadow: var(--button-primary-hover-shadow, 0 10px 22px #{rgba($color-primario, 0.22)});
+  }
+}
+
+.secondary {
+  background-color: var(--button-secondary-bg, #{$color-secundario-fondo});
+  color: var(--button-secondary-color, #{$color-primario});
+  border-color: var(--button-secondary-border, #{rgba($color-secundario, 0.42)});
+
+  &:hover:not(:disabled) {
+    background-color: var(--button-secondary-hover-bg, #{color.mix($color-secundario-fondo, $color-primario-fondo-claro, 55%)});
+    border-color: var(--button-secondary-hover-border, #{rgba($color-primario, 0.32)});
+  }
+}
+
+.danger {
+  background-color: var(--button-danger-bg, #{$color-danger});
+  color: var(--button-danger-color, #{$color-texto-claro});
+  border-color: var(--button-danger-border, rgba(255, 255, 255, 0.28));
+  box-shadow: var(--button-danger-shadow, 0 8px 18px #{rgba($color-danger, 0.18)});
+
+  &:hover:not(:disabled) {
+    background-color: var(--button-danger-hover-bg, #{color.mix(white, $color-danger, 18%)});
+    box-shadow: var(--button-danger-hover-shadow, 0 10px 22px #{rgba($color-danger, 0.22)});
+  }
+}

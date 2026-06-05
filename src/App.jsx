@@ -1,15 +1,17 @@
 import React, { useEffect, useState, useContext } from 'react';
-import Context from './context';
+import Context from '@/context';
 import './App.scss';
-import GlobalState from './globalState';
+import GlobalState from '@/globalState';
 import { sendEmailVerification } from 'firebase/auth';
-import Header from './componentes/Header';
-import FormularioHora from './componentes/FormularioHora';
-import ResumenSemana from './componentes/ResumenSemana';
-import Auth from './componentes/Auth';
-import Loader from './componentes/Loader';
-import HorarioPersonal from './componentes/HorarioPersonal';
-import {ToastProvider} from './context/ToastContext';
+import Header from '@/componentes/Header';
+import FormularioHora from '@/componentes/FormularioHora';
+import ResumenSemana from '@/componentes/ResumenSemana';
+import Auth from '@/componentes/Auth';
+import Loader from '@/componentes/Loader';
+import HorarioPersonal from '@/componentes/HorarioPersonal';
+import {ToastProvider} from '@/context/ToastContext';
+import authStyles from '@/componentes/Auth/Auth.module.scss';
+import buttonStyles from '@/styles/Botones.module.scss';
 
 function AppContent() {
   const context = useContext(Context)
@@ -74,18 +76,18 @@ const handleResendVerification = async () => {
       <div className="App">
           <Header />
         <div className="body">
-          <div className="auth-container">
-            <div className="auth-title">Verificar correo electrónico</div>
-            <div className="auth-form">
-            <div className="verification-error">
+          <div className={authStyles.authContainer}>
+            <div className={authStyles.authTitle}>Verificar correo electrónico</div>
+            <div className={authStyles.authForm}>
+            <div className="verificationError">
               <span>Tu correo electrónico aún no fue verificado.</span>
               <span>Por favor, revisa tu bandeja de entrada y sigue el enlace de verificación que te enviamos para completar este paso.</span>
               <span>Si no encuentras el correo, revisa tu carpeta de spam o solicita un nuevo enlace de verificación.</span>
             </div>
 
-            <button className="button" onClick={handleResendVerification}>Reenviar correo de verificación</button>
-            <button className="button" onClick={() => window.location.reload()}>Ya verifiqué</button>
-            <button className="button" onClick={() => {context.logout()}}>Cerrar sesión</button>
+            <button className={`${buttonStyles.button} ${buttonStyles.primary}`} onClick={handleResendVerification}>Reenviar correo de verificación</button>
+            <button className={`${buttonStyles.button} ${buttonStyles.secondary}`} onClick={() => window.location.reload()}>Ya verifiqué</button>
+            <button className={`${buttonStyles.button} ${buttonStyles.danger}`} onClick={() => {context.logout()}}>Cerrar sesión</button>
             </div>
           </div>
         </div>

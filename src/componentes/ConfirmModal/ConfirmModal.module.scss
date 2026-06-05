@@ -1,0 +1,75 @@
+@use '@/styles/variables.scss' as *;
+@use '@/styles/patterns/buttonSurfaces' as *;
+
+.confirmModalOverlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba($color-primario-oscuro, 0.62);
+  backdrop-filter: blur(4px);
+  z-index: 1300;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 1rem;
+}
+
+.confirmModalContent {
+  @extend %darkButtonSurface;
+
+  width: min(420px, 100%);
+  background-color: $color-primario;
+  border: 1px solid rgba($color-secundario, 0.35);
+  border-radius: 14px;
+  padding: 1.15rem;
+
+  box-shadow: 0 24px 60px rgba($color-primario-oscuro, 0.42);
+}
+
+.confirmModalContentDanger {
+  border-color: $color-danger;
+}
+
+.confirmModalTitle {
+  color: $color-texto-claro;
+  font-family: $fuente-titulos;
+  font-size: $font-size-lg;
+  font-weight: 700;
+  text-align: center;
+
+  width: 100%;
+  padding: 0.2rem 0 0.75rem;
+  border-bottom: 1px solid rgba($color-secundario, 0.42);
+}
+
+.confirmModalMessage {
+  color: $color-texto-claro;
+  font-family: $fuente-contenidos;
+  line-height: 1.4;
+  text-align: center;
+
+  padding: 1rem 0;
+
+  p {
+    margin: 0;
+  }
+}
+
+.confirmModalActions {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.button {
+  --confirm-button: 1;
+}
+
+@media (max-width: 350px) {
+  .confirmModalTitle,
+  .confirmModalMessage,
+  .confirmModalActions .button {
+    font-size: $font-size-sm;
+  }
+}

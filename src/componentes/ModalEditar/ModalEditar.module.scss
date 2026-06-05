@@ -1,0 +1,171 @@
+@use '@/styles/variables.scss' as *;
+@use '@/styles/patterns/buttonSurfaces' as *;
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba($color-primario-oscuro, 0.62);
+  backdrop-filter: blur(4px);
+  z-index: 1200;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 1rem;
+}
+
+.content {
+  @extend %darkButtonSurface;
+
+  width: min(430px, 100%);
+  max-height: calc(100vh - 2rem);
+
+  background-color: $color-primario;
+  border: 1px solid rgba($color-secundario, 0.35);
+  border-radius: 14px;
+  padding: 1.15rem;
+
+  display: flex;
+  justify-content: center;
+
+  overflow-y: auto;
+
+  box-shadow: 0 24px 60px rgba($color-primario-oscuro, 0.42);
+
+  /*
+    Normaliza el look de los modales existentes sin tocar su JSX.
+    Aplica a HorarioPersonal, ActualizarPerfil, FormularioHora,
+    ResumenSemana y CargaAusencias cuando usan ModalEditar.
+  */
+  .timeEntryContainer.modalSurface {
+    width: 100%;
+    max-width: none;
+    margin: 0;
+
+    background-color: transparent;
+    border: none;
+    border-radius: 0;
+    padding: 0;
+
+    color: $color-texto-claro;
+    box-shadow: none;
+  }
+
+  .modalTitle {
+    color: $color-texto-claro;
+    font-family: $fuente-titulos;
+    font-size: $font-size-lg;
+    font-weight: 700;
+    text-align: center;
+
+    width: 100%;
+    padding: 0.2rem 0 0.75rem;
+    margin-bottom: 1rem;
+    border-bottom: 1px solid rgba($color-secundario, 0.42);
+  }
+
+  .timeEntryInputs {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+  }
+
+  .timeEntryInputGroup {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    
+    label {
+      color: $color-secundario;
+    }
+
+    input {
+      background-color: rgba(255, 255, 255, 0.96);
+      color: $color-texto-oscuro;
+      border: 1px solid rgba($color-secundario, 0.38);
+      border-radius: 8px;
+      padding: 0.35rem;
+    }
+  }
+
+  .absenceForm {
+    color: $color-texto-claro;
+  }
+
+  .absenceField {
+    label {
+      color: $color-neutro;
+    }
+
+    input,
+    select {
+      background-color: rgba(255, 255, 255, 0.96);
+      color: $color-texto-oscuro;
+      border: 1px solid rgba($color-secundario, 0.38);
+      border-radius: 8px;
+    }
+  }
+
+  .absencePreview {
+    color: $color-texto-claro;
+    background-color: rgba($color-secundario, 0.18);
+    border: 1px solid rgba($color-secundario, 0.38);
+  }
+
+  .absenceError {
+    color: $color-texto-claro;
+    background-color: rgba($color-danger, 0.28);
+    border: 1px solid rgba($color-danger, 0.48);
+  }
+
+  .modalAlert {
+    color: $color-texto-claro;
+    background-color: rgba($color-secundario, 0.18);
+    border: 1px solid rgba($color-secundario, 0.38);
+  }
+
+  .modalButtonsContainer {
+    padding-top: 0.5rem;
+    margin-top: 0.5rem;
+    border-top: 1px solid rgba($color-secundario, 0.36);
+  }
+
+  .modalDeleteCancelButtons {
+    display: flex;
+    gap: 0.5rem;
+    width: 100%;
+    justify-content: space-evenly;
+  }
+
+  .modalSaveButton {
+    display: flex;
+    justify-content: center;
+    margin-top: 1rem;
+  }
+}
+
+.timeEntryContainer {
+  --modal-entry-container: 1;
+}
+
+.modalSurface {
+  --modal-surface: 1;
+}
+
+.button {
+  --modal-button: 1;
+}
+
+@media (max-width: 350px) {
+  .content {
+    padding: 0.8rem;
+  }
+
+  .content .modalTitle,
+  .content .timeEntryInputGroup,
+  .content .absenceField,
+  .content .button {
+    font-size: $font-size-sm;
+  }
+}

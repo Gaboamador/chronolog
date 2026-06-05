@@ -31,7 +31,7 @@ export function ToastProvider({ children }) {
       if (!normalized.message) return;
 
       const id = ++idCounter;
-      const duration = normalized.duration ?? 3000;
+      const duration = normalized.duration ?? 2000;
 
       setToasts((prev) => [
         ...prev,
