@@ -66,28 +66,46 @@
   }
 
   .timeEntryInputs {
-    display: flex;
-    justify-content: center;
-    gap: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+
+  width: fit-content;
+  max-width: 100%;
+  margin: 0 auto;
+
+  padding: 0.25rem 0;
+}
+
+.timeEntryInputGroup {
+  display: grid;
+  grid-template-columns: 76px minmax(0, 96px);
+  align-items: center;
+  column-gap: 0.75rem;
+
+  label {
+    color: $color-secundario;
   }
 
-  .timeEntryInputGroup {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    
-    label {
-      color: $color-secundario;
-    }
+  input {
+    width: 100%;
+    box-sizing: border-box;
 
-    input {
-      background-color: rgba(255, 255, 255, 0.96);
-      color: $color-texto-oscuro;
-      border: 1px solid rgba($color-secundario, 0.38);
-      border-radius: 8px;
-      padding: 0.35rem;
-    }
+    background-color: rgba(255, 255, 255, 0.96);
+    color: $color-texto-oscuro;
+    border: 1px solid rgba($color-secundario, 0.38);
+    border-radius: 8px;
+    padding: 0.4rem 0.45rem;
   }
+}
+
+.timeEntryLabel {
+  display: block;
+  width: auto;
+  text-align: right;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
 
   .absenceForm {
     color: $color-texto-claro;

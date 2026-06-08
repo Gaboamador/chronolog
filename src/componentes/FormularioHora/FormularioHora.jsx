@@ -171,23 +171,29 @@ const FormularioHora = () => {
       />
 
       {entryExists && (
-        <div className={styles.timeEntryContainer}>
+        <div className={`${styles.timeEntryContainer} ${styles.timeEntryContainerLoaded}`}>
           {selectedEntryIsWorked && (
-            <div className={styles.entryStatusMessage}>
-              Día cargado: {selectedEntry.start} a {selectedEntry.end}
+            <div className={styles.entryStatusCard}>
+              <span className={styles.entryStatusLabel}>Día cargado</span>
+              <strong className={styles.entryStatusValue}>
+                {selectedEntry.start} a {selectedEntry.end}
+              </strong>
             </div>
           )}
 
           {selectedEntryIsAbsence && (
-            <div className={styles.entryStatusMessage}>
-              Ausencia justificada: {getAbsenceReasonLabel(selectedEntry.absenceReason)}
+            <div className={styles.entryStatusCard}>
+              <span className={styles.entryStatusLabel}>Ausencia justificada</span>
+              <strong className={styles.entryStatusValue}>
+                {getAbsenceReasonLabel(selectedEntry.absenceReason)}
+              </strong>
             </div>
           )}
         </div>
       )}
 
       {!entryExists && (
-        <div className={styles.timeEntryContainer}>
+        <div className={`${styles.timeEntryContainer} ${styles.timeEntryContainerForm}`}>
           <div className={styles.timeEntryInputs}>
             <div className={styles.timeEntryInputGroup}>
               <label>ENTRADA</label>

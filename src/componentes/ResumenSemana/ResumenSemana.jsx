@@ -440,7 +440,7 @@ const ResumenSemana = () => {
             {isEditingWorkedEntry && (
               <div className={modalStyles.timeEntryInputs}>
                 <div className={modalStyles.timeEntryInputGroup}>
-                  <label>ENTRADA</label>
+                  <label className={modalStyles.timeEntryLabel}>ENTRADA</label>
                   <input
                     type="time"
                     value={editStart}
@@ -449,7 +449,7 @@ const ResumenSemana = () => {
                 </div>
 
                 <div className={modalStyles.timeEntryInputGroup}>
-                  <label>SALIDA</label>
+                  <label className={modalStyles.timeEntryLabel}>SALIDA</label>
                   <input
                     type="time"
                     value={editEnd}
