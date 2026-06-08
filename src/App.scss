@@ -1,16 +1,31 @@
 @use '@/styles/variables.scss' as *;
 
+html,
+body,
+#root {
+  min-height: 100%;
+  margin: 0;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  background-color: $color-primario-fondo-claro;
+}
+
 .App {
   text-align: center;
   font-family: $fuente-contenidos;
   font-size: $font-size-md;
   color: $color-texto-oscuro;
   background-color: $color-primario-fondo-claro;
-  min-height: 100vh;
+  min-height: 100dvh;
 }
 
 .body {
-  margin-top: 60px;
+  padding-top: 60px;
 }
 
 .loading {
@@ -53,4 +68,44 @@
   text-align: left;
   gap: 10px;
   margin-bottom: 2rem;
+}
+
+.monthlySummaryTriggerContainer {
+  padding: 1rem;
+  padding-top: 0;
+}
+
+.monthly-summary-trigger {
+  // margin: 18px auto 28px;
+  padding: 12px 18px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(100, 116, 139, 0.28);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.86);
+  color: #334155;
+  font-family: inherit;
+  font-size: 0.95rem;
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow: 0 10px 26px rgba(15, 23, 42, 0.08);
+  transition:
+    transform 0.16s ease,
+    box-shadow 0.16s ease,
+    border-color 0.16s ease,
+    background-color 0.16s ease,
+    color 0.16s ease;
+
+  &:hover {
+    transform: translateY(-1px);
+    border-color: rgba(51, 65, 85, 0.42);
+    background: #ffffff;
+    color: #0f172a;
+    box-shadow: 0 14px 32px rgba(15, 23, 42, 0.12);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
 }

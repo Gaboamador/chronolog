@@ -9,13 +9,15 @@ import ResumenSemana from '@/componentes/ResumenSemana';
 import Auth from '@/componentes/Auth';
 import Loader from '@/componentes/Loader';
 import HorarioPersonal from '@/componentes/HorarioPersonal';
+import MonthlySummaryModal from '@/componentes/MonthlySummaryModal';
 import {ToastProvider} from '@/context/ToastContext';
 import authStyles from '@/componentes/Auth/Auth.module.scss';
 import buttonStyles from '@/styles/Botones.module.scss';
 
 function AppContent() {
   const context = useContext(Context)
-const [verificationSent, setVerificationSent] = useState(false);
+  const [verificationSent, setVerificationSent] = useState(false);
+  const [mostrarResumenMensual, setMostrarResumenMensual] = useState(false);
 
 useEffect(() => {
     const enviarVerificacion = async () => {
@@ -113,9 +115,27 @@ const handleResendVerification = async () => {
       <>
         <FormularioHora />
         <ResumenSemana />
+
+        <div className="monthlySummaryTriggerContainer">
+          <button
+            type="button"
+            className="monthly-summary-trigger"
+            onClick={() => setMostrarResumenMensual(true)}
+          >
+            Promedios por mes
+          </button>
+        </div>
       </>
     )}
       </div>
+
+      <MonthlySummaryModal
+        isOpen={mostrarResumenMensual}
+        onClose={() => setMostrarResumenMensual(false)}
+        entries={context.entries}
+        defaultWorkTime={context.defaultWorkTime}
+      />
+
     </div>
   );
 }
