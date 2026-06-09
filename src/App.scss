@@ -1,14 +1,16 @@
 @use '@/styles/variables.scss' as *;
 
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
 html,
 body,
 #root {
-  min-height: 100%;
   margin: 0;
-}
-
-* {
-  box-sizing: border-box;
+  padding: 0;
 }
 
 body {
@@ -21,11 +23,10 @@ body {
   font-size: $font-size-md;
   color: $color-texto-oscuro;
   background-color: $color-primario-fondo-claro;
-  min-height: 100dvh;
 }
 
 .body {
-  padding-top: 60px;
+  width: 100%;
 }
 
 .loading {
