@@ -145,7 +145,11 @@ const CargaAusencias = ({ onClose }) => {
             </select>
           </div>
 
-          <div className={`${styles.absencePreview} ${modalStyles.absencePreview}`}>
+          <div className={`
+              ${styles.absencePreview}
+              ${modalStyles.absencePreview}
+              ${startDate && endDate ? styles.absencePreviewActive : ''}
+            `}>
             {startDate && endDate
               ? `${getBusinessDatesInRange(startDate, endDate).length} día(s) hábiles a marcar`
               : 'Seleccioná un rango de fechas'}

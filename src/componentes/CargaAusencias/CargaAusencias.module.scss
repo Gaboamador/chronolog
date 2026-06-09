@@ -1,3 +1,4 @@
+@use '@/styles/variables.scss' as *;
 @use '@/styles/patterns/entryForms' as *;
 
 .timeEntryContainer {
@@ -22,4 +23,9 @@
 
 .absencePreview {
   @extend %absencePreview;
+}
+
+.absencePreviewActive {
+  background-color: rgba($color-secundario, 0.35) !important;
+  border: 1px solid $color-secundario !important;
 }
