@@ -10,6 +10,11 @@ export const ABSENCE_REASONS = {
   OTHER: "other",
 };
 
+export const CLOCK_STATUS = {
+  OPEN: 'open',
+  CLOSED: 'closed',
+};
+
 export const ABSENCE_REASON_LABELS = {
   [ABSENCE_REASONS.VACATION]: "Vacaciones",
   [ABSENCE_REASONS.SICKNESS]: "Enfermedad",
@@ -19,6 +24,14 @@ export const ABSENCE_REASON_LABELS = {
 
 export function isJustifiedAbsenceEntry(entry) {
   return entry?.entryType === ENTRY_TYPES.JUSTIFIED_ABSENCE;
+}
+
+export function isOpenWorkedEntry(entry) {
+  return (
+    entry?.entryType === ENTRY_TYPES.WORKED &&
+    entry?.clockStatus === CLOCK_STATUS.OPEN &&
+    Boolean(entry?.start)
+  );
 }
 
 export function isWorkedEntry(entry) {

@@ -1,14 +1,21 @@
 import {
   ABSENCE_REASONS,
+  CLOCK_STATUS,
   ENTRY_TYPES,
 } from './entriesStatus';
 
-export function buildWorkedEntry({ date, start, end }) {
+export function buildWorkedEntry({
+  date,
+  start,
+  end,
+  clockStatus = CLOCK_STATUS.CLOSED,
+}) {
   return {
     date,
     entryType: ENTRY_TYPES.WORKED,
     start,
     end,
+    clockStatus,
   };
 }
 

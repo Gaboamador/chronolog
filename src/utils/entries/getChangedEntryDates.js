@@ -19,6 +19,7 @@ function normalizeEntryForComparison(entry = {}) {
     date,
     start: entry.start || '',
     end: entry.end || '',
+    clockStatus: entry.clockStatus || '',
   };
 }
 
