@@ -57,6 +57,17 @@
   }
 }
 
+.tertiary {
+  background-color: var(--button-tertiary-bg, #{$color-terciario-fondo});
+  color: var(--button-tertiary-color, #{$color-primario});
+  border-color: var(--button-tertiary-border, #{rgba($color-terciario, 0.42)});
+
+  &:hover:not(:disabled) {
+    background-color: var(--button-tertiary-hover-bg, #{color.mix($color-terciario-fondo, $color-primario-fondo-claro, 55%)});
+    border-color: var(--button-tertiary-hover-border, #{rgba($color-primario, 0.32)});
+  }
+}
+
 .danger {
   background-color: var(--button-danger-bg, #{$color-danger});
   color: var(--button-danger-color, #{$color-texto-claro});

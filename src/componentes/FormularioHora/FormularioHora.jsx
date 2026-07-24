@@ -431,12 +431,6 @@ const FormularioHora = () => {
             </div>
           </div>
 
-          {!selectedDateIsToday && (
-            <div className={styles.clockHelpText}>
-              El fichaje automático solamente está disponible para hoy.
-            </div>
-          )}
-
           <div className={styles.editButtonsContainer}>
             <button
               type="button"
@@ -461,62 +455,71 @@ const FormularioHora = () => {
             </button>
           </div>
 
+          {!selectedDateIsToday && (
+            <div className={styles.clockHelpText}>
+              El fichaje automático solamente está disponible para hoy.
+            </div>
+          )}
+
+          <hr className={styles.separator} />
+
           <div className={styles.clockButtonsContainer}>
-            <button
-              type="button"
-              className={[
-                buttonStyles.button,
-                buttonStyles.primary,
-                styles.clockActionButton,
-                styles.clockInButton,
-              ].join(' ')}
-              onClick={handleClockIn}
-              disabled={
-                !selectedDateIsToday ||
-                selectedEntryIsOpen ||
-                Boolean(selectedEntry)
-              }
-            >
-              <span className={styles.clockActionIcon}>
-                <FiLogIn aria-hidden="true" />
-              </span>
+            {selectedDateIsToday && (
+              <>
+                <button
+                  type="button"
+                  className={[
+                    buttonStyles.button,
+                    buttonStyles.primary,
+                    styles.clockActionButton,
+                    styles.clockInButton,
+                  ].join(' ')}
+                  onClick={handleClockIn}
+                  disabled={
+                    selectedEntryIsOpen ||
+                    Boolean(selectedEntry)
+                  }
+                >
+                  <span className={styles.clockActionIcon}>
+                    <FiLogIn aria-hidden="true" />
+                  </span>
 
-              <span className={styles.clockActionContent}>
-                <strong>Marcar ingreso</strong>
-                <small>Guarda la hora actual</small>
-              </span>
-            </button>
+                  <span className={styles.clockActionContent}>
+                    <strong>MARCAR INGRESO</strong>
+                    {/* <small>Guarda la hora actual</small> */}
+                  </span>
+                </button>
 
-            <button
-              type="button"
-              className={[
-                buttonStyles.button,
-                buttonStyles.primary,
-                styles.clockActionButton,
-                styles.clockOutButton,
-              ].join(' ')}
-              onClick={handleClockOut}
-              disabled={
-                !selectedDateIsToday ||
-                !selectedEntryIsOpen
-              }
-            >
-              <span className={styles.clockActionIcon}>
-                <FiLogOut aria-hidden="true" />
-              </span>
+                <button
+                  type="button"
+                  className={[
+                    buttonStyles.button,
+                    buttonStyles.primary,
+                    styles.clockActionButton,
+                    styles.clockOutButton,
+                  ].join(' ')}
+                  onClick={handleClockOut}
+                  disabled={!selectedEntryIsOpen}
+                >
+                  <span className={styles.clockActionIcon}>
+                    <FiLogOut aria-hidden="true" />
+                  </span>
 
-              <span className={styles.clockActionContent}>
-                <strong>Marcar salida</strong>
-                <small>Guarda la hora actual</small>
-              </span>
-            </button>
+                  <span className={styles.clockActionContent}>
+                    <strong>MARCAR SALIDA</strong>
+                    {/* <small>Guarda la hora actual</small> */}
+                  </span>
+                </button>
+              </>
+            )}
 
             {selectedEntryIsOpen && (
               <button
                 type="button"
                 className={`
                   ${buttonStyles.button}
-                  ${buttonStyles.secondary}
+                  ${buttonStyles.tertiary}
+                  ${styles.closeWorkDayButton}
                 `}
                 onClick={handleCloseEntry}
                 disabled={!startTime || !endTime}

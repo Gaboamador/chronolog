@@ -13,5 +13,10 @@
   --button-secondary-border: #{rgba($color-texto-claro, 0.3)};
   --button-secondary-hover-bg: #{rgba($color-texto-claro, 0.14)};
   --button-secondary-hover-border: #{rgba($color-secundario, 0.52)};
+  --button-tertiary-bg: #{rgba($color-texto-claro, 0.08)};
+  --button-tertiary-color: #{$color-texto-claro};
+  --button-tertiary-border: #{rgba($color-texto-claro, 0.3)};
+  --button-tertiary-hover-bg: #{rgba($color-texto-claro, 0.14)};
+  --button-tertiary-hover-border: #{rgba($color-terciario, 0.52)};
   --button-danger-border: #{rgba($color-texto-claro, 0.28)};
 }
