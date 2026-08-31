@@ -11,6 +11,9 @@ export function flattenFirestoreEntries(items = []) {
     return nestedEntries.map((entry) => ({
       ...entry,
       date: entry?.date || item.date,
+      ...(!entry?.entryType || entry.entryType === 'worked'
+        ? { breaks: Array.isArray(entry?.breaks) ? entry.breaks : [] }
+        : {}),
     }));
   });
 }

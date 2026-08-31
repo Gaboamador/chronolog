@@ -1,8 +1,9 @@
-import { groupEntriesByDate } from './groupEntriesByDate';
+import { groupEntriesByDate } from './groupEntriesByDate.js';
 import {
   ENTRY_TYPES,
   isJustifiedAbsenceEntry,
-} from './entriesStatus';
+} from './entriesStatus.js';
+import { normalizeBreaks } from './timeCalculations.js';
 
 function normalizeEntryForComparison(entry = {}) {
   const date = entry.date || '';
@@ -20,6 +21,8 @@ function normalizeEntryForComparison(entry = {}) {
     start: entry.start || '',
     end: entry.end || '',
     clockStatus: entry.clockStatus || '',
+    startTimestamp: entry.startTimestamp || '',
+    breaks: normalizeBreaks(entry.breaks),
   };
 }
 

@@ -7,8 +7,6 @@ import {
   startOfWeek,
   addDays,
   isSameDay,
-  differenceInMinutes,
-  parse,
   startOfMonth,
   endOfMonth,
   isWithinInterval,
@@ -32,6 +30,14 @@ import {
   buildJustifiedAbsenceEntry,
   buildWorkedEntry,
 } from '@/utils/entries/buildEntries';
+import {
+  formatMinutes as formatWorkedMinutes,
+  getBreakMinutes,
+  getExpectedWorkMinutes,
+  getWorkedMinutes,
+  normalizeBreaks,
+  validateWorkedEntry,
+} from '@/utils/entries/timeCalculations';
 import buttonStyles from '@/styles/Botones.module.scss';
 import modalStyles from '@/componentes/ModalEditar/ModalEditar.module.scss';
 import styles from './ResumenSemana.module.scss';
@@ -43,8 +49,6 @@ const WEEK_DAYS = [
   'Jueves',
   'Viernes',
 ];
-
-const WORKDAY_MINUTES = 8 * 60;
 
 function getEntryForDate(entries, date) {
   const dateStr = format(date, 'yyyy-MM-dd');
@@ -72,30 +76,19 @@ function getDiffBadgeClass(diff) {
   return `${styles.diffBadge} ${styles.diffNeutral}`;
 }
 
-function averageRealDuration(totalDiffMinutes, count) {
+function averageRealDuration(totalDiffMinutes, count, workdayMinutes) {
   if (!count) return 0;
-  return WORKDAY_MINUTES + Math.round(totalDiffMinutes / count);
+  return workdayMinutes + Math.round(totalDiffMinutes / count);
 }
 
-function getWorkedEntryDiff(entry) {
+function getWorkedEntryDiff(entry, workdayMinutes) {
   if (!isWorkedEntry(entry)) return 0;
-
-  const entryDate = parseISO(entry.date);
-  const startDate = parse(entry.start, 'HH:mm', entryDate);
-  const endDate = parse(entry.end, 'HH:mm', entryDate);
-  const duration = differenceInMinutes(endDate, startDate);
-
-  return duration - WORKDAY_MINUTES;
+  return (getWorkedMinutes(entry) || 0) - workdayMinutes;
 }
 
-function getWorkedEntryDuration(entry, fallbackDate) {
+function getWorkedEntryDuration(entry) {
   if (!isWorkedEntry(entry)) return 0;
-
-  const entryDate = entry.date ? parseISO(entry.date) : fallbackDate;
-  const startDate = parse(entry.start, 'HH:mm', entryDate);
-  const endDate = parse(entry.end, 'HH:mm', entryDate);
-
-  return differenceInMinutes(endDate, startDate);
+  return getWorkedMinutes(entry) || 0;
 }
 
 const ResumenSemana = () => {
@@ -109,8 +102,10 @@ const ResumenSemana = () => {
 
   const [editStart, setEditStart] = useState('');
   const [editEnd, setEditEnd] = useState('');
+  const [editBreaks, setEditBreaks] = useState([]);
 
   const [editAbsenceReason, setEditAbsenceReason] = useState(ABSENCE_REASONS.VACATION);
+  const workdayMinutes = getExpectedWorkMinutes(context.defaultWorkTime);
 
   const monthStart = startOfMonth(context.selectedDate);
   const monthEnd = endOfMonth(context.selectedDate);
@@ -125,14 +120,15 @@ const ResumenSemana = () => {
 
   entriesThisMonth.forEach(entry => {
     if (countsForAverage(entry)) {
-      totalMonthlyDiff += getWorkedEntryDiff(entry);
+      totalMonthlyDiff += getWorkedEntryDiff(entry, workdayMinutes);
       validMonthlyEntriesCount += 1;
     }
   });
 
   const averageMonthlyDuration = averageRealDuration(
     totalMonthlyDiff,
-    validMonthlyEntriesCount
+    validMonthlyEntriesCount,
+    workdayMinutes
   );
 
   const selectedMonthName = format(context.selectedDate, 'MMMM', { locale: es });
@@ -153,8 +149,8 @@ const ResumenSemana = () => {
     const justifiedAbsence = isJustifiedAbsenceEntry(entry);
     const resolved = isResolvedEntry(entry);
 
-    const duration = worked ? getWorkedEntryDuration(entry, date) : 0;
-    const diff = worked ? duration - WORKDAY_MINUTES : 0;
+    const duration = worked ? getWorkedEntryDuration(entry) : 0;
+    const diff = worked ? duration - workdayMinutes : 0;
 
     return {
       day: WEEK_DAYS[idx],
@@ -162,6 +158,7 @@ const ResumenSemana = () => {
       end: worked ? entry.end : '',
       duration,
       diff,
+      breakMinutes: worked ? getBreakMinutes(entry) : 0,
       date,
       dateStr: format(date, 'yyyy-MM-dd'),
       entry,
@@ -184,6 +181,7 @@ const ResumenSemana = () => {
     setEditMode(null);
     setEditStart('');
     setEditEnd('');
+    setEditBreaks([]);
     setEditAbsenceReason(ABSENCE_REASONS.VACATION);
   };
 
@@ -195,10 +193,12 @@ const ResumenSemana = () => {
       setEditAbsenceReason(row.entry.absenceReason || ABSENCE_REASONS.VACATION);
       setEditStart('');
       setEditEnd('');
+      setEditBreaks([]);
     } else {
       setEditMode(ENTRY_TYPES.WORKED);
       setEditStart(row.start);
       setEditEnd(row.end);
+      setEditBreaks(normalizeBreaks(row.entry.breaks));
       setEditAbsenceReason(ABSENCE_REASONS.VACATION);
     }
 
@@ -216,13 +216,20 @@ const ResumenSemana = () => {
         return;
       }
 
-    filteredEntries.push(
-      buildWorkedEntry({
+    const editedEntry = buildWorkedEntry({
         date: editDate,
         start: editStart,
         end: editEnd,
-      })
-    );
+        breaks: editBreaks,
+      });
+
+      const validation = validateWorkedEntry(editedEntry);
+      if (!validation.valid) {
+        showToast(validation.error, 'warning');
+        return;
+      }
+
+      filteredEntries.push(editedEntry);
     }
 
     if (editMode === ENTRY_TYPES.JUSTIFIED_ABSENCE) {
@@ -292,6 +299,12 @@ const ResumenSemana = () => {
   const isEditingWorkedEntry = editMode === ENTRY_TYPES.WORKED;
   const isEditingAbsence = editMode === ENTRY_TYPES.JUSTIFIED_ABSENCE;
 
+  const updateEditBreak = (index, field, value) => {
+    setEditBreaks((current) => current.map((workBreak, breakIndex) =>
+      breakIndex === index ? { ...workBreak, [field]: value } : workBreak
+    ));
+  };
+
   return (
     <div className={styles.containerMain}>
       <div className={styles.titleWrapper}>
@@ -306,6 +319,7 @@ const ResumenSemana = () => {
               <th>Día</th>
               <th>Ingreso</th>
               <th>Salida</th>
+              <th>Fuera</th>
               <th>Diferencia</th>
               <th className={styles.actionsColumn}>
                 <span className={styles.visuallyHidden}>Acciones</span>
@@ -330,7 +344,7 @@ const ResumenSemana = () => {
 
                   {row.justifiedAbsence ? (
                     <>
-                      <td colSpan={2}>
+                      <td colSpan={3}>
                         {row.absenceLabel}
                       </td>
                       <td>—</td>
@@ -342,6 +356,9 @@ const ResumenSemana = () => {
                       </td>
                       <td>
                         {row.worked ? row.end : <span className={styles.mutedCell}>-</span>}
+                      </td>
+                      <td>
+                        {row.worked ? formatWorkedMinutes(row.breakMinutes) : <span className={styles.mutedCell}>-</span>}
                       </td>
                       <td>
                         {row.worked ? (
@@ -375,7 +392,7 @@ const ResumenSemana = () => {
             })}
 
             <tr className={styles.weeklySummarySubfooter}>
-              <td colSpan={3}>
+              <td colSpan={4}>
                 Diferencia Mensual
               </td>
               <td colSpan={2}>
@@ -438,6 +455,7 @@ const ResumenSemana = () => {
             </div>
 
             {isEditingWorkedEntry && (
+              <div className={styles.editWorkedContent}>
               <div className={modalStyles.timeEntryInputs}>
                 <div className={modalStyles.timeEntryInputGroup}>
                   <label className={modalStyles.timeEntryLabel}>ENTRADA</label>
@@ -456,6 +474,45 @@ const ResumenSemana = () => {
                     onChange={e => setEditEnd(e.target.value)}
                   />
                 </div>
+              </div>
+              <div className={styles.editBreaks}>
+                <div className={styles.editBreaksHeader}>
+                  <strong>Salidas transitorias</strong>
+                  <button
+                    type="button"
+                    className={`${buttonStyles.button} ${buttonStyles.secondary}`}
+                    onClick={() => setEditBreaks((current) => [...current, { start: '', end: '' }])}
+                  >
+                    AGREGAR
+                  </button>
+                </div>
+                {editBreaks.length === 0 && <small>No hay salidas registradas.</small>}
+                {editBreaks.map((workBreak, index) => (
+                  <div className={styles.editBreakRow} key={index}>
+                    <input
+                      type="time"
+                      aria-label={`Salida transitoria ${index + 1}`}
+                      value={workBreak.start}
+                      onChange={(event) => updateEditBreak(index, 'start', event.target.value)}
+                    />
+                    <span>–</span>
+                    <input
+                      type="time"
+                      aria-label={`Reingreso ${index + 1}`}
+                      value={workBreak.end}
+                      onChange={(event) => updateEditBreak(index, 'end', event.target.value)}
+                    />
+                    <button
+                      type="button"
+                      className={styles.removeBreakButton}
+                      aria-label={`Eliminar salida transitoria ${index + 1}`}
+                      onClick={() => setEditBreaks((current) => current.filter((_, breakIndex) => breakIndex !== index))}
+                    >
+                      ×
+                    </button>
+                  </div>
+                ))}
+              </div>
               </div>
             )}
 

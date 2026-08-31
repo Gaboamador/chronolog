@@ -9,6 +9,8 @@ export function buildWorkedEntry({
   start,
   end,
   clockStatus = CLOCK_STATUS.CLOSED,
+  breaks = [],
+  startTimestamp,
 }) {
   return {
     date,
@@ -16,6 +18,8 @@ export function buildWorkedEntry({
     start,
     end,
     clockStatus,
+    breaks,
+    ...(startTimestamp ? { startTimestamp } : {}),
   };
 }
 

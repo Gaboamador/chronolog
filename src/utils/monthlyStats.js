@@ -1,42 +1,7 @@
-function parseTimeToMinutes(value) {
-  if (typeof value !== "string") return null;
-
-  const match = value.trim().match(/^(\d{1,2}):(\d{2})$/);
-  if (!match) return null;
-
-  const hours = Number(match[1]);
-  const minutes = Number(match[2]);
-
-  if (
-    Number.isNaN(hours) ||
-    Number.isNaN(minutes) ||
-    hours < 0 ||
-    hours > 23 ||
-    minutes < 0 ||
-    minutes > 59
-  ) {
-    return null;
-  }
-
-  return hours * 60 + minutes;
-}
-
-function getWorkedMinutes(entry) {
-  const startMinutes = parseTimeToMinutes(entry?.start);
-  const endMinutes = parseTimeToMinutes(entry?.end);
-
-  if (startMinutes === null || endMinutes === null) return null;
-
-  let workedMinutes = endMinutes - startMinutes;
-
-  if (workedMinutes < 0) {
-    workedMinutes += 24 * 60;
-  }
-
-  if (workedMinutes <= 0) return null;
-
-  return workedMinutes;
-}
+import {
+  getExpectedWorkMinutes,
+  getWorkedMinutes,
+} from './entries/timeCalculations.js';
 
 function getEntryDate(entry, fallbackDate) {
   const date = entry?.date || fallbackDate;
@@ -75,47 +40,6 @@ function getMonthLabel(monthKey) {
   return label.charAt(0).toUpperCase() + label.slice(1);
 }
 
-function normalizeDefaultWorkTimeToMinutes(defaultWorkTime) {
-  if (typeof defaultWorkTime === "number" && defaultWorkTime > 0) {
-    return defaultWorkTime;
-  }
-
-  if (typeof defaultWorkTime === "string") {
-    const parsed = parseTimeToMinutes(defaultWorkTime);
-    return parsed && parsed > 0 ? parsed : null;
-  }
-
-  if (defaultWorkTime && typeof defaultWorkTime === "object") {
-    if (
-      typeof defaultWorkTime.minutes === "number" &&
-      defaultWorkTime.minutes > 0
-    ) {
-      return defaultWorkTime.minutes;
-    }
-
-    const start =
-      defaultWorkTime.defaultPersonalStartTime || defaultWorkTime.start;
-
-    const end =
-      defaultWorkTime.defaultPersonalEndTime || defaultWorkTime.end;
-
-    const startMinutes = parseTimeToMinutes(start);
-    const endMinutes = parseTimeToMinutes(end);
-
-    if (startMinutes !== null && endMinutes !== null) {
-      let expectedMinutes = endMinutes - startMinutes;
-
-      if (expectedMinutes < 0) {
-        expectedMinutes += 24 * 60;
-      }
-
-      return expectedMinutes > 0 ? expectedMinutes : null;
-    }
-  }
-
-  return null;
-}
-
 export function formatMinutesAsHours(totalMinutes) {
   if (typeof totalMinutes !== "number" || Number.isNaN(totalMinutes)) {
     return "-";
@@ -147,7 +71,7 @@ export function formatBalanceMinutes(totalMinutes) {
 }
 
 export function calculateMonthlySummaries(entries, defaultWorkTime) {
-  const expectedDailyMinutes = normalizeDefaultWorkTimeToMinutes(defaultWorkTime);
+  const expectedDailyMinutes = getExpectedWorkMinutes(defaultWorkTime, null);
   const groupedByMonth = new Map();
 
   normalizeEntries(entries).forEach(({ entry, fallbackDate }) => {

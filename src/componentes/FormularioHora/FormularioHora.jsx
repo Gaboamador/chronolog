@@ -23,6 +23,16 @@ import buttonStyles from '@/styles/Botones.module.scss';
 import modalStyles from '@/componentes/ModalEditar/ModalEditar.module.scss';
 import styles from './FormularioHora.module.scss';
 import { FiLogIn, FiLogOut } from 'react-icons/fi';
+import {
+  formatMinutes,
+  getBreakMinutes,
+  formatSeconds,
+  getLiveTimeSummary,
+  getOpenBreak,
+  getWorkedMinutes,
+  normalizeBreaks,
+  validateWorkedEntry,
+} from '@/utils/entries/timeCalculations';
 
 const FormularioHora = () => {
   const context = useContext(Context);
@@ -39,6 +49,7 @@ const FormularioHora = () => {
 
   const [absenceModalOpen, setAbsenceModalOpen] = useState(false);
   const [absenceReason, setAbsenceReason] = useState(ABSENCE_REASONS.VACATION);
+  const [currentTime, setCurrentTime] = useState(() => new Date());
 
   useEffect(() => {
     if (!context.selectedDate) {
@@ -93,6 +104,19 @@ const FormularioHora = () => {
     );
 
   const selectedEntryIsOpen = isOpenWorkedEntry(selectedEntry);
+  const selectedBreaks = normalizeBreaks(selectedEntry?.breaks);
+  const selectedOpenBreak = getOpenBreak(selectedEntry);
+
+  useEffect(() => {
+    if (!selectedEntryIsOpen) return undefined;
+    setCurrentTime(new Date());
+    const timerId = window.setInterval(() => setCurrentTime(new Date()), 1000);
+    return () => window.clearInterval(timerId);
+  }, [selectedEntryIsOpen]);
+
+  const liveTimeSummary = selectedEntryIsOpen
+    ? getLiveTimeSummary(selectedEntry, currentTime)
+    : { workedSeconds: 0, currentBreakSeconds: 0 };
   
   const getCurrentTime = () => format(new Date(), 'HH:mm');
 
@@ -105,13 +129,15 @@ const FormularioHora = () => {
       return;
     }
 
-    const currentTime = getCurrentTime();
+    const now = new Date();
+    const currentTime = format(now, 'HH:mm');
 
     const openEntry = buildWorkedEntry({
       date: selectedDateStr,
       start: currentTime,
       end: '',
       clockStatus: CLOCK_STATUS.OPEN,
+      startTimestamp: now.toISOString(),
     });
 
     context.setEntries(prev => [
@@ -131,7 +157,8 @@ const FormularioHora = () => {
       !selectedDateStr ||
       !selectedDateIsToday ||
       !selectedEntryIsOpen ||
-      !startTime
+      !startTime ||
+      selectedOpenBreak
     ) {
       return;
     }
@@ -143,7 +170,15 @@ const FormularioHora = () => {
       start: startTime,
       end: currentTime,
       clockStatus: CLOCK_STATUS.CLOSED,
+      breaks: selectedBreaks,
+      startTimestamp: selectedEntry?.startTimestamp,
     });
+
+    const validation = validateWorkedEntry(completedEntry);
+    if (!validation.valid) {
+      alert(validation.error);
+      return;
+    }
 
     context.setEntries(prev => [
       ...prev.filter(
@@ -154,6 +189,98 @@ const FormularioHora = () => {
 
     setEndTime(currentTime);
     setShowValidation(false);
+  };
+
+  const handleTemporaryExit = () => {
+    if (!selectedEntryIsOpen || selectedOpenBreak) return;
+
+    const now = new Date();
+
+    const updatedEntry = buildWorkedEntry({
+      ...selectedEntry,
+      date: selectedDateStr,
+      start: startTime,
+      end: '',
+      clockStatus: CLOCK_STATUS.OPEN,
+      breaks: [...selectedBreaks, {
+        start: format(now, 'HH:mm'),
+        end: '',
+        startTimestamp: now.toISOString(),
+      }],
+    });
+
+    context.setEntries((prev) => [
+      ...prev.filter((entry) => entry.date !== selectedDateStr),
+      updatedEntry,
+    ]);
+  };
+
+  const handleReturn = () => {
+    if (!selectedEntryIsOpen || !selectedOpenBreak) return;
+
+    const now = new Date();
+
+    const updatedBreaks = selectedBreaks.map((workBreak) =>
+      workBreak.start && !workBreak.end
+        ? {
+            ...workBreak,
+            end: format(now, 'HH:mm'),
+            endTimestamp: now.toISOString(),
+          }
+        : workBreak
+    );
+
+    const updatedEntry = buildWorkedEntry({
+      ...selectedEntry,
+      date: selectedDateStr,
+      start: startTime,
+      end: '',
+      clockStatus: CLOCK_STATUS.OPEN,
+      breaks: updatedBreaks,
+    });
+
+    context.setEntries((prev) => [
+      ...prev.filter((entry) => entry.date !== selectedDateStr),
+      updatedEntry,
+    ]);
+  };
+
+  const updateSelectedBreaks = (updatedBreaks) => {
+    if (!selectedEntryIsOpen) return;
+
+    const updatedEntry = buildWorkedEntry({
+      ...selectedEntry,
+      date: selectedDateStr,
+      start: startTime,
+      end: '',
+      clockStatus: CLOCK_STATUS.OPEN,
+      breaks: updatedBreaks,
+    });
+
+    context.setEntries((prev) => [
+      ...prev.filter((entry) => entry.date !== selectedDateStr),
+      updatedEntry,
+    ]);
+  };
+
+  const handleBreakChange = (index, field, value) => {
+    updateSelectedBreaks(selectedBreaks.map((workBreak, breakIndex) =>
+      breakIndex === index
+        ? {
+            ...workBreak,
+            [field]: value,
+            ...(field === 'start'
+              ? { startTimestamp: undefined }
+              : { endTimestamp: undefined }),
+          }
+        : workBreak
+    ));
+  };
+
+  const handleDeleteBreak = (index) => {
+    updateSelectedBreaks(
+      selectedBreaks.filter((_, breakIndex) => breakIndex !== index)
+    );
   };
 
   const handleCloseEntry = () => {
@@ -177,7 +304,15 @@ const FormularioHora = () => {
       start: startTime,
       end: endTime,
       clockStatus: CLOCK_STATUS.CLOSED,
+      breaks: selectedBreaks,
+      startTimestamp: selectedEntry?.startTimestamp,
     });
+
+    const validation = validateWorkedEntry(closedEntry);
+    if (!validation.valid) {
+      alert(validation.error);
+      return;
+    }
 
     context.setEntries(prev => [
       ...prev.filter(
@@ -249,7 +384,17 @@ const FormularioHora = () => {
       clockStatus: selectedDateIsToday
         ? CLOCK_STATUS.OPEN
         : CLOCK_STATUS.CLOSED,
+      breaks: selectedBreaks,
     });
+
+    if (!selectedDateIsToday) {
+      const validation = validateWorkedEntry(newEntry);
+      if (!validation.valid) {
+        setShowValidation(true);
+        alert(validation.error);
+        return;
+      }
+    }
 
     context.setEntries(prev => [
       ...prev.filter(e => e.date !== newEntry.date),
@@ -277,6 +422,7 @@ const FormularioHora = () => {
       start: newStartTime,
       end: endTime,
       clockStatus: CLOCK_STATUS.OPEN,
+      breaks: selectedBreaks,
     });
 
     context.setEntries(prev => [
@@ -363,6 +509,11 @@ const FormularioHora = () => {
               <strong className={styles.entryStatusValue}>
                 {selectedEntry.start} a {selectedEntry.end}
               </strong>
+              {selectedBreaks.length > 0 && (
+                <span className={styles.entryStatusDetail}>
+                  {formatMinutes(getWorkedMinutes(selectedEntry))} trabajadas · {formatMinutes(getBreakMinutes(selectedEntry))} fuera
+                </span>
+              )}
             </div>
           )}
 
@@ -391,8 +542,56 @@ const FormularioHora = () => {
               </span>
 
               <strong className={styles.openEntryStatusValue}>
-                Ingreso marcado a las {startTime}
+                {selectedOpenBreak
+                  ? `Fuera desde las ${selectedOpenBreak.start}`
+                  : `Ingreso marcado a las ${startTime}`}
               </strong>
+              <div className={styles.liveWorkedTime}>
+                <span>Tiempo trabajado</span>
+                <strong>{formatSeconds(liveTimeSummary.workedSeconds)}</strong>
+              </div>
+              {selectedOpenBreak && (
+                <div className={styles.liveBreakTime}>
+                  <span>Tiempo fuera actual</span>
+                  <strong>{formatSeconds(liveTimeSummary.currentBreakSeconds)}</strong>
+                </div>
+              )}
+            </div>
+          )}
+
+          {selectedEntryIsOpen && selectedBreaks.length > 0 && (
+            <div className={styles.breakSummary}>
+              <strong>Salidas transitorias</strong>
+              {selectedBreaks.map((workBreak, index) => (
+                <div className={styles.breakEditRow} key={index}>
+                  <input
+                    type="time"
+                    aria-label={`Salida transitoria ${index + 1}`}
+                    value={workBreak.start}
+                    onChange={(event) => handleBreakChange(index, 'start', event.target.value)}
+                  />
+                  <span>–</span>
+                  <input
+                    type="time"
+                    aria-label={`Reingreso ${index + 1}`}
+                    value={workBreak.end}
+                    onChange={(event) => handleBreakChange(index, 'end', event.target.value)}
+                  />
+                  <button
+                    type="button"
+                    className={styles.deleteBreakButton}
+                    aria-label={`Eliminar salida transitoria ${index + 1}`}
+                    onClick={() => handleDeleteBreak(index)}
+                  >
+                    ×
+                  </button>
+                </div>
+              ))}
+              <small>
+                Tiempo fuera: {formatMinutes(getBreakMinutes(selectedEntry, {
+                  includeOpenUntil: selectedOpenBreak ? getCurrentTime() : null,
+                }))}
+              </small>
             </div>
           )}
 
@@ -499,17 +698,42 @@ const FormularioHora = () => {
                     styles.clockOutButton,
                   ].join(' ')}
                   onClick={handleClockOut}
-                  disabled={!selectedEntryIsOpen}
+                  disabled={!selectedEntryIsOpen || Boolean(selectedOpenBreak)}
                 >
                   <span className={styles.clockActionIcon}>
                     <FiLogOut aria-hidden="true" />
                   </span>
 
                   <span className={styles.clockActionContent}>
-                    <strong>MARCAR SALIDA</strong>
+                    <strong>FINALIZAR JORNADA</strong>
                     {/* <small>Guarda la hora actual</small> */}
                   </span>
                 </button>
+
+                {selectedEntryIsOpen && (
+                  <div className={styles.transientActionPanel}>
+                    <span className={styles.transientActionLabel}>Movimiento transitorio</span>
+                {!selectedOpenBreak && (
+                  <button
+                    type="button"
+                    className={`${buttonStyles.button} ${buttonStyles.secondary} ${styles.temporaryExitButton}`}
+                    onClick={handleTemporaryExit}
+                  >
+                    MARCAR SALIDA TRANSITORIA
+                  </button>
+                )}
+
+                {selectedOpenBreak && (
+                  <button
+                    type="button"
+                    className={`${buttonStyles.button} ${buttonStyles.primary} ${styles.returnButton}`}
+                    onClick={handleReturn}
+                  >
+                    MARCAR REINGRESO
+                  </button>
+                )}
+                  </div>
+                )}
               </>
             )}
 

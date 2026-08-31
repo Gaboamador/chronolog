@@ -148,6 +148,12 @@
   font-weight: 800;
 }
 
+.entryStatusDetail {
+  color: $color-logo4;
+  font-size: $font-size-sm;
+  font-weight: 600;
+}
+
 .absenceForm {
   @extend %absenceForm;
 }
@@ -212,6 +218,83 @@
 .openEntryStatusValue {
   font-size: $font-size-md;
   font-weight: 800;
+}
+
+.liveWorkedTime,
+.liveBreakTime {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 0.35rem;
+
+  span {
+    font-size: $font-size-sm;
+    opacity: 0.72;
+  }
+
+  strong {
+    font-family: $fuente-titulos;
+    font-size: $font-size-lg;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0.04em;
+  }
+}
+
+.liveBreakTime {
+  width: 100%;
+  padding-top: 0.45rem;
+  border-top: 1px solid rgba($color-logo2, 0.2);
+  color: $color-danger;
+}
+
+.breakSummary {
+  width: 100%;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding: 0.7rem 0.85rem;
+  border: 1px solid $color-bordes-tabla;
+  border-radius: 10px;
+  color: $color-primario;
+  font-size: $font-size-sm;
+
+  small {
+    margin-top: 0.2rem;
+    color: $color-logo4;
+  }
+}
+
+.breakEditRow {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr) 2rem;
+  align-items: center;
+  gap: 0.35rem;
+
+  input {
+    box-sizing: border-box;
+    min-width: 0;
+    width: 100%;
+    padding: 0.35rem;
+    border: 1px solid $color-bordes-tabla;
+    border-radius: 7px;
+    background: white;
+    color: $color-texto-oscuro;
+    font-family: $fuente-contenidos;
+  }
+}
+
+.deleteBreakButton {
+  width: 2rem;
+  height: 2rem;
+  padding: 0 !important;
+  border: none;
+  border-radius: 50%;
+  background: rgba($color-danger, 0.12);
+  color: $color-danger;
+  cursor: pointer;
+  font-size: $font-size-lg;
 }
 
 .separator {
@@ -312,6 +395,43 @@
 
 .closeWorkDayButton {
   justify-content: center;
+  margin-top: 0.9rem;
+}
+
+.transientActionPanel {
+  grid-column: 1 / -1;
+  width: 100%;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+  margin-top: 0.45rem;
+  padding: 0.75rem;
+  border: 1px dashed rgba($color-logo2, 0.35);
+  border-radius: 12px;
+  background: rgba($color-logo1, 0.07);
+}
+
+.transientActionLabel {
+  color: $color-logo4;
+  font-size: $font-size-xs;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.temporaryExitButton,
+.returnButton {
+  width: 100%;
+}
+
+.temporaryExitButton {
+  border-style: dashed !important;
+}
+
+.returnButton {
+  box-shadow: 0 0 0 3px rgba($color-logo2, 0.14) !important;
 }
 
 .clockActionIcon {

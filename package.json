@@ -22,6 +22,7 @@
     "dev": "vite",
     "start": "vite",
     "build": "vite build",
+    "test": "node --experimental-default-type=module --test tests/*.test.mjs",
     "preview": "vite preview",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d dist"
