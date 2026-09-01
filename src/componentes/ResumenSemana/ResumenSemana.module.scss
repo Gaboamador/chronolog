@@ -2,7 +2,9 @@
 @use 'sass:color';
 
 .containerMain {
-  padding: 1rem;
+  width: 100%;
+  min-width: 0;
+  padding: var(--flow-gutter);
 }
 
 .titleWrapper {
@@ -13,7 +15,9 @@
   margin: 0 auto;
   margin-bottom: 10px;
   font-family: $fuente-contenidos;
-  max-width: 480px;
+  width: 100%;
+  max-width: var(--flow-content-max);
+  min-width: 0;
 }
 
 .title {
@@ -35,13 +39,15 @@
 
 .tableResponsive {
     width: 100%;
-    max-width: 100vw;
-    overflow-x: auto;
+    max-width: var(--flow-content-max);
+    min-width: 0;
+    margin-inline: auto;
   }
  
   .weeklySummaryTable {
     width: 100%;
-    max-width: 560px;
+    max-width: var(--flow-content-max);
+    table-layout: fixed;
     border-collapse: separate;
     border-spacing: 0;
     margin: 0 auto;
@@ -113,10 +119,31 @@
 
   .weeklySummaryTable th, 
   .weeklySummaryTable td {
-    padding: 8px;
+    min-width: 0;
+    padding: clamp(4px, 1.6vw, 8px);
     border: none;
     border-bottom: 1px solid $color-bordes-tabla;
   }
+
+  .weeklySummaryTable th {
+    font-size: clamp(0.64rem, 2.7vw, 0.78rem);
+    overflow-wrap: anywhere;
+  }
+
+  .weeklySummaryTable td {
+    font-size: clamp(0.68rem, 2.9vw, 0.875rem);
+  }
+
+  .weeklySummaryTable th:nth-child(1),
+  .weeklySummaryTable td:nth-child(1) { width: 24%; }
+  .weeklySummaryTable th:nth-child(2),
+  .weeklySummaryTable td:nth-child(2) { width: 15%; }
+  .weeklySummaryTable th:nth-child(3),
+  .weeklySummaryTable td:nth-child(3) { width: 15%; }
+  .weeklySummaryTable th:nth-child(4),
+  .weeklySummaryTable td:nth-child(4) { width: 17%; }
+  .weeklySummaryTable th:nth-child(5),
+  .weeklySummaryTable td:nth-child(5) { width: 19%; }
 
   .weeklySummaryTable tbody tr {
     transition: background-color 0.18s ease;
@@ -153,8 +180,9 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    min-width: 54px;
-    padding: 2px 7px;
+    min-width: 0;
+    max-width: 100%;
+    padding: 2px clamp(3px, 1vw, 7px);
     border-radius: 999px;
     font-weight: 700;
     white-space: nowrap;
@@ -176,9 +204,9 @@
   }
 
   .actionsColumn {
-    width: 36px;
-    min-width: 36px;
-    max-width: 36px;
+    width: 10%;
+    min-width: 0;
+    max-width: none;
     padding-left: 4px;
     padding-right: 4px;
     text-align: center;
@@ -202,7 +230,8 @@
     margin-top: 1rem;
     gap: 1rem;
     justify-content: space-evenly;
-    max-width: 480px;
+    width: 100%;
+    max-width: var(--flow-content-max);
 
   }
 

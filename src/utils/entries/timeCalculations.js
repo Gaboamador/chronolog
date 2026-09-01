@@ -103,6 +103,25 @@ export function getBreakMinutes(entry, { includeOpenUntil = null } = {}) {
   }, 0);
 }
 
+export function getElapsedMinutes(entry, { endTime = null } = {}) {
+  const startMinutes = parseTimeToMinutes(entry?.start);
+  const effectiveEnd = entry?.end || endTime;
+  const endMinutes =
+    startMinutes === null
+      ? null
+      : toTimelineMinute(effectiveEnd, startMinutes);
+
+  if (
+    startMinutes === null ||
+    endMinutes === null ||
+    endMinutes <= startMinutes
+  ) {
+    return null;
+  }
+
+  return endMinutes - startMinutes;
+}
+
 export function getWorkedMinutes(entry, { endTime = null, includeOpenBreak = false } = {}) {
   const startMinutes = parseTimeToMinutes(entry?.start);
   const effectiveEnd = entry?.end || endTime;

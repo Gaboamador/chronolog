@@ -26,6 +26,7 @@ import { FiLogIn, FiLogOut } from 'react-icons/fi';
 import {
   formatMinutes,
   getBreakMinutes,
+  getElapsedMinutes,
   formatSeconds,
   getLiveTimeSummary,
   getOpenBreak,
@@ -505,14 +506,22 @@ const FormularioHora = () => {
         <div className={`${styles.timeEntryContainer} ${styles.timeEntryContainerLoaded}`}>
           {selectedEntryIsWorked && (
             <div className={styles.entryStatusCard}>
-              <span className={styles.entryStatusLabel}>Día cargado</span>
-              <strong className={styles.entryStatusValue}>
-                {selectedEntry.start} a {selectedEntry.end}
-              </strong>
+              <div className={styles.firstRow}>
+                <span className={styles.entryStatusLabel}>Día cargado</span>
+                <strong className={styles.entryStatusValue}>
+                  {selectedEntry.start} a {selectedEntry.end}
+                </strong>
+              </div>
               {selectedBreaks.length > 0 && (
-                <span className={styles.entryStatusDetail}>
-                  {formatMinutes(getWorkedMinutes(selectedEntry))} trabajadas · {formatMinutes(getBreakMinutes(selectedEntry))} fuera
-                </span>
+                <div className={styles.secondRow}>
+                  <span className={styles.entryStatusDetail}>
+                    {formatMinutes(getWorkedMinutes(selectedEntry))} trabajadas
+                    {' · '}
+                    {formatMinutes(getBreakMinutes(selectedEntry))} fuera
+                    {' · '}
+                    {formatMinutes(getElapsedMinutes(selectedEntry))} total
+                  </span>
+                </div>
               )}
             </div>
           )}
@@ -556,6 +565,42 @@ const FormularioHora = () => {
                   <strong>{formatSeconds(liveTimeSummary.currentBreakSeconds)}</strong>
                 </div>
               )}
+            </div>
+          )}
+
+          {selectedEntryIsOpen && (
+            <div className={styles.transientActionPanel}>
+              <span className={styles.transientActionLabel}>Movimiento transitorio</span>
+          {!selectedOpenBreak && (
+            <button
+              type="button"
+              className={[
+              buttonStyles.button,
+              buttonStyles.primary,
+              styles.clockActionButton,
+              styles.temporaryExitButton,
+            ].join(' ')}
+              onClick={handleTemporaryExit}
+            >
+              MARCAR SALIDA TRANSITORIA
+            </button>
+          )}
+
+          {selectedOpenBreak && (
+            <button
+              type="button"
+              className={[
+              buttonStyles.button,
+              buttonStyles.primary,
+              styles.clockActionButton,
+              styles.temporaryExitButton,
+              styles.returnButton
+            ].join(' ')}
+              onClick={handleReturn}
+            >
+              MARCAR REINGRESO
+            </button>
+          )}
             </div>
           )}
 
@@ -709,31 +754,6 @@ const FormularioHora = () => {
                     {/* <small>Guarda la hora actual</small> */}
                   </span>
                 </button>
-
-                {selectedEntryIsOpen && (
-                  <div className={styles.transientActionPanel}>
-                    <span className={styles.transientActionLabel}>Movimiento transitorio</span>
-                {!selectedOpenBreak && (
-                  <button
-                    type="button"
-                    className={`${buttonStyles.button} ${buttonStyles.secondary} ${styles.temporaryExitButton}`}
-                    onClick={handleTemporaryExit}
-                  >
-                    MARCAR SALIDA TRANSITORIA
-                  </button>
-                )}
-
-                {selectedOpenBreak && (
-                  <button
-                    type="button"
-                    className={`${buttonStyles.button} ${buttonStyles.primary} ${styles.returnButton}`}
-                    onClick={handleReturn}
-                  >
-                    MARCAR REINGRESO
-                  </button>
-                )}
-                  </div>
-                )}
               </>
             )}
 

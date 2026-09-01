@@ -30,6 +30,7 @@
   justify-content: center;
 
   overflow-y: auto;
+  min-width: 0;
 
   box-shadow: 0 24px 60px rgba($color-primario-oscuro, 0.42);
 
@@ -79,7 +80,7 @@
 
 .timeEntryInputGroup {
   display: grid;
-  grid-template-columns: 76px minmax(0, 96px);
+  grid-template-columns: minmax(0, 76px) minmax(0, 96px);
   align-items: center;
   column-gap: 0.75rem;
 
@@ -88,7 +89,8 @@
   }
 
   input {
-    width: calc(100% + 1rem);
+    width: 100%;
+    min-width: 0;
     box-sizing: border-box;
 
     background-color: rgba(255, 255, 255, 0.96);
@@ -154,6 +156,7 @@
     gap: 0.5rem;
     width: 100%;
     justify-content: space-evenly;
+    flex-wrap: wrap;
   }
 
   .modalSaveButton {

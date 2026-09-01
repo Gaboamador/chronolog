@@ -1,5 +1,10 @@
 @use '@/styles/variables.scss' as *;
 
+:root {
+  --flow-content-max: 31.25rem;
+  --flow-gutter: 1rem;
+}
+
 *,
 *::before,
 *::after {
@@ -11,6 +16,8 @@ body,
 #root {
   margin: 0;
   padding: 0;
+  width: 100%;
+  min-width: 0;
 }
 
 body {
@@ -23,10 +30,13 @@ body {
   font-size: $font-size-md;
   color: $color-texto-oscuro;
   background-color: $color-primario-fondo-claro;
+  width: 100%;
+  min-width: 0;
 }
 
 .body {
   width: 100%;
+  min-width: 0;
 }
 
 .loading {
@@ -37,26 +47,34 @@ body {
 }
 
 .rdp-root {
-  width:fit-content;
+  --rdp-day-width: clamp(
+    38px,
+    calc(
+      min(
+        100vw - (2 * var(--flow-gutter)),
+        var(--flow-content-max)
+      ) / 7
+    ),
+    71.43px
+  );
+  --rdp-day-height: clamp(38px, 10vw, 48px);
+  --rdp-day_button-width: clamp(36px, 10vw, 46px);
+  --rdp-day_button-height: var(--rdp-day_button-width);
+
+  width: min(100%, var(--flow-content-max));
+  min-width: 0;
   margin: 0 auto;
   --rdp-accent-color: #{$color-secundario} !important;
 }
 
-.containerMain {
-  padding: 1rem;
+.rdp-month,
+.rdp-month_grid {
+  width: 100%;
+  min-width: 0;
 }
 
-.containerMain.calendar {
-  background-color: $color-primario-fondo;
-  border-bottom: 1px solid $color-bordes-tabla;
-}
-
-@media(max-width: 350px){
-  .rdp-day_button,
-  .rdp-day {
-    max-width: 38px !important;
-    max-height: 38px !important;
-  }
+.rdp-month_grid {
+  table-layout: fixed;
 }
 
 .verificationError {
@@ -72,7 +90,9 @@ body {
 }
 
 .monthlySummaryTriggerContainer {
-  padding: 1rem;
+  width: min(calc(100% - (2 * var(--flow-gutter))), var(--flow-content-max));
+  margin-inline: auto;
+  padding: 1rem 0;
   padding-top: 0;
 }
 

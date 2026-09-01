@@ -141,7 +141,7 @@ const handleResendVerification = async () => {
 }
 
 function App() {
-   return (
+  return (
     <GlobalState>
       <ToastProvider>
         <AppContent />
