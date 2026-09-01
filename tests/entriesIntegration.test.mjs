@@ -3,7 +3,7 @@ import test from 'node:test';
 import { getChangedEntryDates } from '../src/utils/entries/getChangedEntryDates.js';
 import { calculateMonthlySummaries } from '../src/utils/monthlyStats.js';
 
-test('una modificación en las salidas queda pendiente de sincronización', () => {
+test('detecta una modificación estructural en las salidas', () => {
   const previous = [{
     date: '2026-08-31',
     start: '09:00',

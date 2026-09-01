@@ -1,0 +1,47 @@
+@use '@/styles/variables.scss' as *;
+
+.wrapper {
+  width: 100%;
+  min-height: calc(100dvh - 4rem);
+  padding: 1rem;
+  display: grid;
+  place-items: center;
+  background: $color-primario;
+}
+
+.card {
+  width: min(100%, 31.25rem);
+  padding: clamp(1.25rem, 5vw, 2rem);
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  border: 1px solid rgba($color-secundario, 0.4);
+  border-radius: 16px;
+  background: $color-primario-claro;
+  color: $color-texto-claro;
+  box-shadow: 0 24px 60px rgba($color-primario-oscuro, 0.42);
+  text-align: left;
+
+  h1, p { margin: 0; }
+  h1 { font-family: $fuente-titulos; font-size: clamp(1.35rem, 6vw, 1.8rem); }
+  p { line-height: 1.5; }
+  button { width: 100%; }
+}
+
+.eyebrow {
+  color: $color-secundario;
+  font-size: $font-size-xs;
+  font-weight: 800;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+
+.warning, .unassigned {
+  padding: 0.85rem;
+  border-radius: 10px;
+  background: rgba($color-secundario, 0.12);
+}
+
+.unassigned { display: flex; flex-direction: column; gap: 0.8rem; }
+.error { color: #ffb4ab; font-weight: 700; }
+.note { opacity: 0.72; font-size: $font-size-sm; text-align: center; }

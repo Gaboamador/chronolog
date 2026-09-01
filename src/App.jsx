@@ -9,6 +9,7 @@ import ResumenSemana from '@/componentes/ResumenSemana';
 import Auth from '@/componentes/Auth';
 import Loader from '@/componentes/Loader';
 import HorarioPersonal from '@/componentes/HorarioPersonal';
+import LegacyMigrationGate from '@/componentes/LegacyMigrationGate';
 import MonthlySummaryModal from '@/componentes/MonthlySummaryModal';
 import {ToastProvider} from '@/context/ToastContext';
 import authStyles from '@/componentes/Auth/Auth.module.scss';
@@ -18,6 +19,7 @@ function AppContent() {
   const context = useContext(Context)
   const [verificationSent, setVerificationSent] = useState(false);
   const [mostrarResumenMensual, setMostrarResumenMensual] = useState(false);
+  const [historicalEntries, setHistoricalEntries] = useState([]);
 
 useEffect(() => {
     const enviarVerificacion = async () => {
@@ -46,6 +48,18 @@ const handleResendVerification = async () => {
       console.error("Error al reenviar el correo:", error);
     }
   }
+
+};
+
+const handleOpenMonthlySummary = async () => {
+  try {
+    const allEntries = await context.exportAllEntries();
+    setHistoricalEntries(allEntries);
+    setMostrarResumenMensual(true);
+  } catch (error) {
+    console.error('Error cargando el resumen histórico:', error);
+    alert('No se pudo cargar el historial completo.');
+  }
 };
 
 
@@ -73,7 +87,7 @@ const handleResendVerification = async () => {
     );
   }
 
-    if (context.user && !context.user.emailVerified) {
+  if (context.user && !context.user.emailVerified) {
     return (
       <div className="App">
           <Header />
@@ -93,6 +107,24 @@ const handleResendVerification = async () => {
             </div>
           </div>
         </div>
+      </div>
+    );
+  }
+
+  if (!context.legacyMigrationChecked) {
+    return (
+      <div className="App">
+        <Header hideUserMenu />
+        <div className="body"><Loader /></div>
+      </div>
+    );
+  }
+
+  if (context.legacyPendingCount > 0 || context.legacyUnassignedCount > 0) {
+    return (
+      <div className="App">
+        <Header hideUserMenu />
+        <LegacyMigrationGate />
       </div>
     );
   }
@@ -120,7 +152,7 @@ const handleResendVerification = async () => {
           <button
             type="button"
             className="monthly-summary-trigger"
-            onClick={() => setMostrarResumenMensual(true)}
+            onClick={handleOpenMonthlySummary}
           >
             Promedios por mes
           </button>
@@ -132,7 +164,7 @@ const handleResendVerification = async () => {
       <MonthlySummaryModal
         isOpen={mostrarResumenMensual}
         onClose={() => setMostrarResumenMensual(false)}
-        entries={context.entries}
+        entries={historicalEntries}
         defaultWorkTime={context.defaultWorkTime}
       />
 

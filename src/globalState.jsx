@@ -36,19 +36,26 @@ function GlobalState(props) {
 
   const {
     entries,
-    setEntries,
-
     entriesLoading,
     entriesError,
-
-    uploadEntriesToFirebase,
-    isUploadingEntries,
-    entriesUploadError,
-
-    hasPendingEntriesChanges,
-
-    clearEntriesLocalState,
-  } = useEntries(user, authLoading);
+    persistEntry,
+    removeEntry,
+    persistEntries,
+    exportAllEntries,
+    fetchEntriesInRange,
+    restoreAllEntries,
+    clearAllEntries,
+    legacyPendingCount,
+    legacyUnassignedCount,
+    legacyMigrationChecked,
+    inspectLegacyPendingEntries,
+    importLegacyPendingEntries,
+    exportUnassignedLegacyEntries,
+    inspectUnassignedLegacyEntries,
+    importUnassignedLegacyEntries,
+    syncStatus,
+    hasPendingWrites,
+  } = useEntries(user, authLoading, selectedDate);
 
   const loading = authLoading;
 
@@ -58,7 +65,6 @@ function GlobalState(props) {
 
       setUser(null);
 
-      clearEntriesLocalState();
       clearDefaultWorkTimeLocalState();
     } catch (error) {
       console.error("Error cerrando sesión:", error);
@@ -72,7 +78,23 @@ function GlobalState(props) {
         setSelectedDate,
 
         entries,
-        setEntries,
+        persistEntry,
+        removeEntry,
+        persistEntries,
+        exportAllEntries,
+        fetchEntriesInRange,
+        restoreAllEntries,
+        clearAllEntries,
+        legacyPendingCount,
+        legacyUnassignedCount,
+        legacyMigrationChecked,
+        inspectLegacyPendingEntries,
+        importLegacyPendingEntries,
+        exportUnassignedLegacyEntries,
+        inspectUnassignedLegacyEntries,
+        importUnassignedLegacyEntries,
+        syncStatus,
+        hasPendingWrites,
 
         user,
         setUser,
@@ -91,15 +113,9 @@ function GlobalState(props) {
         mostrarModalHorario,
         setMostrarModalHorario,
 
-        uploadEntriesToFirebase,
-        isUploadingEntries,
-
         entriesUploadError:
-          entriesUploadError ||
           entriesError ||
           defaultWorkTimeError,
-
-        hasPendingEntriesChanges,
       }}
     >
       {props.children}

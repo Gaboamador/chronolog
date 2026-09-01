@@ -12,7 +12,7 @@ import { FaUserEdit } from "react-icons/fa";
 import styles from './Header.module.scss';
 
 
-const Header = () => {
+const Header = ({ hideUserMenu = false }) => {
 
   const context = useContext(Context)
   const [showHorarioModal, setShowHorarioModal] = useState(false);
@@ -29,7 +29,7 @@ const Header = () => {
       <img src={isologo} alt={""} className={styles.isologo} />
     </div>
 
-    {context.user && (
+    {context.user && !hideUserMenu && (
       <div className={styles.menuButtonContainer}>
       <button
         onClick={() => setMenuOpen(prev => !prev)}

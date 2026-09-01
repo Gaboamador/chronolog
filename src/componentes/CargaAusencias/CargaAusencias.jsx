@@ -44,8 +44,10 @@ const CargaAusencias = ({ onClose }) => {
   const [error, setError] = useState('');
   const [replaceConfirmOpen, setReplaceConfirmOpen] = useState(false);
   const [pendingDatesToApply, setPendingDatesToApply] = useState([]);
+  const [saving, setSaving] = useState(false);
 
-  const applyAbsences = (datesToApply) => {
+  const applyAbsences = async (datesToApply) => {
+    if (saving) return;
     const absenceEntries = datesToApply.map((date) =>
         buildJustifiedAbsenceEntry({
         date,
@@ -53,17 +55,27 @@ const CargaAusencias = ({ onClose }) => {
         })
     );
 
-    context.setEntries((prev) => [
-        ...prev.filter((entry) => !datesToApply.includes(entry.date)),
-        ...absenceEntries,
-    ]);
-
-    setReplaceConfirmOpen(false);
-    setPendingDatesToApply([]);
-    onClose();
+    try {
+      setSaving(true);
+      const persisted = await context.persistEntries(absenceEntries);
+      if (!persisted) {
+        setError('No se pudieron guardar las ausencias. Revisá la conexión e intentá nuevamente.');
+        setReplaceConfirmOpen(false);
+        return;
+      }
+      setReplaceConfirmOpen(false);
+      setPendingDatesToApply([]);
+      onClose();
+    } catch (saveError) {
+      console.error('Error guardando ausencias:', saveError);
+      setError('No se pudieron guardar las ausencias. Revisá la conexión e intentá nuevamente.');
+      setReplaceConfirmOpen(false);
+    } finally {
+      setSaving(false);
+    }
     };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     setError('');
 
     if (!startDate || !endDate) {
@@ -86,9 +98,17 @@ const CargaAusencias = ({ onClose }) => {
       return;
     }
 
-    const existingEntries = context.entries.filter((entry) =>
-      datesToApply.includes(entry.date)
-    );
+    let existingEntries;
+    try {
+      existingEntries = (await context.fetchEntriesInRange(
+        datesToApply[0],
+        datesToApply[datesToApply.length - 1]
+      )).filter((entry) => datesToApply.includes(entry.date));
+    } catch (loadError) {
+      console.error('Error comprobando ausencias existentes:', loadError);
+      setError('No se pudo comprobar el rango. Revisá la conexión e intentá nuevamente.');
+      return;
+    }
 
     if (existingEntries.length > 0) {
     setPendingDatesToApply(datesToApply);
@@ -158,12 +178,12 @@ const CargaAusencias = ({ onClose }) => {
 
         <div className={modalStyles.modalButtonsContainer}>
           <div className={modalStyles.modalDeleteCancelButtons}>
-            <button className={`${buttonStyles.button} ${buttonStyles.secondary} ${modalStyles.button}`} onClick={onClose}>
+            <button className={`${buttonStyles.button} ${buttonStyles.secondary} ${modalStyles.button}`} onClick={onClose} disabled={saving}>
               CANCELAR
             </button>
 
-            <button className={`${buttonStyles.button} ${buttonStyles.primary} ${modalStyles.button}`} onClick={handleSave}>
-              GUARDAR
+            <button className={`${buttonStyles.button} ${buttonStyles.primary} ${modalStyles.button}`} onClick={handleSave} disabled={saving}>
+              {saving ? 'GUARDANDO…' : 'GUARDAR'}
             </button>
           </div>
         </div>
@@ -173,11 +193,12 @@ const CargaAusencias = ({ onClose }) => {
       isOpen={replaceConfirmOpen}
       title="Reemplazar cargas existentes"
       message={`El rango incluye ${pendingDatesToApply.length} día(s) que ya tienen una carga. Si continuás, se reemplazarán por ausencia justificada.`}
-      confirmText="Reemplazar"
+      confirmText={saving ? 'Guardando…' : 'Reemplazar'}
       cancelText="Cancelar"
       danger
       onConfirm={() => applyAbsences(pendingDatesToApply)}
       onCancel={() => {
+        if (saving) return;
         setReplaceConfirmOpen(false);
         setPendingDatesToApply([]);
       }}

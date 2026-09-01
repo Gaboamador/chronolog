@@ -2,7 +2,8 @@ import {
   ABSENCE_REASONS,
   CLOCK_STATUS,
   ENTRY_TYPES,
-} from './entriesStatus';
+} from './entriesStatus.js';
+import { normalizeBreaks } from './timeCalculations.js';
 
 export function buildWorkedEntry({
   date,
@@ -11,6 +12,7 @@ export function buildWorkedEntry({
   clockStatus = CLOCK_STATUS.CLOSED,
   breaks = [],
   startTimestamp,
+  endTimestamp,
 }) {
   return {
     date,
@@ -18,8 +20,9 @@ export function buildWorkedEntry({
     start,
     end,
     clockStatus,
-    breaks,
+    breaks: normalizeBreaks(breaks),
     ...(startTimestamp ? { startTimestamp } : {}),
+    ...(endTimestamp ? { endTimestamp } : {}),
   };
 }
 

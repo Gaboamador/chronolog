@@ -1,7 +1,6 @@
 import React, { useContext, useMemo, useState } from 'react';
 import Context from '@/context';
 import ConfirmModal from '@/componentes/ConfirmModal';
-import { motion } from "framer-motion";
 import {
   format,
   startOfWeek,
@@ -32,6 +31,7 @@ import {
 } from '@/utils/entries/buildEntries';
 import {
   formatMinutes as formatWorkedMinutes,
+  editBreakTime,
   getBreakMinutes,
   getExpectedWorkMinutes,
   getWorkedMinutes,
@@ -95,6 +95,7 @@ const ResumenSemana = () => {
   const context = useContext(Context);
   const { showToast } = useToast();
   const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
+  const [savingEdit, setSavingEdit] = useState(false);
 
   const [modalOpen, setModalOpen] = useState(false);
   const [editDate, setEditDate] = useState(null);
@@ -171,10 +172,6 @@ const ResumenSemana = () => {
     };
   });
 
-  const totalDiff = tableRows.reduce((sum, row) => {
-    return sum + (row.worked ? row.diff : 0);
-  }, 0);
-
   const resetEditState = () => {
     setModalOpen(false);
     setEditDate(null);
@@ -205,14 +202,14 @@ const ResumenSemana = () => {
     setModalOpen(true);
   };
 
-  const handleSaveEdit = () => {
+  const handleSaveEdit = async () => {
     if (!editDate) return;
 
     const filteredEntries = context.entries.filter(e => e.date !== editDate);
 
     if (editMode === ENTRY_TYPES.WORKED) {
-      if (!editStart || !editEnd) {
-        showToast('Completá entrada y salida para guardar el horario.', 'warning');
+      if (!editStart) {
+        showToast('Completá la hora de entrada.', 'warning');
         return;
       }
 
@@ -220,10 +217,18 @@ const ResumenSemana = () => {
         date: editDate,
         start: editStart,
         end: editEnd,
+        clockStatus: editEnd ? 'closed' : 'open',
         breaks: editBreaks,
+        startTimestamp: (() => {
+          const original = context.entries.find((entry) => entry.date === editDate);
+          return original?.start === editStart ? original.startTimestamp : undefined;
+        })(),
       });
 
-      const validation = validateWorkedEntry(editedEntry);
+      const validation = validateWorkedEntry(editedEntry, {
+        allowOpenEntry: !editEnd,
+        allowOpenBreak: !editEnd,
+      });
       if (!validation.valid) {
         showToast(validation.error, 'warning');
         return;
@@ -241,8 +246,22 @@ const ResumenSemana = () => {
     );
     }
 
-    context.setEntries(filteredEntries);
-    resetEditState();
+    const savedEntry = filteredEntries.find((entry) => entry.date === editDate);
+    if (!savedEntry || savingEdit) return;
+    try {
+      setSavingEdit(true);
+      const persisted = await context.persistEntry(savedEntry);
+      if (!persisted) {
+        showToast('No se pudo guardar la edición. Revisá la conexión e intentá nuevamente.', 'error');
+        return;
+      }
+      resetEditState();
+    } catch (saveError) {
+      console.error('Error guardando edición:', saveError);
+      showToast('No se pudo guardar la edición. Revisá la conexión e intentá nuevamente.', 'error');
+    } finally {
+      setSavingEdit(false);
+    }
   };
 
   const handleDeleteEdit = () => {
@@ -250,17 +269,28 @@ const ResumenSemana = () => {
 
     setConfirmDeleteOpen(true);
   };
-  const handleConfirmDeleteEdit = () => {
-    if (!editDate) return;
+  const handleConfirmDeleteEdit = async () => {
+    if (!editDate || savingEdit) return;
 
-    const filteredEntries = context.entries.filter(e => e.date !== editDate);
-
-    context.setEntries(filteredEntries);
+    let removed = false;
+    try {
+      setSavingEdit(true);
+      removed = await context.removeEntry(editDate);
+    } catch (deleteError) {
+      console.error('Error eliminando registro:', deleteError);
+    } finally {
+      setSavingEdit(false);
+    }
+    if (!removed) {
+      setConfirmDeleteOpen(false);
+      showToast('No se pudo eliminar el registro. Revisá la conexión e intentá nuevamente.', 'error');
+      return;
+    }
 
     showToast(
       editMode === ENTRY_TYPES.JUSTIFIED_ABSENCE
-        ? 'Ausencia eliminada. Cargá cambios para sincronizar.'
-        : 'Entrada eliminada. Cargá cambios para sincronizar.',
+        ? 'Ausencia eliminada.'
+        : 'Entrada eliminada.',
       'success'
     );
 
@@ -276,32 +306,14 @@ const ResumenSemana = () => {
     resetEditState();
   };
 
-  const handleUploadEntries = async () => {
-    try {
-      const result = await context.uploadEntriesToFirebase();
-
-      const savedCount = result?.savedCount || 0;
-      const deletedCount = result?.deletedCount || 0;
-      const changedCount = savedCount + deletedCount;
-
-      if (changedCount === 0) {
-        showToast('No hay cambios pendientes para cargar.', 'info');
-        return;
-      }
-
-      showToast('Cambios cargados correctamente.', 'success');
-    } catch (error) {
-      console.error('Error al cargar cambios:', error);
-      showToast('No se pudieron cargar los cambios. Intentá nuevamente.', 'error');
-    }
-  };
-
   const isEditingWorkedEntry = editMode === ENTRY_TYPES.WORKED;
   const isEditingAbsence = editMode === ENTRY_TYPES.JUSTIFIED_ABSENCE;
 
   const updateEditBreak = (index, field, value) => {
     setEditBreaks((current) => current.map((workBreak, breakIndex) =>
-      breakIndex === index ? { ...workBreak, [field]: value } : workBreak
+      breakIndex === index
+        ? editBreakTime(workBreak, field, value)
+        : workBreak
     ));
   };
 
@@ -310,6 +322,17 @@ const ResumenSemana = () => {
       <div className={styles.titleWrapper}>
         <span className={styles.title}>Promedio {selectedMonthName}</span>
         <span className={styles.average}>{formatDurationPlain(averageMonthlyDuration)}</span>
+        <span className={styles.syncStatus} role={context.syncStatus === 'error' ? 'alert' : undefined}>
+          {context.syncStatus === 'syncing' && 'Sincronizando…'}
+          {context.syncStatus === 'offline' && 'Sin conexión · cambios en espera'}
+          {context.syncStatus === 'error' && 'Error de sincronización'}
+          {context.syncStatus === 'migration' && (
+            context.legacyUnassignedCount > 0
+              ? 'Cambios anteriores sin asociar'
+              : 'Cambios anteriores por importar'
+          )}
+          {context.syncStatus === 'synced' && 'Sincronizado'}
+        </span>
       </div>
 
       <div className={styles.tableResponsive}>
@@ -402,51 +425,8 @@ const ResumenSemana = () => {
               </td>
             </tr>
 
-            {/* <tr className={styles.weeklySummarySecondaryRow}>
-              <td colSpan={3}>Diferencia Semanal</td>
-              <td colSpan={2}>{formatDuration(totalDiff)}</td>
-            </tr> */}
           </tbody>
         </table>
-
-      <div className={styles.buttonsContainer}>
-        <button
-          className={`${buttonStyles.button} ${buttonStyles.primary} ${styles.buttonUpload} ${
-            context.hasPendingEntriesChanges ? styles.dirty : ""
-          }`}
-          onClick={handleUploadEntries}
-          disabled={
-            context.isUploadingEntries ||
-            !context.hasPendingEntriesChanges
-          }
-          title={
-            context.hasPendingEntriesChanges
-              ? "Hay cambios pendientes de cargar"
-              : "No hay cambios pendientes"
-          }
-        >
-          {context.isUploadingEntries ? "CARGANDO..." : "CARGAR CAMBIOS"}
-
-          {context.hasPendingEntriesChanges && !context.isUploadingEntries && (
-            <span className={styles.dirtyDot} aria-hidden="true">
-              <motion.span
-                className={styles.dirtyDotRipple}
-                initial={{ scale: 1, opacity: 0 }}
-                animate={{
-                  scale: [1, 1.8, 2.6],
-                  opacity: [0, 0.45, 0],
-                }}
-                transition={{
-                  duration: 1.8,
-                  repeat: Infinity,
-                  ease: "easeOut",
-                  times: [0, 0.15, 1],
-                }}
-              />
-            </span>
-          )}
-        </button>
-      </div>
 
         <ModalEditar isOpen={modalOpen} onClose={handleCancelEdit}>
           <div className={`${modalStyles.timeEntryContainer} ${modalStyles.modalSurface}`}>
@@ -538,18 +518,18 @@ const ResumenSemana = () => {
 
             <div className={modalStyles.modalButtonsContainer}>
               <div className={modalStyles.modalDeleteCancelButtons}>
-                <button onClick={handleDeleteEdit} className={`${buttonStyles.button} ${buttonStyles.danger} ${modalStyles.button}`}>
+                <button onClick={handleDeleteEdit} disabled={savingEdit} className={`${buttonStyles.button} ${buttonStyles.danger} ${modalStyles.button}`}>
                   ELIMINAR
                 </button>
 
-                <button onClick={handleCancelEdit} className={`${buttonStyles.button} ${buttonStyles.secondary} ${modalStyles.button}`}>
+                <button onClick={handleCancelEdit} disabled={savingEdit} className={`${buttonStyles.button} ${buttonStyles.secondary} ${modalStyles.button}`}>
                   CANCELAR
                 </button>
               </div>
 
               <div className={modalStyles.modalSaveButton}>
-                <button className={`${buttonStyles.button} ${buttonStyles.primary} ${modalStyles.button}`} onClick={handleSaveEdit}>
-                  GUARDAR
+                <button className={`${buttonStyles.button} ${buttonStyles.primary} ${modalStyles.button}`} onClick={handleSaveEdit} disabled={savingEdit}>
+                  {savingEdit ? 'GUARDANDO…' : 'GUARDAR'}
                 </button>
               </div>
             </div>
@@ -564,8 +544,8 @@ const ResumenSemana = () => {
           }
           message={
             editMode === ENTRY_TYPES.JUSTIFIED_ABSENCE
-              ? '¿Estás seguro de que querés borrar esta ausencia? El cambio quedará pendiente hasta que cargues los cambios.'
-              : '¿Estás seguro de que querés borrar esta entrada? El cambio quedará pendiente hasta que cargues los cambios.'
+              ? '¿Estás seguro de que querés borrar esta ausencia?'
+              : '¿Estás seguro de que querés borrar esta entrada?'
           }
           confirmText="Eliminar"
           cancelText="Cancelar"

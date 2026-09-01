@@ -27,6 +27,22 @@ export function normalizeBreaks(breaks) {
   }));
 }
 
+export function editBreakTime(workBreak, field, value) {
+  if (field !== 'start' && field !== 'end') {
+    throw new Error('Campo de salida transitoria inválido.');
+  }
+
+  const normalized = normalizeBreaks([workBreak])[0];
+  const timestampField = field === 'start' ? 'startTimestamp' : 'endTimestamp';
+  const { [timestampField]: omittedTimestamp, ...withoutInvalidatedTimestamp } = normalized;
+  void omittedTimestamp;
+
+  return {
+    ...withoutInvalidatedTimestamp,
+    [field]: value,
+  };
+}
+
 export function getOpenBreak(entry) {
   return normalizeBreaks(entry?.breaks).find(
     (workBreak) => Boolean(workBreak.start) && !workBreak.end
@@ -39,15 +55,17 @@ function toTimelineMinute(value, dayStartMinutes) {
   return parsed < dayStartMinutes ? parsed + MINUTES_PER_DAY : parsed;
 }
 
-export function validateWorkedEntry(entry, { allowOpenBreak = false } = {}) {
+export function validateWorkedEntry(entry, { allowOpenBreak = false, allowOpenEntry = false } = {}) {
   const startMinutes = parseTimeToMinutes(entry?.start);
   const endMinutes = parseTimeToMinutes(entry?.end);
 
   if (startMinutes === null) return { valid: false, error: 'La hora de entrada no es válida.' };
-  if (endMinutes === null) return { valid: false, error: 'La hora de salida no es válida.' };
+  if (endMinutes === null && !allowOpenEntry) return { valid: false, error: 'La hora de salida no es válida.' };
 
-  let dayEndMinutes = toTimelineMinute(entry.end, startMinutes);
-  if (dayEndMinutes === startMinutes) {
+  let dayEndMinutes = endMinutes === null
+    ? startMinutes + MINUTES_PER_DAY
+    : toTimelineMinute(entry.end, startMinutes);
+  if (endMinutes !== null && dayEndMinutes === startMinutes) {
     return { valid: false, error: 'La entrada y la salida no pueden ser iguales.' };
   }
 

@@ -21,7 +21,7 @@ body,
 }
 
 body {
-  background-color: $color-primario-fondo-claro;
+  background-color: $color-primario;
 }
 
 .App {
@@ -29,7 +29,7 @@ body {
   font-family: $fuente-contenidos;
   font-size: $font-size-md;
   color: $color-texto-oscuro;
-  background-color: $color-primario-fondo-claro;
+  background-color: $color-primario;
   width: 100%;
   min-width: 0;
 }
@@ -37,6 +37,7 @@ body {
 .body {
   width: 100%;
   min-width: 0;
+  background-color: $color-primario-fondo-claro;
 }
 
 .loading {
@@ -75,6 +76,14 @@ body {
 
 .rdp-month_grid {
   table-layout: fixed;
+}
+
+.rdp-root td.rdp-day {
+  text-align: center;
+}
+
+.rdp-root td.rdp-day > button.rdp-day_button {
+  margin: 0 auto;
 }
 
 .verificationError {
