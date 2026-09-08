@@ -9,8 +9,9 @@ import {
   clearMonthCaches, monthKeyOf, readAllMonthCaches, readMonthCache, writeMonthCache,
 } from '@/utils/entries/monthCache';
 import {
-  archiveUnassignedLegacyEntries, clearMigratedLegacyEntries, getLegacyMigrationState,
-  readLegacyCandidates, readUidLegacyEntries,
+  archiveUnassignedLegacyEntries, clearAllActiveLegacyEntries, clearGlobalLegacyEntries,
+  clearMigratedLegacyEntries, getLegacyMigrationState, readAllLegacyEntriesForRecovery, readLegacyCandidates,
+  readUidLegacyEntries,
 } from '@/utils/entries/legacyMigration';
 
 function replaceMonth(allEntries, monthKey, monthEntries) {
@@ -245,6 +246,18 @@ export function useEntries(user, authLoading, selectedDate) {
     return getLegacyMigrationState(user.uid).unassignedEntries;
   }, [user]);
 
+  const exportAllLegacyEntriesForRecovery = useCallback(() => {
+    if (!user) return [];
+    return readAllLegacyEntriesForRecovery(user.uid);
+  }, [user]);
+
+  const resolveLegacyEntriesAfterBackup = useCallback(() => {
+    if (!user) throw new Error('No hay usuario autenticado.');
+    clearAllActiveLegacyEntries(user.uid);
+    setLegacyPendingCount(0);
+    setLegacyUnassignedCount(0);
+  }, [user]);
+
   const inspectUnassignedLegacyEntries = useCallback(async () => {
     if (!user) throw new Error('No hay usuario autenticado.');
     const pending = getLegacyMigrationState(user.uid).unassignedEntries;
@@ -270,7 +283,14 @@ export function useEntries(user, authLoading, selectedDate) {
     }).length;
     await saveEntriesInChunks(user.uid, pending);
     // Conserva una copia local fechada antes de retirar las keys heredadas activas.
-    archiveUnassignedLegacyEntries();
+    try {
+      archiveUnassignedLegacyEntries();
+    } catch (archiveError) {
+      // Firestore ya confirmó la escritura. No se debe bloquear la cuenta porque el
+      // navegador no permita crear una segunda copia de los mismos datos.
+      console.warn('No se pudo crear el archivo local posterior a la migración:', archiveError);
+      clearGlobalLegacyEntries();
+    }
     if (activeUidRef.current !== user.uid) return { imported: pending.length, conflicts };
     setLegacyUnassignedCount(0);
     const merged = upsertMany(remote, pending);
@@ -317,6 +337,7 @@ export function useEntries(user, authLoading, selectedDate) {
     legacyMigrationChecked: !user || legacyMigrationCheckedUid === user.uid,
     inspectLegacyPendingEntries, importLegacyPendingEntries, exportUnassignedLegacyEntries,
     inspectUnassignedLegacyEntries, importUnassignedLegacyEntries,
+    exportAllLegacyEntriesForRecovery, resolveLegacyEntriesAfterBackup,
     syncStatus, hasPendingWrites,
   };
 }

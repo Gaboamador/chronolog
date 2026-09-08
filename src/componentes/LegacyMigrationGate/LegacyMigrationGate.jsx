@@ -22,6 +22,7 @@ export default function LegacyMigrationGate() {
   const [unassignedInspecting, setUnassignedInspecting] = useState(false);
   const [mutationBusy, setMutationBusy] = useState(false);
   const [confirmUnassigned, setConfirmUnassigned] = useState(false);
+  const [confirmBackupAndContinue, setConfirmBackupAndContinue] = useState(false);
   const [error, setError] = useState('');
   const busy = ownedInspecting || unassignedInspecting || mutationBusy;
 
@@ -75,6 +76,19 @@ export default function LegacyMigrationGate() {
     } catch (archiveError) {
       console.error('Error respaldando datos locales sin asociar:', archiveError);
       setError('No se pudo crear el respaldo. No se eliminó ningún dato local.');
+    }
+  };
+
+  const downloadBackupAndContinue = () => {
+    try {
+      const entries = context.exportAllLegacyEntriesForRecovery();
+      if (!entries.length) throw new Error('No hay registros locales para respaldar.');
+      downloadJson(entries);
+      context.resolveLegacyEntriesAfterBackup();
+      setConfirmBackupAndContinue(false);
+    } catch (backupError) {
+      console.error('Error resolviendo la migración mediante respaldo:', backupError);
+      setError('No se pudo descargar el respaldo. Los datos locales siguen intactos.');
     }
   };
 
@@ -155,6 +169,14 @@ export default function LegacyMigrationGate() {
         )}
 
         {error && <p className={styles.error} role="alert">{error}</p>}
+        <button
+          type="button"
+          className={`${buttonStyles.button} ${buttonStyles.secondary}`}
+          disabled={busy}
+          onClick={() => setConfirmBackupAndContinue(true)}
+        >
+          DESCARGAR RESPALDO Y CONTINUAR
+        </button>
         <p className={styles.note}>No se habilitará el uso normal hasta resolver estos registros.</p>
         <button
           type="button"
@@ -173,6 +195,15 @@ export default function LegacyMigrationGate() {
         cancelText="Cancelar"
         onConfirm={migrateUnassigned}
         onCancel={() => setConfirmUnassigned(false)}
+      />
+      <ConfirmModal
+        isOpen={confirmBackupAndContinue}
+        title="Continuar con un respaldo"
+        message="Se descargará una copia de todos los registros locales pendientes y dejarán de bloquear esta aplicación. Usá esta opción si la migración automática falla; después podés importar el archivo desde el menú de datos."
+        confirmText="Descargar y continuar"
+        cancelText="Cancelar"
+        onConfirm={downloadBackupAndContinue}
+        onCancel={() => setConfirmBackupAndContinue(false)}
       />
     </main>
   );

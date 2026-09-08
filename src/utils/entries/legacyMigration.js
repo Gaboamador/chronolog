@@ -103,6 +103,23 @@ export function clearMigratedLegacyEntries(uid, storage = localStorage) {
   storage.removeItem(`${LEGACY_CURRENT_MONTH_PREFIX}:${uid}`);
 }
 
+export function clearGlobalLegacyEntries(storage = localStorage) {
+  storage.removeItem(LEGACY_PENDING_KEY);
+  storage.removeItem(LEGACY_TIME_ENTRIES_KEY);
+  storage.removeItem(LEGACY_PENDING_OWNER_KEY);
+}
+
+export function clearAllActiveLegacyEntries(uid, storage = localStorage) {
+  clearGlobalLegacyEntries(storage);
+  if (uid) storage.removeItem(`${LEGACY_CURRENT_MONTH_PREFIX}:${uid}`);
+}
+
+export function readAllLegacyEntriesForRecovery(uid, storage = localStorage) {
+  const state = getLegacyMigrationState(uid, storage);
+  // El cache asociado al UID contiene el estado más reciente de sus fechas.
+  return upsertByDate(state.unassignedEntries, state.ownedEntries);
+}
+
 export function archiveUnassignedLegacyEntries(storage = localStorage, now = new Date()) {
   const entries = readGlobalLegacyEntries(storage);
   if (!entries.length) return { entries: [], archiveKey: null };

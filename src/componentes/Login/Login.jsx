@@ -7,6 +7,7 @@ import {
 } from "firebase/auth";
 import { FaSignInAlt, FaUserPlus } from "react-icons/fa";
 import { auth } from "@/firebase";
+import { guardarDatosPerfil } from '@/services/firebase/profileService';
 import zxcvbn from 'zxcvbn';
 import buttonStyles from '@/styles/Botones.module.scss';
 import authStyles from '@/componentes/Auth/Auth.module.scss';
@@ -65,6 +66,7 @@ const firebaseErrorMessages = {
         // Configurar displayName
           const fullName = `${firstName.trim()} ${lastName.trim()}`;
           await updateProfile(user, { displayName: fullName });
+          await guardarDatosPerfil(user.uid, firstName.trim(), lastName.trim());
         // Enviar correo de verificación
           await sendEmailVerification(user);
       }

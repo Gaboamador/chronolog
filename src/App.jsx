@@ -9,6 +9,7 @@ import ResumenSemana from '@/componentes/ResumenSemana';
 import Auth from '@/componentes/Auth';
 import Loader from '@/componentes/Loader';
 import HorarioPersonal from '@/componentes/HorarioPersonal';
+import ActualizarPerfil from '@/componentes/ActualizarPerfil';
 import LegacyMigrationGate from '@/componentes/LegacyMigrationGate';
 import MonthlySummaryModal from '@/componentes/MonthlySummaryModal';
 import {ToastProvider} from '@/context/ToastContext';
@@ -125,6 +126,46 @@ const handleOpenMonthlySummary = async () => {
       <div className="App">
         <Header hideUserMenu />
         <LegacyMigrationGate />
+      </div>
+    );
+  }
+
+  if (context.profileLoading) {
+    return (
+      <div className="App">
+        <Header hideUserMenu />
+        <div className="body"><Loader /></div>
+      </div>
+    );
+  }
+
+  if (context.profileError) {
+    return (
+      <div className="App">
+        <Header hideUserMenu />
+        <div className="body">
+          <div className={authStyles.authContainer}>
+            <div className={authStyles.authTitle}>No pudimos comprobar tu perfil</div>
+            <div className={authStyles.authForm}>
+              <div className="verificationError">
+                <span>Revisá tu conexión y volvé a intentarlo.</span>
+              </div>
+              <button className={`${buttonStyles.button} ${buttonStyles.primary}`} onClick={context.retryProfileLoad}>Reintentar</button>
+              <button className={`${buttonStyles.button} ${buttonStyles.secondary}`} onClick={context.logout}>Cerrar sesión</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (!context.profileComplete) {
+    return (
+      <div className="App">
+        <Header hideUserMenu />
+        <div className="body">
+          <ActualizarPerfil required />
+        </div>
       </div>
     );
   }

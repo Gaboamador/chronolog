@@ -4,6 +4,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { useEntries } from "@/hooks/useEntries";
 import { useSelectedDate } from "@/hooks/useSelectedDate";
 import { useDefaultWorkTime } from "@/hooks/useDefaultWorkTime";
+import { useProfile } from "@/hooks/useProfile";
 import { getExpectedWorkMinutes } from "@/utils/entries/timeCalculations";
 
 function GlobalState(props) {
@@ -38,6 +39,15 @@ function GlobalState(props) {
   const expectedWorkMinutes = getExpectedWorkMinutes(defaultWorkTime);
 
   const {
+    profile,
+    profileComplete,
+    profileLoading,
+    profileError,
+    setProfile,
+    retryProfileLoad,
+  } = useProfile(user, authLoading);
+
+  const {
     entries,
     entriesLoading,
     entriesError,
@@ -56,6 +66,8 @@ function GlobalState(props) {
     exportUnassignedLegacyEntries,
     inspectUnassignedLegacyEntries,
     importUnassignedLegacyEntries,
+    exportAllLegacyEntriesForRecovery,
+    resolveLegacyEntriesAfterBackup,
     syncStatus,
     hasPendingWrites,
   } = useEntries(user, authLoading, selectedDate);
@@ -96,6 +108,8 @@ function GlobalState(props) {
         exportUnassignedLegacyEntries,
         inspectUnassignedLegacyEntries,
         importUnassignedLegacyEntries,
+        exportAllLegacyEntriesForRecovery,
+        resolveLegacyEntriesAfterBackup,
         syncStatus,
         hasPendingWrites,
 
@@ -103,6 +117,12 @@ function GlobalState(props) {
         setUser,
         logout,
         loading,
+        profile,
+        profileComplete,
+        profileLoading,
+        profileError,
+        setProfile,
+        retryProfileLoad,
 
         entriesLoading,
         defaultWorkTimeLoading,

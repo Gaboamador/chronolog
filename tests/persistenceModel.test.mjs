@@ -11,8 +11,11 @@ import {
   LEGACY_PENDING_KEY,
   LEGACY_TIME_ENTRIES_KEY,
   archiveUnassignedLegacyEntries,
+  clearAllActiveLegacyEntries,
+  clearGlobalLegacyEntries,
   clearMigratedLegacyEntries,
   getLegacyMigrationState,
+  readAllLegacyEntriesForRecovery,
   readLegacyCandidates,
 } from '../src/utils/entries/legacyMigration.js';
 
@@ -160,4 +163,38 @@ test('revisar o descargar pendientes sin UID no retira la fuente local activa', 
   const preview = getLegacyMigrationState('dev-user', storage).unassignedEntries;
   assert.equal(preview.length, 1);
   assert.equal(storage.getItem(LEGACY_PENDING_KEY), raw);
+});
+
+test('un respaldo de recuperación conserva todos los datos y permite destrabar la aplicación', () => {
+  const storage = new MemoryStorage();
+  storage.setItem(LEGACY_PENDING_KEY, JSON.stringify([
+    { date: '2026-08-31', start: '09:00', end: '17:00' },
+  ]));
+  storage.setItem(`${LEGACY_CURRENT_MONTH_PREFIX}:user-a`, JSON.stringify({
+    entries: [{ date: '2026-09-01', start: '10:00', end: '', clockStatus: 'open' }],
+  }));
+
+  const recovery = readAllLegacyEntriesForRecovery('user-a', storage);
+  assert.deepEqual(recovery.map((entry) => entry.date), ['2026-08-31', '2026-09-01']);
+
+  clearAllActiveLegacyEntries('user-a', storage);
+  const state = getLegacyMigrationState('user-a', storage);
+  assert.equal(state.ownedEntries.length, 0);
+  assert.equal(state.unassignedEntries.length, 0);
+});
+
+test('limpiar un bloque global ya migrado conserva la jornada local asociada al usuario', () => {
+  const storage = new MemoryStorage();
+  storage.setItem(LEGACY_PENDING_KEY, JSON.stringify([
+    { date: '2026-08-31', start: '09:00', end: '17:00' },
+  ]));
+  const scopedKey = `${LEGACY_CURRENT_MONTH_PREFIX}:user-a`;
+  storage.setItem(scopedKey, JSON.stringify({
+    entries: [{ date: '2026-09-01', start: '10:00', end: '' }],
+  }));
+
+  clearGlobalLegacyEntries(storage);
+
+  assert.equal(storage.getItem(LEGACY_PENDING_KEY), null);
+  assert.ok(storage.getItem(scopedKey));
 });

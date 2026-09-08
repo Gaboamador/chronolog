@@ -44,7 +44,9 @@ const Header = ({ hideUserMenu = false }) => {
 
         {menuOpen && (
           <ul className={styles.menuDropdown}>
-            <li>{context.user?.displayName || 'Usuario'}</li>
+            <li>{context.profileComplete
+              ? `${context.profile.firstName} ${context.profile.lastName}`
+              : context.user?.displayName || 'Usuario'}</li>
             <li>{context.user.email}</li>
             <li
               onClick={() => {
