@@ -40,10 +40,10 @@ import {
 const FormularioHora = () => {
   const context = useContext(Context);
 
-  const { defaultPersonalStartTime, defaultPersonalEndTime } = context.defaultWorkTime;
+  // const { defaultPersonalStartTime, defaultPersonalEndTime } = context.defaultWorkTime;
 
-  const [startTime, setStartTime] = useState(defaultPersonalStartTime);
-  const [endTime, setEndTime] = useState(defaultPersonalEndTime);
+  const [startTime, setStartTime] = useState('');
+  const [endTime, setEndTime] = useState('');
 
   const [entryExists, setEntryExists] = useState(false);
   const [selectedEntry, setSelectedEntry] = useState(null);
@@ -94,10 +94,10 @@ const FormularioHora = () => {
       return;
     }
 
-    setStartTime(defaultPersonalStartTime);
-    setEndTime(defaultPersonalEndTime);
+    setStartTime('');
+    setEndTime('');
     setDraftBreaks([]);
-  }, [context.entries, context.selectedDate, defaultPersonalStartTime, defaultPersonalEndTime]);
+  }, [context.entries, context.selectedDate]);
 
   const selectedDateStr = context.selectedDate
     ? format(context.selectedDate, 'yyyy-MM-dd')
@@ -349,44 +349,28 @@ const FormularioHora = () => {
     }
 
     if (startTime && !endTime) {
-      if (selectedEntryIsOpen) {
-        context.persistEntry(buildWorkedEntry({
-          ...selectedEntry,
-          date: selectedDateStr,
-          start: startTime,
-          end: '',
-          clockStatus: CLOCK_STATUS.OPEN,
-          breaks: selectedBreaks,
-          startTimestamp: startTime === selectedEntry?.start
-            ? selectedEntry?.startTimestamp
-            : undefined,
-        }));
-        setShowValidation(false);
+      const openEntry = buildWorkedEntry({
+        ...selectedEntry,
+        date: selectedDateStr,
+        start: startTime,
+        end: '',
+        clockStatus: CLOCK_STATUS.OPEN,
+        breaks: selectedBreaks,
+        startTimestamp: startTime === selectedEntry?.start
+          ? selectedEntry?.startTimestamp
+          : undefined,
+      });
+      const validation = validateWorkedEntry(openEntry, {
+        allowOpenEntry: true,
+        allowOpenBreak: true,
+      });
+      if (!validation.valid) {
+        setShowValidation(true);
+        alert(validation.error);
         return;
       }
-
-      const [hour, minute] =
-        startTime.split(':').map(Number);
-
-      const startDate = new Date();
-
-      startDate.setHours(hour, minute, 0, 0);
-      startDate.setHours(
-        startDate.getHours() + 8
-      );
-
-      const pad = n =>
-        String(n).padStart(2, '0');
-
-      const autoEnd =
-        `${pad(startDate.getHours())}:${pad(startDate.getMinutes())}`;
-
-      setEndTime(autoEnd);
-
-      alert(
-        'SALIDA se completó automáticamente (+8h). Pulse GUARDAR nuevamente para confirmar.'
-      );
-
+      context.persistEntry(openEntry);
+      setShowValidation(false);
       return;
     }
 
@@ -508,17 +492,20 @@ const FormularioHora = () => {
                   {selectedEntry.start} a {selectedEntry.end}
                 </strong>
               </div>
-              {selectedBreaks.length > 0 && (
-                <div className={styles.secondRow}>
-                  <span className={styles.entryStatusDetail}>
-                    {formatMinutes(getWorkedMinutes(selectedEntry))} trabajadas
-                    {' · '}
-                    {formatMinutes(getBreakMinutes(selectedEntry))} fuera
-                    {' · '}
-                    {formatMinutes(getElapsedMinutes(selectedEntry))} total
-                  </span>
-                </div>
-              )}
+              <div className={styles.secondRow}>
+                <span className={styles.entryStatusDetail}>
+                  {formatMinutes(getWorkedMinutes(selectedEntry))} trabajadas
+
+                  {selectedBreaks.length > 0 && (
+                    <>
+                      {' · '}
+                      {formatMinutes(getBreakMinutes(selectedEntry))} fuera
+                      {' · '}
+                      {formatMinutes(getElapsedMinutes(selectedEntry))} total
+                    </>
+                  )}
+                </span>
+              </div>
             </div>
           )}
 

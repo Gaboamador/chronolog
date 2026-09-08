@@ -10,11 +10,11 @@ export default function MonthlySummaryModal({
   isOpen,
   onClose,
   entries,
-  defaultWorkTime,
+  expectedWorkMinutes,
 }) {
   const monthlySummaries = useMemo(() => {
-    return calculateMonthlySummaries(entries, defaultWorkTime);
-  }, [entries, defaultWorkTime]);
+    return calculateMonthlySummaries(entries, expectedWorkMinutes);
+  }, [entries, expectedWorkMinutes]);
 
   const generalAverage = useMemo(() => {
     const totalWorkedDays = monthlySummaries.reduce(

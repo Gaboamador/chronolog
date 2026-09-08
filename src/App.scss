@@ -18,6 +18,7 @@ body,
   padding: 0;
   width: 100%;
   min-width: 0;
+  min-height: 100%;
 }
 
 body {
@@ -25,18 +26,30 @@ body {
 }
 
 .App {
+  display: flex;
+  flex-direction: column;
+
+  min-height: 100dvh;
+
   text-align: center;
   font-family: $fuente-contenidos;
   font-size: $font-size-md;
   color: $color-texto-oscuro;
   background-color: $color-primario;
+
   width: 100%;
   min-width: 0;
 }
 
 .body {
+  flex: 1;
+
+  display: flex;
+  flex-direction: column;
+
   width: 100%;
   min-width: 0;
+
   background-color: $color-primario-fondo-claro;
 }
 

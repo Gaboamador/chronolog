@@ -1,7 +1,4 @@
-import {
-  getExpectedWorkMinutes,
-  getWorkedMinutes,
-} from './entries/timeCalculations.js';
+import { getWorkedMinutes } from './entries/timeCalculations.js';
 
 function getEntryDate(entry, fallbackDate) {
   const date = entry?.date || fallbackDate;
@@ -70,8 +67,7 @@ export function formatBalanceMinutes(totalMinutes) {
   return `${prefix}${hours}h ${String(minutes).padStart(2, "0")}m`;
 }
 
-export function calculateMonthlySummaries(entries, defaultWorkTime) {
-  const expectedDailyMinutes = getExpectedWorkMinutes(defaultWorkTime, null);
+export function calculateMonthlySummaries(entries, expectedDailyMinutes) {
   const groupedByMonth = new Map();
 
   normalizeEntries(entries).forEach(({ entry, fallbackDate }) => {

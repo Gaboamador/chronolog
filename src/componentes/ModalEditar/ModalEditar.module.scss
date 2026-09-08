@@ -80,7 +80,7 @@
 
 .timeEntryInputGroup {
   display: grid;
-  grid-template-columns: minmax(0, 76px) minmax(0, 96px);
+  grid-template-columns: minmax(0, 76px) minmax(0, 96px) 2rem;
   align-items: center;
   column-gap: 0.75rem;
 

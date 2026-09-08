@@ -5,9 +5,21 @@ import {
   getOpenBreak,
   getWorkedMinutes,
   getLiveTimeSummary,
+  getExpectedWorkMinutes,
   normalizeBreaks,
   validateWorkedEntry,
 } from '../src/utils/entries/timeCalculations.js';
+
+test('deriva la referencia diaria del horario por defecto', () => {
+  assert.equal(getExpectedWorkMinutes({
+    defaultPersonalStartTime: '09:00',
+    defaultPersonalEndTime: '16:30',
+  }), 450);
+  assert.equal(getExpectedWorkMinutes({
+    defaultPersonalStartTime: '09:00',
+    defaultPersonalEndTime: '17:30',
+  }), 510);
+});
 
 test('mantiene compatibilidad con jornadas históricas sin salidas', () => {
   const entry = { start: '09:00', end: '17:00' };

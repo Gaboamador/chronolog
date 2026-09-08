@@ -12,19 +12,19 @@
   align-items: center;
   justify-content: flex-start;
   gap: 10px;
-  margin: 0 auto;
-  margin-bottom: 10px;
+  margin: 0 auto 10px;
   font-family: $fuente-contenidos;
   width: 100%;
   max-width: var(--flow-content-max);
   min-width: 0;
+  font-size: clamp(0.8rem, 3.75vw, 1rem);
 }
 
 .syncStatus {
   margin-left: auto;
   font-size: 0.75rem;
   color: rgba($color-primario, 0.7);
-  white-space: nowrap;
+  white-space: pre-wrap;
 }
 
 .title {
@@ -42,6 +42,7 @@
   padding: 3px 9px;
   font-weight: 700;
   box-shadow: 0 4px 12px rgba($color-primario, 0.06);
+  white-space: nowrap;
 }
 
 .tableResponsive {
@@ -114,6 +115,11 @@
     color: $color-texto-claro;
     cursor: pointer;
     font-size: $font-size-lg;
+
+    &:disabled {
+      opacity: 0.4;
+      cursor: default;
+    }
   }
 
   .weeklySummaryTable th {
@@ -133,12 +139,11 @@
   }
 
   .weeklySummaryTable th {
-    font-size: clamp(0.64rem, 2.7vw, 0.78rem);
-    overflow-wrap: anywhere;
+    font-size: clamp(0.68rem, 3.3vw, 0.875rem);
   }
 
   .weeklySummaryTable td {
-    font-size: clamp(0.68rem, 2.9vw, 0.875rem);
+    font-size: clamp(0.68rem, 3.3vw, 0.875rem);
   }
 
   .weeklySummaryTable th:nth-child(1),

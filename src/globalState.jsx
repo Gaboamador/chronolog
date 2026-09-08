@@ -4,6 +4,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { useEntries } from "@/hooks/useEntries";
 import { useSelectedDate } from "@/hooks/useSelectedDate";
 import { useDefaultWorkTime } from "@/hooks/useDefaultWorkTime";
+import { getExpectedWorkMinutes } from "@/utils/entries/timeCalculations";
 
 function GlobalState(props) {
   const {
@@ -33,6 +34,8 @@ function GlobalState(props) {
 
     clearDefaultWorkTimeLocalState,
   } = useDefaultWorkTime(user, authLoading);
+
+  const expectedWorkMinutes = getExpectedWorkMinutes(defaultWorkTime);
 
   const {
     entries,
@@ -106,6 +109,7 @@ function GlobalState(props) {
 
         defaultWorkTime,
         setDefaultWorkTime,
+        expectedWorkMinutes,
 
         necesitaConfigurarHorario,
         setNecesitaConfigurarHorario,

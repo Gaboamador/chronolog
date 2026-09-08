@@ -165,7 +165,7 @@ const handleOpenMonthlySummary = async () => {
         isOpen={mostrarResumenMensual}
         onClose={() => setMostrarResumenMensual(false)}
         entries={historicalEntries}
-        defaultWorkTime={context.defaultWorkTime}
+        expectedWorkMinutes={context.expectedWorkMinutes}
       />
 
     </div>

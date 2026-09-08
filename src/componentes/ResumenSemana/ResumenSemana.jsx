@@ -33,7 +33,6 @@ import {
   formatMinutes as formatWorkedMinutes,
   editBreakTime,
   getBreakMinutes,
-  getExpectedWorkMinutes,
   getWorkedMinutes,
   normalizeBreaks,
   validateWorkedEntry,
@@ -106,7 +105,7 @@ const ResumenSemana = () => {
   const [editBreaks, setEditBreaks] = useState([]);
 
   const [editAbsenceReason, setEditAbsenceReason] = useState(ABSENCE_REASONS.VACATION);
-  const workdayMinutes = getExpectedWorkMinutes(context.defaultWorkTime);
+  const workdayMinutes = context.expectedWorkMinutes;
 
   const monthStart = startOfMonth(context.selectedDate);
   const monthEnd = endOfMonth(context.selectedDate);
@@ -324,7 +323,7 @@ const ResumenSemana = () => {
         <span className={styles.average}>{formatDurationPlain(averageMonthlyDuration)}</span>
         <span className={styles.syncStatus} role={context.syncStatus === 'error' ? 'alert' : undefined}>
           {context.syncStatus === 'syncing' && 'Sincronizando…'}
-          {context.syncStatus === 'offline' && 'Sin conexión · cambios en espera'}
+          {context.syncStatus === 'offline' && 'Sin conexión\nCambios en\nespera'}
           {context.syncStatus === 'error' && 'Error de sincronización'}
           {context.syncStatus === 'migration' && (
             context.legacyUnassignedCount > 0
@@ -444,6 +443,16 @@ const ResumenSemana = () => {
                     value={editStart}
                     onChange={e => setEditStart(e.target.value)}
                   />
+                  <button
+                    type="button"
+                    className={styles.removeBreakButton}
+                    aria-label="Borrar hora de entrada"
+                    title="Borrar hora de entrada"
+                    disabled={!editStart}
+                    onClick={() => setEditStart('')}
+                  >
+                    ×
+                  </button>
                 </div>
 
                 <div className={modalStyles.timeEntryInputGroup}>
@@ -453,6 +462,16 @@ const ResumenSemana = () => {
                     value={editEnd}
                     onChange={e => setEditEnd(e.target.value)}
                   />
+                  <button
+                    type="button"
+                    className={styles.removeBreakButton}
+                    aria-label="Borrar hora de salida"
+                    title="Borrar hora de salida"
+                    disabled={!editEnd}
+                    onClick={() => setEditEnd('')}
+                  >
+                    ×
+                  </button>
                 </div>
               </div>
               <div className={styles.editBreaks}>
