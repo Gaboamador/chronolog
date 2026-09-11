@@ -27,7 +27,9 @@
     "preview": "vite preview --mode production",
     "test:firebase-env": "node --test tests/firebaseEnvironment.test.mjs",
     "predeploy": "npm run build",
-    "deploy": "gh-pages -d dist"
+    "deploy": "gh-pages -d dist",
+    "deploy:rules:dev": "firebase deploy --only firestore:rules --project chronolog-dev",
+    "deploy:rules:prod": "firebase deploy --only firestore:rules --project chronolog-f21f6"
   },
   "eslintConfig": {
     "extends": [
