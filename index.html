@@ -8,15 +8,27 @@
     <link rel="manifest" href="/chronolog/manifest.json" />
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="theme-color" content="#0b2233" />
+    <meta name="theme-color" content="#000000" />
+    <script>
+      try {
+        const savedTheme = localStorage.getItem('chronolog:theme-preference');
+        const preferredTheme = ['light', 'dark', 'system'].includes(savedTheme) ? savedTheme : 'dark';
+        const theme = preferredTheme === 'system'
+          ? (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
+          : preferredTheme;
+        document.documentElement.dataset.theme = theme;
+      } catch {
+        document.documentElement.dataset.theme = 'dark';
+      }
+    </script>
     <meta
       name="description"
       content="Chronolog"
     />
 
     <title>Chronolog</title>
-    <script type="module" crossorigin src="/chronolog/assets/index-Cvs8w7Yn.js"></script>
-    <link rel="stylesheet" crossorigin href="/chronolog/assets/index-C_H29nTp.css">
+    <script type="module" crossorigin src="/chronolog/assets/index-OZdsI8C9.js"></script>
+    <link rel="stylesheet" crossorigin href="/chronolog/assets/index-BZb9tcQP.css">
   </head>
 
   <body>
