@@ -1,4 +1,5 @@
 @use '@/styles/variables.scss' as *;
+@use '@/styles/theme.scss';
 
 :root {
   --flow-content-max: 31.25rem;
@@ -22,7 +23,7 @@ body,
 }
 
 body {
-  background-color: $color-primario;
+  background-color: var(--page-bg);
 }
 
 .App {
@@ -34,8 +35,8 @@ body {
   text-align: center;
   font-family: $fuente-contenidos;
   font-size: $font-size-md;
-  color: $color-texto-oscuro;
-  background-color: $color-primario;
+  color: var(--text-main);
+  background-color: var(--page-bg);
 
   width: 100%;
   min-width: 0;
@@ -50,14 +51,14 @@ body {
   width: 100%;
   min-width: 0;
 
-  background-color: $color-primario-fondo-claro;
+  background-color: var(--page-bg);
 }
 
 .loading {
   padding: 3rem;
   font-size: $font-size-lg;
   text-align: center;
-  color: $color-logo4;
+  color: var(--color-logo4);
 }
 
 .rdp-root {
@@ -78,7 +79,10 @@ body {
   width: min(100%, var(--flow-content-max));
   min-width: 0;
   margin: 0 auto;
-  --rdp-accent-color: #{$color-secundario} !important;
+  --rdp-accent-color: var(--calendar-accent);
+  --rdp-accent-background-color: var(--calendar-selected-bg);
+  --rdp-today-color: var(--calendar-accent);
+  --rdp-selected-border: 2px solid var(--calendar-accent);
 }
 
 .rdp-month,
@@ -111,44 +115,106 @@ body {
   margin-bottom: 2rem;
 }
 
-.monthlySummaryTriggerContainer {
-  width: min(calc(100% - (2 * var(--flow-gutter))), var(--flow-content-max));
-  margin-inline: auto;
-  padding: 1rem 0;
-  padding-top: 0;
+/* Distribución del panel principal. El estado de las vistas móviles afecta
+   exclusivamente a la presentación; los componentes no se desmontan. */
+.chronologDashboard {
+  width: min(100%, 1620px);
+  min-width: 0;
+  margin: 0 auto;
+  padding: clamp(0.9rem, 1.8vw, 1.6rem);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-items: start;
+  gap: clamp(0.85rem, 1.5vw, 1.4rem);
 }
 
-.monthly-summary-trigger {
-  // margin: 18px auto 28px;
-  padding: 12px 18px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  border: 1px solid rgba(100, 116, 139, 0.28);
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.86);
-  color: #334155;
-  font-family: inherit;
-  font-size: 0.95rem;
-  font-weight: 800;
-  cursor: pointer;
-  box-shadow: 0 10px 26px rgba(15, 23, 42, 0.08);
-  transition:
-    transform 0.16s ease,
-    box-shadow 0.16s ease,
-    border-color 0.16s ease,
-    background-color 0.16s ease,
-    color 0.16s ease;
+.summaryPanel {
+  min-width: 0;
+  width: 100%;
+  border: 1px solid var(--color-bordes-tabla);
+  border-radius: 20px;
+  background: var(--surface-glass);
+  box-shadow: 0 12px 28px rgba(11, 34, 51, 0.05);
+  overflow: visible;
+}
 
-  &:hover {
-    transform: translateY(-1px);
-    border-color: rgba(51, 65, 85, 0.42);
-    background: #ffffff;
-    color: #0f172a;
-    box-shadow: 0 14px 32px rgba(15, 23, 42, 0.12);
+/* La grilla desktop une Calendario y Jornada en el primer bloque, y separa
+   el resumen a la derecha cuando realmente hay espacio suficiente. */
+@media (min-width: 801px) {
+  .chronologDashboard {
+    grid-template-columns: minmax(0, 1fr);
   }
 
-  &:active {
-    transform: translateY(0);
+  .summaryPanel {
+    align-self: stretch;
   }
+}
+
+@media (min-width: 1200px) {
+  .chronologDashboard {
+    grid-template-columns: minmax(0, 2.15fr) minmax(0, 1.25fr);
+  }
+}
+
+@media (max-width: 800px) {
+  :root {
+    --flow-gutter: 0.75rem;
+    --mobile-nav-height: 65px;
+  }
+
+  .AppWithMobileNav .body {
+    padding-bottom: calc(var(--mobile-nav-height) + env(safe-area-inset-bottom, 0px));
+  }
+
+  .chronologDashboard {
+    display: flex;
+    flex-direction: column;
+    padding: 0.75rem;
+    gap: 0;
+  }
+
+  .chronologDashboard > * {
+    width: 100%;
+  }
+
+  .chronologDashboard[data-mobile-view='jornada'] [data-pane='calendar'],
+  .chronologDashboard[data-mobile-view='calendario'] [data-pane='work'],
+  .chronologDashboard[data-mobile-view='resumen'] [data-pane='calendar'],
+  .chronologDashboard[data-mobile-view='resumen'] [data-pane='work'] {
+    display: none;
+  }
+
+  .chronologDashboard:not([data-mobile-view='resumen']) .summaryPanel > div {
+    padding: 0;
+  }
+
+  .chronologDashboard:not([data-mobile-view='resumen']) [data-pane='summary-content'] {
+    display: none;
+  }
+
+  .chronologDashboard:not([data-mobile-view='resumen']) .summaryPanel {
+    border: 0;
+    background: transparent;
+    box-shadow: none;
+  }
+
+  .summaryPanel {
+    border-radius: 16px;
+  }
+
+}
+
+/* Vista móvil de borde a borde: la jerarquía reside en el contenido, no en
+   tarjetas contenedoras duplicadas alrededor de cada pantalla. */
+@media (max-width: 800px) {
+  .AppWithMobileNav .body { background: var(--page-bg); }
+  .chronologDashboard { padding: 0 0.95rem 1rem; }
+  .summaryPanel {
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+  }
+  /* El contenido permanece montado al entrar en Más. */
+  .chronologDashboard[data-mobile-view='mas'] > * { display: none; }
 }

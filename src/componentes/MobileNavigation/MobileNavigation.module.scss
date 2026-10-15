@@ -1,0 +1,114 @@
+@use '@/styles/variables.scss' as *;
+
+.navigation {
+  display: none;
+}
+
+@media (max-width: 800px) {
+  .navigation {
+    display: block;
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 1100;
+    min-height: calc(var(--mobile-nav-height, 65px) + env(safe-area-inset-bottom, 0px));
+    padding: 0.25rem max(0.5rem, env(safe-area-inset-right, 0px))
+      env(safe-area-inset-bottom, 0px) max(0.5rem, env(safe-area-inset-left, 0px));
+    border-top: 1px solid var(--border-strong);
+    background: var(--nav-bg);
+    box-shadow: 0 -10px 30px rgba($color-primario, 0.17);
+  }
+
+  .items {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 0.25rem;
+    max-width: 500px;
+    margin-inline: auto;
+    position: relative;
+  }
+
+  /* Una sola pastilla se desplaza entre las cuatro posiciones de la grilla. */
+  .activeIndicator {
+    position: absolute;
+    z-index: 0;
+    pointer-events: none;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: calc((100% - 0.75rem) / 4);
+    border-radius: 12px;
+    background: rgba($color-logo1, 0.12);
+    transform: translateX(0);
+    transition: transform 300ms cubic-bezier(0.22, 1, 0.36, 1);
+    will-change: transform;
+
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 37%;
+      right: 37%;
+      height: 3px;
+      border-radius: 0 0 4px 4px;
+      background: var(--color-logo1);
+    }
+  }
+
+  .items[data-active-index='1'] .activeIndicator {
+    transform: translateX(calc(100% + 0.25rem));
+  }
+
+  .items[data-active-index='2'] .activeIndicator {
+    transform: translateX(calc(200% + 0.5rem));
+  }
+
+  .items[data-active-index='3'] .activeIndicator {
+    transform: translateX(calc(300% + 0.75rem));
+  }
+
+  .item {
+    z-index: 1;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.2rem;
+    min-height: 56px;
+    min-width: 0;
+    padding: 0.3rem 0.15rem;
+    border: 0;
+    border-radius: 12px;
+    background: transparent;
+    color: rgba($color-texto-claro, 0.68);
+    font-family: $fuente-contenidos;
+    font-size: 0.67rem;
+    font-weight: 700;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    transition: color 180ms ease;
+
+    svg { width: 1.35rem; height: 1.35rem; }
+
+    &:focus-visible {
+      outline: 2px solid var(--color-logo1);
+      outline-offset: -2px;
+    }
+  }
+
+  .active {
+    color: var(--color-texto-claro);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .activeIndicator,
+  .item {
+    transition: none;
+  }
+  .activeIndicator {
+    will-change: auto;
+  }
+}

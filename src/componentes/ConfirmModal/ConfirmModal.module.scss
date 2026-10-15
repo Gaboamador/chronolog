@@ -19,8 +19,8 @@
   @extend %darkButtonSurface;
 
   width: min(420px, 100%);
-  background-color: $color-primario;
-  border: 1px solid rgba($color-secundario, 0.35);
+  background-color: var(--modal-bg);
+  border: 1px solid var(--border-strong);
   border-radius: 14px;
   padding: 1.15rem;
 
@@ -28,11 +28,11 @@
 }
 
 .confirmModalContentDanger {
-  border-color: $color-danger;
+  border-color: var(--color-danger);
 }
 
 .confirmModalTitle {
-  color: $color-texto-claro;
+  color: var(--color-texto-claro);
   font-family: $fuente-titulos;
   font-size: $font-size-lg;
   font-weight: 700;
@@ -40,11 +40,11 @@
 
   width: 100%;
   padding: 0.2rem 0 0.75rem;
-  border-bottom: 1px solid rgba($color-secundario, 0.42);
+  border-bottom: 1px solid var(--border-strong);
 }
 
 .confirmModalMessage {
-  color: $color-texto-claro;
+  color: var(--color-texto-claro);
   font-family: $fuente-contenidos;
   line-height: 1.4;
   text-align: center;
@@ -71,5 +71,22 @@
   .confirmModalMessage,
   .confirmModalActions .button {
     font-size: $font-size-sm;
+  }
+}
+
+@media (max-width: 800px) {
+  .confirmModalOverlay {
+    padding: max(0.65rem, env(safe-area-inset-top, 0px))
+      max(0.65rem, env(safe-area-inset-right, 0px))
+      max(0.65rem, env(safe-area-inset-bottom, 0px))
+      max(0.65rem, env(safe-area-inset-left, 0px));
+  }
+  .confirmModalContent {
+    max-height: calc(100dvh - 1.3rem - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px));
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+  .confirmModalActions button {
+    min-height: 44px;
   }
 }

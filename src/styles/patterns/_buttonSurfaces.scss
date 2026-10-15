@@ -1,22 +1,24 @@
-@use '@/styles/variables.scss' as *;
-@use 'sass:color';
-
+/* Los modales centrados y los bottom sheets tienen un fondo oscuro.
+   Las pantallas completas móviles redefinen estos tokens en ModalEditar
+   porque allí el fondo es --page-bg (claro u oscuro según preferencia). */
 %darkButtonSurface {
-  --button-primary-bg: #{$color-secundario};
-  --button-primary-color: #{$color-primario-oscuro};
-  --button-primary-border: #{rgba($color-secundario, 0.78)};
-  --button-primary-hover-bg: #{color.mix(white, $color-secundario, 14%)};
-  --button-primary-shadow: 0 8px 18px #{rgba($color-secundario, 0.18)};
-  --button-primary-hover-shadow: 0 10px 22px #{rgba($color-secundario, 0.24)};
-  --button-secondary-bg: #{rgba($color-texto-claro, 0.08)};
-  --button-secondary-color: #{$color-texto-claro};
-  --button-secondary-border: #{rgba($color-texto-claro, 0.3)};
-  --button-secondary-hover-bg: #{rgba($color-texto-claro, 0.14)};
-  --button-secondary-hover-border: #{rgba($color-secundario, 0.52)};
-  --button-tertiary-bg: #{rgba($color-texto-claro, 0.08)};
-  --button-tertiary-color: #{$color-texto-claro};
-  --button-tertiary-border: #{rgba($color-texto-claro, 0.3)};
-  --button-tertiary-hover-bg: #{rgba($color-texto-claro, 0.14)};
-  --button-tertiary-hover-border: #{rgba($color-terciario, 0.52)};
-  --button-danger-border: #{rgba($color-texto-claro, 0.28)};
+  --button-primary-bg: var(--modal-control-primary-bg);
+  --button-primary-color: var(--modal-control-primary-color);
+  --button-primary-border: var(--modal-control-primary-border);
+  --button-primary-hover-bg: var(--modal-control-primary-hover-bg);
+  --button-primary-shadow: 0 8px 18px rgba(0, 0, 0, 0.16);
+  --button-primary-hover-shadow: 0 10px 22px rgba(0, 0, 0, 0.2);
+
+  --button-secondary-bg: var(--modal-control-secondary-bg);
+  --button-secondary-color: var(--modal-control-secondary-color);
+  --button-secondary-border: var(--modal-control-secondary-border);
+  --button-secondary-hover-bg: var(--modal-control-secondary-hover-bg);
+  --button-secondary-hover-border: var(--modal-control-secondary-border);
+
+  --button-tertiary-bg: var(--modal-control-tertiary-bg);
+  --button-tertiary-color: var(--modal-control-tertiary-color);
+  --button-tertiary-border: var(--modal-control-tertiary-border);
+  --button-tertiary-hover-bg: var(--modal-control-tertiary-hover-bg);
+  --button-tertiary-hover-border: var(--modal-control-tertiary-border);
+  --button-danger-border: var(--border-strong);
 }

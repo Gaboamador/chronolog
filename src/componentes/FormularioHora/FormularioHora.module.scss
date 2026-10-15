@@ -12,8 +12,8 @@
 }
 
 .calendar {
-  background-color: $color-primario-fondo;
-  border-bottom: 1px solid $color-bordes-tabla;
+  background-color: var(--color-primario-fondo);
+  border-bottom: 1px solid var(--color-bordes-tabla);
 }
 
 .timeEntryContainer {
@@ -24,8 +24,8 @@
   margin: 0 auto;
   padding: 1rem;
 
-  background-color: rgba(255, 255, 255, 0.86);
-  border: 1px solid rgba($color-logo2, 0.16);
+  background-color: var(--surface-glass);
+  border: 1px solid var(--border-subtle);
   border-radius: 12px;
   box-shadow: 0 12px 28px rgba($color-primario, 0.08);
 
@@ -44,8 +44,8 @@
   margin: 0 auto;
   padding: 0.85rem 1rem;
 
-  background-color: rgba(255, 255, 255, 0.78);
-  border: 1px solid rgba($color-logo2, 0.16);
+  background-color: var(--surface-glass);
+  border: 1px solid var(--border-subtle);
   border-radius: 14px;
   box-shadow: 0 10px 24px rgba($color-primario, 0.07);
 
@@ -78,7 +78,7 @@
     @extend %timeEntryInputLabel;
 
     font-size: $font-size-sm;
-    color: $color-primario;
+    color: var(--color-primario);
     letter-spacing: 0.04em;
     text-align: center;
   }
@@ -89,10 +89,10 @@
     min-width: 0;
     max-width: 100%;
     padding: 0.6rem 0.7rem;
-    border: 1px solid $color-bordes-tabla;
+    border: 1px solid var(--color-bordes-tabla);
     border-radius: 10px;
-    background-color: $color-primario-fondo-claro;
-    color: $color-texto-oscuro;
+    background-color: var(--color-primario-fondo-claro);
+    color: var(--color-texto-oscuro);
     font-family: $fuente-contenidos;
     font-weight: 700;
     text-align: center;
@@ -103,8 +103,8 @@
 
     &:focus {
       outline: none;
-      background-color: white;
-      border-color: $color-logo2;
+      background-color: var(--surface-bg);
+      border-color: var(--color-logo2);
       box-shadow: 0 0 0 3px rgba($color-logo2, 0.12);
     }
   }
@@ -136,7 +136,7 @@
   justify-content: center;
   gap: 0.45rem;
 
-  color: $color-primario;
+  color: var(--color-primario);
   line-height: 1.3;
 
   & .firstRow {
@@ -172,10 +172,75 @@
 .entryStatusDetail {
   display: flex;
   justify-content: flex-end;
-  color: $color-logo4;
+  color: var(--color-logo4);
   font-size: $font-size-sm;
   font-weight: 600;
   width: 100%;
+}
+
+/* Detalle de salidas de una jornada cerrada: exclusivamente de lectura. */
+.savedBreaks {
+  width: 100%;
+  min-width: 0;
+  margin-top: 0.45rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--color-bordes-tabla);
+}
+
+.savedBreaksHeading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-bottom: 0.55rem;
+  color: var(--color-primario);
+  font-size: 0.85rem;
+
+  > span {
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: var(--color-logo4);
+  }
+}
+
+.savedBreaksList {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 175px), 1fr));
+  gap: 0.5rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.savedBreakRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  min-width: 0;
+  padding: 0.55rem 0.65rem;
+  border: 1px solid var(--border-subtle);
+  border-radius: 9px;
+  background: var(--color-primario-fondo-claro);
+}
+
+.savedBreakLabel {
+  white-space: nowrap;
+  color: var(--color-primario-claro);
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.savedBreakHours {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  color: var(--color-primario);
+  font-size: 0.85rem;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
 }
 
 .absenceForm {
@@ -192,14 +257,6 @@
 
 .absencePreview {
   @extend %absencePreview;
-}
-
-.justifiedAbsenceDay {
-  @extend %justifiedAbsenceDay;
-}
-
-.justifiedAbsenceDay :global(.rdp-day_button) {
-  @extend %justifiedAbsenceDayButton;
 }
 
 .timeEntryContainer > button {
@@ -229,7 +286,7 @@
 
   border-radius: 10px;
 
-  color: $color-primario;
+  color: var(--color-primario);
   text-align: center;
 }
 
@@ -269,7 +326,7 @@
   width: 100%;
   padding-top: 0.45rem;
   border-top: 1px solid rgba($color-logo2, 0.2);
-  color: $color-danger;
+  color: var(--color-danger);
 }
 
 .breakSummary {
@@ -279,14 +336,14 @@
   flex-direction: column;
   gap: 0.25rem;
   padding: 0.7rem 0.85rem;
-  border: 1px solid $color-bordes-tabla;
+  border: 1px solid var(--color-bordes-tabla);
   border-radius: 10px;
-  color: $color-primario;
+  color: var(--color-primario);
   font-size: $font-size-sm;
 
   small {
     margin-top: 0.2rem;
-    color: $color-logo4;
+    color: var(--color-logo4);
   }
 }
 
@@ -301,10 +358,10 @@
     min-width: 0;
     width: 100%;
     padding: 0.35rem;
-    border: 1px solid $color-bordes-tabla;
+    border: 1px solid var(--color-bordes-tabla);
     border-radius: 7px;
-    background: white;
-    color: $color-texto-oscuro;
+    background: var(--surface-bg);
+    color: var(--color-texto-oscuro);
     font-family: $fuente-contenidos;
   }
 }
@@ -316,14 +373,14 @@
   border: none;
   border-radius: 50%;
   background: rgba($color-danger, 0.12);
-  color: $color-danger;
+  color: var(--color-danger);
   cursor: pointer;
   font-size: $font-size-lg;
 }
 
 .separator {
   border: none;
-  border-top: 1px solid $color-secundario;
+  border-top: 1px solid var(--color-secundario);
   margin: 0 auto;
   width: 100%;
 }
@@ -437,7 +494,7 @@
 }
 
 .transientActionLabel {
-  color: $color-logo4;
+  color: var(--color-logo4);
   font-size: $font-size-xs;
   font-weight: 700;
   letter-spacing: 0.04em;
@@ -454,13 +511,13 @@
   border-style: dashed;
   display: flex;
   justify-content: center;
-  background: $color-terciario;
+  background: var(--color-terciario);
   min-height: 1rem;
 }
 
 .returnButton {
   box-shadow: 0 0 0 3px rgba($color-logo2, 0.14) !important;
-  background: $color-secundario;
+  background: var(--color-secundario);
 }
 
 .clockActionIcon {
@@ -595,14 +652,14 @@
     )};
 
   .clockActionIcon {
-    color: $color-secundario;
+    color: var(--color-secundario);
   }
 }
 
 .clockHelpText {
   margin-top: -0.35rem;
 
-  color: $color-logo4;
+  color: var(--color-logo4);
   font-size: $font-size-sm;
   line-height: 1.35;
   text-align: center;
@@ -648,4 +705,956 @@
         font-size: $font-size-xs;
       }
     }
+}
+
+/* Paneles persistentes: Calendario y Jornada comparten la misma instancia
+   de FormularioHora y todo su estado original. */
+.containerMain {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: clamp(0.85rem, 1.4vw, 1.3rem);
+  align-items: start;
+  padding: 0;
+  background: transparent;
+  border: 0;
+}
+
+.calendarPane,
+.workPane {
+  min-width: 0;
+  width: 100%;
+  border: 1px solid var(--color-bordes-tabla);
+  border-radius: 20px;
+  padding: clamp(0.8rem, 1.25vw, 1.15rem);
+  box-shadow: 0 12px 28px rgba($color-primario, 0.05);
+}
+
+.calendarPane {
+  background: var(--color-primario-fondo);
+  container-type: inline-size;
+}
+
+.workPane {
+  background: var(--surface-glass);
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.paneHeading,
+.workPaneHeading {
+  text-align: left;
+  width: 100%;
+  padding: 0 0.2rem 0.65rem;
+  border-bottom: 1px solid var(--border-strong);
+  margin-bottom: 0.55rem;
+}
+
+.paneEyebrow {
+  font-family: $fuente-titulos;
+  font-weight: 700;
+  font-size: 0.69rem;
+  text-transform: uppercase;
+  letter-spacing: 0.095em;
+  color: var(--color-logo2);
+}
+
+.paneHeading h2,
+.workPaneHeading h2 {
+  margin: 0.25rem 0 0;
+  font-family: $fuente-titulos;
+  font-size: clamp(1.1rem, 1.6vw, 1.4rem);
+  line-height: 1.25;
+  font-weight: 800;
+  color: var(--color-primario);
+}
+
+.workPaneHeading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-bottom: 0.15rem;
+}
+
+.changeDateButton {
+  display: none;
+  border: 1px solid rgba($color-logo2, 0.24);
+  border-radius: 999px;
+  background: var(--color-primario-fondo);
+  color: var(--color-logo3);
+  font-family: inherit;
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 0.5rem 0.7rem;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.calendarPane :global(.rdp-root) {
+  width: 100%;
+  max-width: none;
+  --rdp-day-width: clamp(32px, calc((100cqw - 2.1rem) / 7), 52px);
+  --rdp-day-height: 45px;
+  --rdp-day_button-width: min(42px, 100%);
+  --rdp-day_button-height: 42px;
+  /* Definidos en el propio root del calendario para ganar a su CSS base. */
+  --rdp-accent-color: var(--calendar-accent);
+  --rdp-accent-background-color: var(--calendar-selected-bg);
+  --rdp-today-color: var(--calendar-accent);
+  --rdp-selected-border: 2px solid var(--calendar-accent);
+  margin: 0 auto;
+}
+
+.calendarPane :global(.rdp-month) {
+  width: 100%;
+}
+
+.timeEntryContainer,
+.timeEntryContainerLoaded {
+  max-width: none;
+  width: 100%;
+  margin-inline: 0;
+}
+
+.workPane .clockActionButton {
+  min-height: 4.65rem;
+}
+
+@media (min-width: 801px) {
+  .containerMain {
+    grid-template-columns: minmax(0, 0.88fr) minmax(0, 1.12fr);
+  }
+}
+
+@media (max-width: 800px) {
+  .containerMain {
+    display: block;
+  }
+
+  .calendarPane,
+  .workPane {
+    border-radius: 16px;
+    padding: 0.8rem;
+  }
+
+  .changeDateButton {
+    display: inline-flex;
+    align-items: center;
+    min-height: 40px;
+  }
+
+  .workPaneHeading h2 {
+    font-size: clamp(1.05rem, 4.5vw, 1.35rem);
+  }
+
+  .calendarPane :global(.rdp-root) {
+    --rdp-day-height: clamp(39px, 11vw, 49px);
+    --rdp-day_button-height: clamp(36px, 10vw, 44px);
+    --rdp-day_button-width: var(--rdp-day_button-height);
+  }
+
+  .timeEntryContainer,
+  .timeEntryContainerLoaded {
+    padding: 0.8rem;
+  }
+
+  .entryStatusCard .firstRow {
+    flex-wrap: wrap;
+  }
+}
+
+@media (max-width: 360px) {
+  .workPaneHeading {
+    align-items: start;
+  }
+
+  .changeDateButton {
+    font-size: 0.7rem;
+    padding: 0.45rem;
+  }
+
+  .clockActionIcon {
+    width: 2.2rem;
+    height: 2.2rem;
+  }
+}
+
+
+/* Jornada contextual: misma lógica de registro, nueva jerarquía de presentación. */
+.jornadaLayout {
+  align-items: stretch;
+  gap: 0.85rem;
+  background: transparent;
+  padding: 0;
+  border: 0;
+  box-shadow: none;
+}
+
+.jornadaStatus,
+.jornadaEmptyState,
+.jornadaRecord,
+.jornadaActions,
+.jornadaCorrections {
+  box-sizing: border-box;
+  min-width: 0;
+  width: 100%;
+  border: 1px solid var(--border-subtle);
+  border-radius: 15px;
+  background: var(--surface-bg);
+}
+
+.jornadaStatus {
+  padding: 1.05rem 1.1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.45rem;
+  color: var(--color-primario);
+  background: linear-gradient(155deg, var(--color-primario-fondo), var(--surface-bg));
+}
+
+.jornadaStatusHeading {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}
+
+.jornadaStateBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: rgba($color-logo2, 0.1);
+  color: var(--color-logo3);
+  border-radius: 100px;
+  padding: 0.4rem 0.7rem;
+  font-size: 0.73rem;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+}
+
+.jornadaStateAway {
+  color: var(--color-peligro);
+  background: rgba($color-secundario, 0.23);
+}
+
+.jornadaStateDot {
+  width: 0.48rem;
+  height: 0.48rem;
+  background: #239370;
+  border-radius: 50%;
+}
+
+.jornadaStateAway .jornadaStateDot {
+  background: var(--color-peligro);
+}
+
+.jornadaStatusStart,
+.jornadaCounterLabel {
+  color: var(--color-primario-claro);
+  font-size: 0.79rem;
+  font-weight: 600;
+}
+
+.jornadaCounterLabel {
+  margin-top: 0.4rem;
+}
+
+.jornadaCounter {
+  font-family: $fuente-titulos;
+  font-size: clamp(1.9rem, 3.2vw, 2.6rem);
+  line-height: 1.1;
+  font-weight: 850;
+  letter-spacing: 0.01em;
+  font-variant-numeric: tabular-nums;
+}
+
+.jornadaAwayCounter {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 0.9rem;
+  justify-content: center;
+  border-top: 1px solid var(--border-subtle);
+  padding-top: 0.7rem;
+  width: 100%;
+  font-size: 0.82rem;
+  color: var(--color-peligro);
+}
+
+.jornadaAwayCounter strong {
+  font-variant-numeric: tabular-nums;
+}
+
+.jornadaEmptyState {
+  padding: 1.05rem;
+  background: var(--color-primario-fondo);
+}
+
+.jornadaEmptyState h3 {
+  margin: 0.55rem 0 0.25rem;
+  font-size: 1.08rem;
+  color: var(--color-primario);
+}
+
+.jornadaEmptyState p {
+  margin: 0;
+  color: var(--color-primario-claro);
+  font-size: 0.83rem;
+  line-height: 1.5;
+}
+
+.jornadaActions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  border: 0;
+  background: transparent;
+}
+
+.jornadaActions h3,
+.jornadaSectionTitle h3 {
+  margin: 0;
+  font-family: $fuente-titulos;
+  font-size: 0.95rem;
+  color: var(--color-primario);
+}
+
+.jornadaLayout .jornadaAction {
+  box-sizing: border-box;
+  width: 100%;
+  display: flex;
+  justify-content: flex-start;
+  gap: 0.75rem;
+  min-height: 4.4rem;
+  padding: 0.8rem 1rem;
+  border-radius: 13px;
+  text-align: left;
+}
+
+.jornadaLayout .jornadaActionPrimary {
+  background: var(--action-primary-bg);
+  color: #ffffff;
+  border-color: var(--action-primary-bg);
+  border-style: solid;
+}
+
+.jornadaLayout .jornadaActionPrimary:hover:not(:disabled) {
+  background: var(--action-primary-hover-bg);
+}
+
+.jornadaLayout .jornadaActionSecondary {
+  background: var(--surface-bg);
+  color: var(--color-primario);
+  border: 1px solid var(--color-bordes-tabla);
+  box-shadow: none;
+}
+
+.jornadaLayout .jornadaActionSecondary:hover:not(:disabled) {
+  background: var(--color-primario-fondo-claro);
+}
+
+.jornadaActionText {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.jornadaActionText strong {
+  font-family: $fuente-titulos;
+  font-size: 0.92rem;
+  line-height: 1.25;
+}
+
+.jornadaActionText small {
+  font-size: 0.74rem;
+  line-height: 1.45;
+  font-weight: 500;
+  opacity: 0.85;
+}
+
+.jornadaActionIcon,
+.jornadaLayout .clockActionIcon {
+  display: grid;
+  place-items: center;
+  width: 2.3rem;
+  height: 2.3rem;
+  min-width: 2.3rem;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.14);
+  font-size: 1.25rem;
+  color: inherit;
+}
+
+.jornadaActionSecondary .jornadaActionIcon {
+  background: var(--color-primario-fondo);
+}
+
+.jornadaActionArrow {
+  align-self: center;
+  font-size: 1.5rem;
+  opacity: 0.7;
+  line-height: 1;
+}
+
+.jornadaRecord {
+  padding: 1rem;
+  color: var(--color-primario);
+}
+
+.jornadaSectionTitle,
+.jornadaBreaksTitle {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.jornadaSectionTitle > span,
+.jornadaBreaksTitle > span {
+  font-size: 0.7rem;
+  color: var(--color-logo4);
+  font-weight: 700;
+}
+
+.jornadaRecordTimes {
+  margin: 0.7rem 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.jornadaRecordTimes > div {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.6rem;
+  align-items: baseline;
+  font-size: 0.83rem;
+}
+
+.jornadaRecordTimes dt {
+  color: var(--color-logo4);
+}
+
+.jornadaRecordTimes dd {
+  margin: 0;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+
+.jornadaBreaksTitle {
+  border-top: 1px solid var(--color-bordes-tabla);
+  padding-top: 0.7rem;
+  font-size: 0.83rem;
+}
+
+.jornadaBreaksList {
+  padding: 0;
+  margin: 0.6rem 0 0;
+  list-style: none;
+  display: grid;
+  gap: 0.35rem;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 195px), 1fr));
+}
+
+.jornadaBreaksList li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.4rem;
+  background: var(--color-primario-fondo-claro);
+  border-radius: 8px;
+  padding: 0.55rem 0.6rem;
+  font-size: 0.77rem;
+}
+
+.jornadaBreaksList li span {
+  color: var(--color-primario-claro);
+}
+
+.jornadaBreaksList li strong {
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+.jornadaNoBreaks,
+.jornadaBreakTotal {
+  margin: 0.55rem 0 0;
+  color: var(--color-logo4);
+  font-size: 0.76rem;
+}
+
+.jornadaLayout .jornadaAbsenceButton {
+  align-self: flex-start;
+  font-size: 0.8rem;
+  max-width: 100%;
+}
+
+.jornadaPendingNotice {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  padding: 0.7rem 0.85rem;
+  color: var(--color-peligro);
+  background: var(--color-secundario-fondo);
+  border: 1px solid rgba($color-secundario, 0.55);
+  border-radius: 10px;
+  font-size: 0.79rem;
+  line-height: 1.4;
+}
+
+.jornadaCorrections {
+  overflow: clip;
+}
+
+.jornadaCorrectionsToggle,
+.jornadaBreakEditor > summary {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  cursor: pointer;
+  list-style: none;
+  padding: 0.9rem 1rem;
+  color: var(--color-primario);
+}
+
+.jornadaCorrectionsToggle::-webkit-details-marker,
+.jornadaBreakEditor > summary::-webkit-details-marker {
+  display: none;
+}
+
+.jornadaCorrectionsToggle:focus-visible,
+.jornadaBreakEditor > summary:focus-visible {
+  outline: 3px solid rgba($color-logo2, 0.35);
+  outline-offset: -3px;
+}
+
+.jornadaCorrectionsIcon {
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 8px;
+  background: var(--color-primario-fondo);
+  color: var(--color-logo3);
+  font-size: 1.1rem;
+}
+
+.jornadaCorrectionsText {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.jornadaCorrectionsText strong {
+  font-size: 0.86rem;
+}
+
+.jornadaCorrectionsText small {
+  font-size: 0.73rem;
+  color: var(--color-logo4);
+  font-weight: 500;
+  line-height: 1.35;
+}
+
+.jornadaChevron {
+  display: inline-block;
+  transition: transform 180ms ease;
+  color: var(--color-logo3);
+  font-size: 1.2rem;
+}
+
+.jornadaCorrections[open] > summary .jornadaChevron,
+.jornadaBreakEditor[open] > summary .jornadaChevron {
+  transform: rotate(180deg);
+}
+
+.jornadaCorrectionsContent {
+  border-top: 1px solid var(--color-bordes-tabla);
+  padding: 0.95rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.95rem;
+}
+
+.jornadaCorrectionsHelp {
+  margin: 0;
+  color: var(--color-primario-claro);
+  font-size: 0.79rem;
+  line-height: 1.5;
+}
+
+.jornadaManualButtons {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.6rem;
+}
+
+.jornadaManualButtons button,
+.jornadaSaveBreaksButton {
+  width: 100%;
+  justify-content: center;
+  font-size: 0.82rem;
+  min-height: 2.65rem;
+}
+
+.jornadaBreakEditor {
+  border: 1px solid var(--color-bordes-tabla);
+  border-radius: 10px;
+  min-width: 0;
+}
+
+.jornadaBreakEditor > summary {
+  padding: 0.7rem;
+  font-size: 0.8rem;
+  font-weight: 800;
+}
+
+.jornadaBreakEditor > summary > span:first-child {
+  flex: 1;
+}
+
+.jornadaPendingTag {
+  display: inline-block;
+  padding: 0.25rem 0.45rem;
+  border-radius: 99px;
+  background: var(--color-secundario-fondo);
+  color: var(--color-peligro);
+  font-size: 0.64rem;
+}
+
+.jornadaBreakEditor .breakSummary {
+  border: 0;
+  border-top: 1px solid var(--color-bordes-tabla);
+  border-radius: 0;
+  padding: 0.8rem;
+  gap: 0.65rem;
+}
+
+.jornadaManualAbsence {
+  padding-top: 0.8rem;
+  border-top: 1px solid var(--color-bordes-tabla);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+  font-size: 0.75rem;
+  color: var(--color-primario-claro);
+}
+
+.jornadaManualAbsence button {
+  font-size: 0.79rem;
+}
+
+@media (max-width: 800px) {
+  .jornadaStatus,
+  .jornadaRecord {
+    padding: 0.85rem;
+  }
+  .jornadaCounter {
+    font-size: clamp(1.95rem, 8vw, 2.35rem);
+  }
+  .jornadaLayout .jornadaAction {
+    min-height: 4.1rem;
+  }
+}
+
+@media (max-width: 360px) {
+  .jornadaLayout .jornadaAction {
+    gap: 0.55rem;
+    padding: 0.7rem;
+  }
+  .jornadaActionText strong {
+    font-size: 0.84rem;
+  }
+  .jornadaActionText small {
+    font-size: 0.7rem;
+  }
+  .jornadaCorrectionsToggle {
+    padding: 0.8rem 0.65rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .jornadaChevron {
+    transition: none;
+  }
+}
+
+/* El editor se mantiene montado aun cuando el usuario lo contrae. */
+.jornadaCorrectionsToggle {
+  width: 100%;
+  text-align: left;
+  border: 0;
+  background: transparent;
+  font-family: inherit;
+}
+
+.jornadaCorrectionsToggle:hover {
+  background: var(--color-primario-fondo-claro);
+}
+
+.jornadaCorrectionsContent[hidden] {
+  display: none;
+}
+
+.jornadaChevronOpen {
+  transform: rotate(180deg);
+}
+
+// Acceso contextual al mismo editor que se utiliza en el resumen semanal.
+.editLoadedEntryButton {
+  align-self: stretch;
+  width: 100%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 0.65rem;
+  min-height: 2.5rem;
+  border-color: var(--color-bordes-tabla);
+
+  svg {
+    flex-shrink: 0;
+    width: 1rem;
+    height: 1rem;
+  }
+}
+
+/* Indicadores del calendario. Respetan los colores y el seleccionado de DayPicker.
+   La marca inferior evita competir con el resaltado de la fecha seleccionada. */
+.calendarPaneHeading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.7rem;
+  text-align: left;
+}
+
+.todayButton {
+  flex: 0 0 auto;
+  min-width: 54px;
+  min-height: 44px;
+  padding: 0.45rem 0.8rem;
+  border: 1px solid rgba($color-logo2, 0.3);
+  border-radius: 999px;
+  background: var(--surface-bg);
+  color: var(--color-primario);
+  font: inherit;
+  font-size: 0.8rem;
+  font-weight: 800;
+  cursor: pointer;
+
+  &:hover:not(:disabled),
+  &:focus-visible {
+    border-color: var(--color-logo2);
+    background: var(--color-primario-fondo-claro);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--color-logo2);
+    outline-offset: 2px;
+  }
+
+  &:disabled {
+    opacity: 0.46;
+    cursor: default;
+  }
+}
+
+.calendarPane :global(.rdp-day_button) {
+  position: relative;
+}
+
+.closedWorkedDay :global(.rdp-day_button)::after,
+.openWorkedDay :global(.rdp-day_button)::after,
+.justifiedAbsenceDay :global(.rdp-day_button)::after {
+  content: '';
+  position: absolute;
+  bottom: 3px;
+  left: 50%;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  transform: translateX(-50%);
+  background-color: #23865c;
+  pointer-events: none;
+}
+
+.justifiedAbsenceDay :global(.rdp-day_button)::after {
+  background-color: #b47819;
+}
+
+.openWorkedDay :global(.rdp-day_button)::after {
+  background-color: #258ec4;
+}
+
+/* Navegación, día actual y selección: sin azul predeterminado de DayPicker.
+   El selector explícito también cubre cambios de orden de inyección CSS. */
+.calendarPane :global(.rdp-chevron) {
+  fill: var(--calendar-accent);
+}
+
+.calendarPane :global(.rdp-today:not(.rdp-selected) .rdp-day_button) {
+  color: var(--calendar-accent);
+  font-weight: 800;
+}
+
+.calendarPane :global(.rdp-selected .rdp-day_button) {
+  color: var(--text-main);
+  border: 2px solid var(--calendar-accent);
+  background: var(--calendar-selected-bg);
+}
+
+/* El punto no debe afectar fechas deshabilitadas ni confundirse con el seleccionado. */
+.calendarPane :global(.rdp-disabled) :global(.rdp-day_button)::after {
+  opacity: 0.4;
+}
+
+.calendarLegend {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.35rem 0.9rem;
+  margin: 0.55rem auto 0;
+  color: var(--color-primario-claro);
+  font-size: 0.71rem;
+  font-weight: 700;
+}
+
+.calendarLegend > span {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  white-space: nowrap;
+}
+
+.calendarLegend i {
+  width: 7px;
+  height: 7px;
+  flex-shrink: 0;
+  border-radius: 50%;
+}
+
+.legendWorked { background: #23865c; }
+.legendAbsence { background: #b47819; }
+.legendOpen { background: #258ec4; }
+
+@media (max-width: 800px) {
+  .changeDateButton { min-height: 44px; }
+
+  .calendarLegend {
+    font-size: 0.68rem;
+    gap: 0.35rem 0.65rem;
+  }
+
+  .calendarPane :global(.rdp-root) {
+    --rdp-day_button-height: clamp(38px, 11vw, 44px);
+    --rdp-day_button-width: var(--rdp-day_button-height);
+  }
+}
+
+/* Íconos vectoriales de react-icons en lugar de caracteres tipográficos. */
+.jornadaActionArrow {
+  width: 1.22rem;
+  height: 1.22rem;
+  flex: 0 0 auto;
+}
+.jornadaActionIcon svg,
+.jornadaCorrectionsIcon svg { width: 1.12rem; height: 1.12rem; }
+.jornadaChevron { width: 1.2rem; height: 1.2rem; flex: 0 0 auto; }
+.deleteBreakButton svg { width: 1.12rem; height: 1.12rem; }
+
+/* En móvil cada destino es una pantalla; se eliminan las cajas exteriores,
+   conservando diferenciación dentro de la jornada y en los registros. */
+@media (max-width: 800px) {
+  .containerMain { gap: 0; padding: 0; }
+
+  .calendarPane,
+  .workPane {
+    padding: 0.7rem 0.15rem 1rem;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+    background: transparent;
+  }
+
+  .calendarPane { container-type: inline-size; }
+  .paneHeading,
+  .workPaneHeading {
+    padding: 0.15rem 0.1rem 0.7rem;
+    border-bottom: 1px solid var(--border-strong);
+  }
+
+  .timeEntryContainer,
+  .timeEntryContainerLoaded {
+    padding: 0.25rem 0;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+    backdrop-filter: none;
+  }
+
+  .jornadaStatus,
+  .jornadaEmptyState {
+    border: 0;
+    border-radius: 14px;
+  }
+  .jornadaRecord {
+    padding-inline: 0.15rem;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+  }
+  .jornadaCorrections {
+    border: 0;
+    border-top: 1px solid var(--color-bordes-tabla);
+    border-bottom: 1px solid var(--color-bordes-tabla);
+    border-radius: 0;
+    background: transparent;
+  }
+  .jornadaCorrectionsToggle { padding: 0.85rem 0.25rem; }
+  .jornadaCorrectionsContent { padding: 0.85rem 0.25rem; }
+  .jornadaCorrectionsToggle:hover { background: transparent; }
+  .editLoadedEntryButton { min-height: 44px; }
+}
+
+
+/* Temas: mantener suficiente contraste en las acciones y el calendario. */
+:global(html[data-theme='dark']) {
+  .jornadaStatus, .jornadaEmptyState, .jornadaRecord, .jornadaCorrections,
+  .jornadaBreakEditor, .jornadaActions, .timeEntryContainerLoaded,
+  .timeEntryContainer { background: var(--surface-bg); color: var(--text-main); }
+  .jornadaStatus { background: var(--surface-bg); }
+  .jornadaLayout { background: transparent; }
+  .jornadaLayout .jornadaActionPrimary { background: var(--button-primary-bg); color: var(--button-primary-color); }
+  .jornadaLayout .jornadaActionSecondary { background: var(--surface-elevated); color: var(--text-main); }
+  .jornadaPendingNotice { color: var(--color-peligro); }
+  .calendarPane :global(.rdp-day_button) { color: var(--text-main); }
+
+}
+
+
+/* En móvil todas las pantallas comparten el lienzo de la app. En tema oscuro
+   estos wrappers no deben recuperar un fondo propio por especificidad. */
+@media (max-width: 800px) {
+  :global(html[data-theme='dark']) {
+    .timeEntryContainer,
+    .timeEntryContainerLoaded,
+    .jornadaActions,
+    .jornadaRecord,
+    .jornadaCorrections {
+      background: transparent;
+    }
+  }
 }

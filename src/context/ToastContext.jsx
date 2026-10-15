@@ -1,3 +1,4 @@
+import { FiX } from 'react-icons/fi';
 import { createContext, useCallback, useContext, useState } from 'react';
 import { createPortal } from 'react-dom';
 import styles from './ToastContext.module.scss';
@@ -78,7 +79,7 @@ export function ToastProvider({ children }) {
             onClick={() => removeToast(toast.id)}
             aria-label="Cerrar notificación"
           >
-            ×
+            <FiX aria-hidden="true" />
           </button>
         </div>
       ))}

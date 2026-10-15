@@ -1,0 +1,255 @@
+/* Paleta central. No se duplican componentes por tema: todos consumen tokens. */
+:root,
+:root[data-theme='light'] {
+  color-scheme: light;
+  --color-logo1: #52c2e5;
+  --color-logo2: #0d77a6;
+  --color-logo3: #013f61;
+  --color-logo4: #898e94;
+  --color-primario: #0b2233;
+  --color-primario-claro: #24465c;
+  --color-primario-oscuro: #071722;
+  --color-primario-fondo: #eaf2f6;
+  --color-primario-fondo-claro: #f4f8fa;
+  --color-secundario: #d6a978;
+  --color-secundario-fondo: #f6ede3;
+  --color-terciario: #2e9ac0;
+  --color-terciario-oscuro: #013f61;
+  --color-terciario-fondo: #ebf6fa;
+  --color-neutro: #f6f8fa;
+  --color-texto-oscuro: #17212b;
+  --color-texto-claro: #f8fafc;
+  --color-bordes-tabla: #d8e1e8;
+  /* Separadores con jerarquía propia en ambos temas. */
+  --border-subtle: #d8e1e8;
+  --border-strong: #b4c5d1;
+  /* DayPicker: acento cálido de la paleta clara, suficientemente legible. */
+  --calendar-accent: #95632f;
+  --calendar-selected-bg: #f6ede3;
+  --color-peligro: #8f3f2d;
+  /* Controles sobre el fondo oscuro del modal desktop / bottom sheet. */
+  --modal-control-primary-bg: #d6a978;
+  --modal-control-primary-color: #071722;
+  --modal-control-primary-hover-bg: #e4be96;
+  --modal-control-primary-border: #ba9167;
+  --modal-control-secondary-bg: #29465a;
+  --modal-control-secondary-color: #f8fafc;
+  --modal-control-secondary-hover-bg: #35566b;
+  --modal-control-secondary-border: #7b929f;
+  --modal-control-tertiary-bg: #29465a;
+  --modal-control-tertiary-color: #f8fafc;
+  --modal-control-tertiary-hover-bg: #35566b;
+  --modal-control-tertiary-border: #7b929f;
+  --color-danger: #b42318;
+  --dropdown-bg: #082133;
+  --dropdown-hover: #12384f;
+  --page-bg: #f4f8fa;
+  --surface-bg: #ffffff;
+  --surface-glass: rgba(255,255,255,.86);
+  --surface-elevated: #ffffff;
+  --text-main: #17212b;
+  --text-muted: #64748b;
+  --header-bg: var(--nav-bg);
+  --header-fg: var(--nav-fg);
+  --dropdown-fg: #f8fafc;
+  --sync-ok: #047857;
+  --sync-working: #075985;
+  --sync-warning: #9a5800;
+  --sync-error: #b42318;
+  --nav-bg: #0b2233;
+  --nav-fg: #f8fafc;
+  --modal-bg: #0b2233;
+  --modal-fg: #f8fafc;
+  --field-bg: #ffffff;
+  --field-fg: #17212b;
+  --accent-contrast: #ffffff;
+  --action-primary-bg: #0d77a6;
+  --action-primary-hover-bg: #013f61;
+  --stat-positive: #047857;
+  --stat-negative: #b91c1c;
+  --button-primary-bg: #0b2233;
+  --button-primary-color: #f8fafc;
+  --button-primary-hover-bg: #344756;
+  --button-secondary-bg: #f6ede3;
+  --button-secondary-color: #0b2233;
+  --button-secondary-hover-bg: #f1ebe5;
+  --button-tertiary-bg: #ebf6fa;
+  --button-tertiary-color: #0b2233;
+  --table-header-bg: #0b2233;
+  --table-header-fg: #f8fafc;
+  --button-disabled-bg: #e4e8ec;
+  --button-disabled-color: #425466;
+  --button-danger-bg: #b42318;
+  --button-danger-color: #f8fafc;
+  --button-danger-hover-bg: #cb4a3f;
+}
+
+
+
+:root[data-theme='dark'] {
+  color-scheme: dark;
+
+  /* ========================================
+     1. FONDOS Y SUPERFICIES
+     ======================================== */
+  --page-bg: #000000;
+  --surface-bg: #1b1b1b;
+  --surface-glass: #1b1b1b;
+  --surface-elevated: #454545;
+
+  --color-primario-fondo: #1b1b1b;
+  --color-primario-fondo-claro: #2b2b2b;
+  --color-secundario-fondo: #302b25;
+  --color-terciario-fondo: #263036;
+  --color-neutro: #2b2b2b;
+
+  /* ========================================
+     2. TEXTOS Y COLORES BASE
+     ======================================== */
+  --text-main: #ededed;
+  --text-muted: #b8b8b8;
+
+  --color-primario: #ededed;
+  --color-primario-claro: #c6c6c6;
+  --color-primario-oscuro: #171717;
+  --color-texto-oscuro: #ededed;
+  --color-texto-claro: #ededed;
+  --accent-contrast: #171717;
+
+  /* ========================================
+     3. IDENTIDAD Y ACENTOS
+     ======================================== */
+  --color-logo1: #9abcc8;
+  --color-logo2: #91b4c1;
+  --color-logo3: #bfd5dc;
+  --color-logo4: #b3b3b3;
+
+  --color-secundario: #c7b298;
+  --color-terciario: #a0c2cc;
+  --color-terciario-oscuro: #c3dce3;
+
+  /* ========================================
+     4. BORDES Y DIVISORES
+     ======================================== */
+  --border-subtle: #454545;
+  --border-strong: #606060;
+  --color-bordes-tabla: #454545;
+
+  /* ========================================
+     5. HEADER, NAVEGACIÓN Y MENÚS
+     ======================================== */
+  --header-bg: var(--page-bg);
+  --header-fg: var(--text-main);
+
+  --nav-bg: #000000;
+  --nav-fg: #ededed;
+
+  --dropdown-bg: #1b1b1b;
+  --dropdown-hover: #2b2b2b;
+  --dropdown-fg: #ededed;
+
+  /* ========================================
+     6. CALENDARIO Y TABLAS
+     ======================================== */
+  --calendar-accent: #91b4c1;
+  --calendar-selected-bg: #2b2b2b;
+
+  --table-header-bg: #2b2b2b;
+  --table-header-fg: #ededed;
+
+  /* ========================================
+     7. MODALES Y CAMPOS
+     ======================================== */
+  --modal-bg: #1b1b1b;
+  --modal-fg: #ededed;
+
+  --field-bg: #2b2b2b;
+  --field-fg: #ededed;
+
+  /* ========================================
+     8. ACCIONES PRINCIPALES
+     ======================================== */
+  --action-primary-bg: #173e76;
+  --action-primary-hover-bg: #245397;
+
+  /* ========================================
+     9. BOTONES GENERALES
+     ======================================== */
+  --button-primary-bg: #173e76;
+  --button-primary-color: #ffffff;
+  --button-primary-hover-bg: #245397;
+
+  --button-secondary-bg: #2b2b2b;
+  --button-secondary-color: #ededed;
+  --button-secondary-hover-bg: #454545;
+
+  --button-tertiary-bg: #2b2b2b;
+  --button-tertiary-color: #ededed;
+
+  --button-disabled-bg: #454545;
+  --button-disabled-color: #b8b8b8;
+
+  --button-danger-bg: #884549;
+  --button-danger-color: #ffffff;
+  --button-danger-hover-bg: #9e5157;
+
+  /* ========================================
+     10. CONTROLES DE MODALES
+     ======================================== */
+  --modal-control-primary-bg: #173e76;
+  --modal-control-primary-color: #ffffff;
+  --modal-control-primary-hover-bg: #245397;
+  --modal-control-primary-border: #345d9a;
+
+  --modal-control-secondary-bg: #454545;
+  --modal-control-secondary-color: #ededed;
+  --modal-control-secondary-hover-bg: #555555;
+  --modal-control-secondary-border: #606060;
+
+  --modal-control-tertiary-bg: #454545;
+  --modal-control-tertiary-color: #ededed;
+  --modal-control-tertiary-hover-bg: #555555;
+  --modal-control-tertiary-border: #606060;
+
+  /* ========================================
+     11. ESTADOS E INDICADORES
+     ======================================== */
+  --sync-ok: #8ed9ad;
+  --sync-working: #b3e6ff;
+  --sync-warning: #ffd48a;
+  --sync-error: #ff9c9c;
+
+  --stat-positive: #98c9b0;
+  --stat-negative: #e6a7a7;
+
+  --color-peligro: #e8ad9d;
+  --color-danger: #e99595;
+}
+
+
+
+/* Elementos nativos y contenido que aparece en overlays/portales. */
+html { background: var(--page-bg); }
+body { background: var(--page-bg); color: var(--text-main); }
+input, select, textarea { accent-color: var(--color-logo2); }
+:root[data-theme='dark'] input,
+:root[data-theme='dark'] textarea,
+:root[data-theme='dark'] select {
+  color: var(--field-fg);
+  background-color: var(--field-bg);
+  border-color: var(--color-bordes-tabla);
+}
+:root[data-theme='dark'] input::placeholder,
+:root[data-theme='dark'] textarea::placeholder { color: var(--text-muted); }
+:root[data-theme='dark'] :focus-visible { outline-color: var(--color-logo1); }
+:root[data-theme='dark'] .rdp-root {
+  --rdp-accent-color: var(--calendar-accent);
+  --rdp-accent-background-color: var(--calendar-selected-bg);
+  --rdp-today-color: var(--calendar-accent);
+  --rdp-selected-border: 2px solid var(--calendar-accent);
+  --rdp-day_button-border: 1px solid transparent;
+  color: var(--text-main);
+}
+:root[data-theme='dark'] .rdp-day_button:hover:not(:disabled) {
+  background-color: var(--surface-elevated);
+}

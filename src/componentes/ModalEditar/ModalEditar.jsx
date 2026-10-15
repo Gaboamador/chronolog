@@ -7,6 +7,7 @@ const ModalEditar = ({
   onClose,
   children,
   permitirCerrar = true,
+  presentation = 'full',
 }) => {
   useEffect(() => {
     if (!isOpen || !permitirCerrar) return;
@@ -34,7 +35,7 @@ const ModalEditar = ({
     <AnimatePresence>
       {isOpen && (
         <motion.div
-          className={styles.overlay}
+          className={`${styles.overlay} ${presentation === 'sheet' ? styles.sheet : ''}`}
           onClick={handleOverlayClick}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}

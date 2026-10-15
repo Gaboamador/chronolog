@@ -7,7 +7,7 @@
 .strengthBar {
   height: 6px;
   border-radius: 4px;
-  background-color: $color-bordes-tabla;
+  background-color: var(--color-bordes-tabla);
   transition: width 0.3s;
 }
 

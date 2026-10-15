@@ -21,8 +21,10 @@
   width: min(430px, 100%);
   max-height: calc(100vh - 2rem);
 
-  background-color: $color-primario;
-  border: 1px solid rgba($color-secundario, 0.35);
+  background-color: var(--modal-bg);
+  color: var(--modal-fg);
+  --modal-foreground: var(--modal-fg);
+  border: 1px solid var(--border-strong);
   border-radius: 14px;
   padding: 1.15rem;
 
@@ -49,12 +51,12 @@
     border-radius: 0;
     padding: 0;
 
-    color: $color-texto-claro;
+    color: var(--modal-foreground);
     box-shadow: none;
   }
 
   .modalTitle {
-    color: $color-texto-claro;
+    color: var(--modal-foreground);
     font-family: $fuente-titulos;
     font-size: $font-size-lg;
     font-weight: 700;
@@ -63,7 +65,7 @@
     width: 100%;
     padding: 0.2rem 0 0.75rem;
     margin-bottom: 1rem;
-    border-bottom: 1px solid rgba($color-secundario, 0.42);
+    border-bottom: 1px solid var(--border-strong);
   }
 
   .timeEntryInputs {
@@ -85,7 +87,7 @@
   column-gap: 0.75rem;
 
   label {
-    color: $color-secundario;
+    color: var(--color-secundario);
   }
 
   input {
@@ -93,9 +95,9 @@
     min-width: 0;
     box-sizing: border-box;
 
-    background-color: rgba(255, 255, 255, 0.96);
-    color: $color-texto-oscuro;
-    border: 1px solid rgba($color-secundario, 0.38);
+    background-color: var(--surface-glass);
+    color: var(--field-fg);
+    border: 1px solid var(--border-subtle);
     border-radius: 8px;
     padding: 0.4rem 0.45rem;
   }
@@ -110,45 +112,49 @@
 }
 
   .absenceForm {
-    color: $color-texto-claro;
+    color: var(--modal-foreground);
   }
 
   .absenceField {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
     label {
-      color: $color-neutro;
+      color: var(--modal-foreground);
     }
 
     input,
     select {
-      background-color: rgba(255, 255, 255, 0.96);
-      color: $color-texto-oscuro;
-      border: 1px solid rgba($color-secundario, 0.38);
+      background-color: var(--surface-glass);
+      color: var(--field-fg);
+      border: 1px solid var(--border-subtle);
       border-radius: 8px;
     }
   }
 
   .absencePreview {
-    color: $color-texto-claro;
+    color: var(--modal-foreground);
     background-color: rgba($color-secundario, 0.18);
-    border: 1px solid rgba($color-secundario, 0.38);
+    border: 1px solid var(--border-subtle);
   }
 
   .absenceError {
-    color: $color-texto-claro;
+    color: var(--modal-foreground);
     background-color: rgba($color-danger, 0.28);
     border: 1px solid rgba($color-danger, 0.48);
   }
 
   .modalAlert {
-    color: $color-texto-claro;
+    color: var(--modal-foreground);
     background-color: rgba($color-secundario, 0.18);
-    border: 1px solid rgba($color-secundario, 0.38);
+    border: 1px solid var(--border-subtle);
   }
 
   .modalButtonsContainer {
     padding-top: 0.5rem;
     margin-top: 0.5rem;
-    border-top: 1px solid rgba($color-secundario, 0.36);
+    border-top: 1px solid var(--border-subtle);
   }
 
   .modalDeleteCancelButtons {
@@ -164,6 +170,39 @@
     justify-content: center;
     margin-top: 1rem;
   }
+
+  /* Sólo el editor de registros usa tres acciones. Eliminar se representa
+     mediante un ícono accesible; las demás acciones conservan sus etiquetas. */
+  .editorActions {
+    display: grid;
+    grid-template-columns: 44px minmax(0, 1fr) minmax(0, 1fr);
+    gap: 0.5rem;
+    align-items: center;
+  }
+
+  .editorActions .modalDeleteCancelButtons,
+  .editorActions .modalSaveButton {
+    display: contents;
+  }
+
+  .editorActions .button {
+    min-width: 0;
+    width: 100%;
+    min-height: 44px;
+    justify-content: center;
+    margin: 0;
+    padding: 0.55rem 0.3rem;
+    white-space: nowrap;
+    font-size: clamp(0.72rem, 2.7vw, 0.91rem);
+  }
+
+  .editorActions .iconDeleteButton {
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    font-size: 1.15rem;
+  }
+
 }
 
 .timeEntryContainer {
@@ -188,5 +227,142 @@
   .content .absenceField,
   .content .button {
     font-size: $font-size-sm;
+  }
+}
+
+/* El contenido permanece dentro del viewport visible cuando se abre el teclado
+   virtual. Los cambios son de presentación y no alteran el ciclo del modal. */
+@media (max-width: 800px) {
+  .overlay {
+    padding: max(0.55rem, env(safe-area-inset-top, 0px))
+      max(0.55rem, env(safe-area-inset-right, 0px))
+      max(0.55rem, env(safe-area-inset-bottom, 0px))
+      max(0.55rem, env(safe-area-inset-left, 0px));
+    align-items: center;
+  }
+
+  .content {
+    max-height: calc(100dvh - 1.1rem - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px));
+    width: min(430px, 100%);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+    scroll-padding-bottom: 1rem;
+    padding: 0.95rem;
+  }
+
+  .content input,
+  .content select,
+  .content button {
+    min-height: 44px;
+  }
+
+  /* Evita el zoom automático del navegador al enfocar horarios en iPhone. */
+  .content input,
+  .content select {
+    font-size: 16px;
+  }
+}
+
+/* Escritorio mantiene el diálogo. Móvil usa una pantalla de trabajo completa. */
+@media (max-width: 800px) {
+  .overlay {
+    padding: 0;
+    align-items: stretch;
+    justify-content: stretch;
+    background: var(--page-bg);
+    backdrop-filter: none;
+  }
+  .content {
+    width: 100%;
+    height: 100dvh;
+    max-height: 100dvh;
+    max-width: none;
+    margin: 0;
+    padding: max(1.15rem, env(safe-area-inset-top, 0px))
+             max(1rem, env(safe-area-inset-right, 0px))
+             max(1.4rem, env(safe-area-inset-bottom, 0px))
+             max(1rem, env(safe-area-inset-left, 0px));
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+    background: var(--page-bg);
+    color: var(--text-main);
+    display: block;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+  }
+  /* En una pantalla completa clara los botones dejan de usar los colores
+     diseñados para el modal oscuro. El bottom sheet conserva su aspecto. */
+  .overlay:not(.sheet) .content {
+    --modal-foreground: var(--text-main);
+    --modal-control-primary-bg: var(--action-primary-bg);
+    --modal-control-primary-color: #ffffff;
+    --modal-control-primary-hover-bg: var(--action-primary-hover-bg);
+    --modal-control-primary-border: var(--action-primary-bg);
+    --modal-control-secondary-bg: var(--color-secundario-fondo);
+    --modal-control-secondary-color: var(--text-main);
+    --modal-control-secondary-hover-bg: var(--color-primario-fondo);
+    --modal-control-secondary-border: var(--border-strong);
+    --modal-control-tertiary-bg: var(--color-terciario-fondo);
+    --modal-control-tertiary-color: var(--text-main);
+    --modal-control-tertiary-hover-bg: var(--color-primario-fondo);
+    --modal-control-tertiary-border: var(--border-strong);
+  }
+
+  /* El oscuro mantiene los secundarios neutros, sin fondos beige. */
+  :global(:root[data-theme='dark']) .overlay:not(.sheet) .content {
+    --modal-control-secondary-bg: var(--surface-elevated);
+    --modal-control-secondary-hover-bg: #474747;
+    --modal-control-tertiary-bg: var(--surface-elevated);
+    --modal-control-tertiary-hover-bg: #474747;
+  }
+  .content .timeEntryInputs { width: 100%; }
+  .content .timeEntryInputGroup { grid-template-columns: minmax(75px, 1fr) minmax(100px, 1.3fr) 2rem; }
+  .content .modalTitle {
+    text-align: left;
+    font-size: 1.28rem;
+    padding-bottom: 1rem;
+    color: var(--text-main);
+  }
+  .content .timeEntryContainer.modalSurface,
+  .content .absenceForm,
+  .content .absenceField label,
+  .content .modalAlert { color: var(--text-main); }
+  .content .timeEntryInputGroup label { color: var(--color-logo2); }
+  .content .absencePreview { color: var(--text-main); }
+  .content .absenceError { color: var(--color-peligro); }
+  .content .timeEntryContainer.modalSurface { min-height: 100%; padding-bottom: 0.7rem; }
+
+  /* Una elección rápida se presenta como bottom sheet y no como otra pantalla. */
+  .overlay.sheet {
+    align-items: end;
+    background: rgba(3, 10, 18, 0.64);
+    backdrop-filter: blur(3px);
+  }
+  .sheet .content {
+    --text-main: var(--modal-fg);
+    width: 100%;
+    height: auto;
+    max-height: min(85dvh, 720px);
+    border-radius: 22px 22px 0 0;
+    border-top: 1px solid var(--color-bordes-tabla);
+    background: var(--modal-bg);
+    padding-top: 1.4rem;
+  }
+  .sheet .content .modalTitle { text-align: center; }
+  .sheet .content .timeEntryContainer.modalSurface { min-height: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .overlay, .content { animation: none; transition: none; }
+}
+
+@media (max-width: 300px) {
+  .content .editorActions {
+    grid-template-columns: 44px minmax(0, 1fr);
+  }
+  .content .editorActions .modalSaveButton > .button {
+    grid-column: 1 / -1;
   }
 }

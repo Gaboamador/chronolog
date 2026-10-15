@@ -7,9 +7,9 @@
   width: 100%;
   height: 60px;
 
-  background-color: $color-primario;
-  color: $color-texto-claro;
-  box-shadow: 0 10px 30px rgba($color-primario, 0.18);
+  background-color: var(--header-bg);
+  color: var(--header-fg);
+  box-shadow: none;
   z-index: 1000;
 
   display: flex;
@@ -21,12 +21,18 @@
 
 .headerContent {
   display: flex;
-    align-items: end;
-    justify-content: space-between;
-    width: 100%;
-    margin: 0 auto;
-    max-width: calc(var(--flow-content-max) + (2 * var(--flow-gutter)));
-    min-width: 0;
+  align-items: end;
+  justify-content: space-between;
+  width: 100%;
+  margin: 0 auto;
+  max-width: calc(var(--flow-content-max) + (2 * var(--flow-gutter)));
+  min-width: 0;
+  border-bottom: 1px solid transparent;
+}
+
+/* El corte del encabezado sólo aparece después del primer píxel de scroll. */
+.headerContentScrolled {
+  border-bottom-color: var(--border-strong);
 }
 
 .appLogoContainer {
@@ -43,7 +49,7 @@
   height: 40px;
   padding: 2px;
   vertical-align: middle;
-  background-color: $color-secundario-fondo;
+  background-color: var(--color-secundario-fondo);
   border-radius: 50px;
   box-shadow: 0 8px 20px rgba($color-secundario, 0.22);
 }
@@ -63,7 +69,7 @@ padding: 5px;
   font-family: "MuseoSans700", "Roboto", sans-serif;
   font-size: $font-size-lg;
   font-weight: 700;
-  text-shadow: $color-secundario 1px 1px 2px;
+  text-shadow: var(--color-secundario) 1px 1px 2px;
 }
 
 .settingsButton {
@@ -78,7 +84,7 @@ padding: 5px;
 
 .settingsIcon {
   // color: $color-texto-claro;
-    color: $color-texto-claro;
+  color: var(--header-fg);
   font-size: $font-size-lg;
   // margin-right: .5rem;
 }
@@ -117,93 +123,52 @@ padding: 5px;
   }
 }
 
-.hamburger {
+/* El menú desktop utiliza los mismos íconos vectoriales que la app. */
+.menuGlyph {
   width: 1.5rem;
-  height: 1rem;
-  position: relative;
-  transition: all 0.3s ease;
+  height: 1.5rem;
+  color: var(--header-fg);
 }
-
-.hamburgerLine {
-  display: block;
-  width: 100%;
-  height: 2px;
-  background: rgba($color-texto-claro, 0.72);
-  position: absolute;
-  left: 0;
-  transition: all 0.3s ease;
-  transform-origin: center;
-
-  &:nth-child(1) {
-    top: 0;
-  }
-  &:nth-child(2) {
-    top: 50%;
-    transform: translateY(-50%);
-  }
-  &:nth-child(3) {
-    bottom: 0;
-  }
-
-  .hamburger:hover & {
-    background: $color-logo2;
-  }
-}
-
-// Estado activo (X)
-.hamburger.isActive {
-  .hamburgerLine {
-    background: $color-logo1;
-    
-    &:nth-child(1) {
-      top: 50%;
-      transform: translateY(-50%) rotate(45deg);
-    }
-    &:nth-child(2) {
-      opacity: 0;
-      transform: translateY(-50%) scaleX(0);
-    }
-    &:nth-child(3) {
-      bottom: unset;
-      top: 50%;
-      transform: translateY(-50%) rotate(-45deg);
-    }
-  }
-}
+.menuButton[aria-expanded='true'] .menuGlyph { color: var(--header-fg); }
 
 .menuDropdown {
   position: absolute;
   text-align: left;
   top: 28px;
   right: 5px;
-  border: 1px solid rgba($color-texto-claro, 0.12);
-  background-color: $dropdown-bg;
+  border: 1px solid var(--border-strong);
+  background-color: var(--dropdown-bg);
+  color: var(--dropdown-fg);
   border-radius: 12px;
   list-style: none;
   padding: .5rem;
   box-shadow: 0 18px 38px rgba($color-primario-oscuro, 0.32);
   z-index: 1000;
   
-  li:first-child {
+  .settingsIcon {
+    color: var(--dropdown-fg);
+  }
+
+  li.profileName {
     &:hover {background-color: transparent;}
     cursor: auto;
   }
 
-  li:nth-child(2) {
+  li.profileEmail {
     &:hover {background-color: transparent;}
     cursor: auto;
 
-    border-bottom: 1px solid rgba($color-texto-claro, 0.16);
+    border-bottom: 1px solid var(--border-subtle);
     border-radius: 0;
     margin-bottom: 5px;
   }
 
   li {
-    color: $color-neutro;
+    color: var(--dropdown-fg);
     padding: 0.5rem;
     cursor: pointer;
     &:hover {
-      background-color: $dropdown-hover;
+      background-color: var(--dropdown-hover);
     }
     display: flex;
     gap: 5px;
@@ -212,7 +177,7 @@ padding: 5px;
   }
 
   li.bottomDivider {
-    border-bottom: 1px solid rgba($color-texto-claro, 0.16);
+    border-bottom: 1px solid var(--border-subtle);
     border-radius: 8px 8px 0 0;
     margin-bottom: 5px 0;
   }
@@ -232,4 +197,368 @@ padding: 5px;
   .menuDropdown {
     font-size: $font-size-sm;
   }
+}
+
+/* Ajuste de la cabecera al nuevo ancho de escritorio. */
+.headerContent {
+  max-width: 1620px;
+  padding: 0 clamp(0.75rem, 1.8vw, 1.6rem);
+  align-items: center;
+}
+
+.menuButton {
+  min-width: 42px;
+  min-height: 42px;
+  border-radius: 10px;
+
+  &:focus-visible {
+    outline: 2px solid var(--color-logo1);
+    outline-offset: 2px;
+  }
+}
+
+@media (max-width: 800px) {
+  .appHeader {
+    height: 54px;
+    min-height: 54px;
+  }
+
+  .headerContent {
+    height: 100%;
+    padding: 0 0.8rem;
+  }
+
+  .isologo { max-height: 42px; }
+
+  .withMobileNavigation .menuButton { display: none; }
+
+  .withMobileNavigation .menuDropdown {
+    position: fixed;
+    left: max(0.75rem, env(safe-area-inset-left, 0px));
+    right: max(0.75rem, env(safe-area-inset-right, 0px));
+    top: auto;
+    bottom: calc(var(--mobile-nav-height, 65px) + env(safe-area-inset-bottom, 0px) + 0.65rem);
+    max-height: calc(100dvh - 160px - env(safe-area-inset-bottom, 0px));
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    width: auto;
+    padding: 0.75rem;
+    border: 1px solid rgba($color-logo1, 0.23);
+    border-radius: 18px;
+    box-shadow: 0 25px 70px rgba($color-primario-oscuro, 0.38);
+  }
+
+  .withMobileNavigation .menuDropdown li {
+    min-height: 42px;
+    overflow-wrap: anywhere;
+  }
+}
+
+/* Los cuadros de diálogo que nacen desde el Header deben permanecer encima
+   de la barra móvil sin alterar el orden del resto de la aplicación. */
+.appHeader:has([role='dialog']) {
+  z-index: 2200;
+}
+
+/* Estado global de sincronización, visible desde todas las vistas sin depender
+   de que la tarjeta de Resumen esté abierta. */
+.menuButtonContainer {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-width: 0;
+}
+
+.syncIndicator {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  max-width: min(50vw, 315px);
+  min-width: 0;
+  padding: 0.45rem 0.65rem;
+  border: 1px solid rgba($color-texto-claro, 0.18);
+  border-radius: 999px;
+  background: rgba($color-texto-claro, 0.07);
+  color: var(--color-texto-claro);
+  font-size: 0.73rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.syncIcon {
+  width: 1rem;
+  height: 1rem;
+  flex: 0 0 auto;
+  color: var(--sync-ok);
+}
+
+.syncLabel { overflow: hidden; text-overflow: ellipsis; }
+.syncShortLabel { display: none; }
+
+.sync_syncing .syncIcon { color: var(--sync-working); }
+.sync_offline .syncIcon,
+.sync_migration .syncIcon { color: var(--sync-warning); }
+.sync_error .syncIcon { color: var(--sync-error); }
+
+@media (max-width: 800px) {
+  .syncIndicator {
+    max-width: min(58vw, 240px);
+    padding: 0.35rem 0.5rem;
+    font-size: 0.69rem;
+  }
+
+  .syncIndicator:has(.syncShortLabel) .syncLabel { display: none; }
+  .syncShortLabel { display: inline; overflow: hidden; text-overflow: ellipsis; }
+  .syncIcon { width: 0.95rem; height: 0.95rem; }
+}
+
+@media (max-width: 360px) {
+  .syncIndicator {
+    max-width: 61vw;
+    padding-inline: 0.42rem;
+    gap: 0.26rem;
+  }
+}
+
+@media (max-width: 800px) {
+  .withMobileNavigation .isologoContainer {
+    flex: 1 1 auto;
+    min-width: 0;
+    padding-left: 0; // Mantiene simétricos los espacios de headerContent.
+  }
+
+  .withMobileNavigation .isologo {
+    width: 100%;
+    max-width: min(45vw, 210px);
+  }
+
+  .withMobileNavigation .menuButtonContainer {
+    flex: 0 1 auto;
+    min-width: 0;
+  }
+}
+
+/* Más pasa a ocupar su propia pantalla móvil. En desktop sigue siendo el
+   mismo desplegable, con las mismas acciones y modales existentes. */
+.mobileMoreHeading { display: none !important; }
+
+@media (max-width: 800px) {
+  .withMobileNavigation .menuDropdown {
+    position: fixed;
+    inset: 54px 0 calc(var(--mobile-nav-height, 65px) + env(safe-area-inset-bottom, 0px)) 0;
+    width: 100%;
+    height: auto;
+    max-height: none;
+    margin: 0;
+    padding: 1rem max(0.95rem, env(safe-area-inset-right, 0px)) 1.5rem
+             max(0.95rem, env(safe-area-inset-left, 0px));
+    background: var(--surface-bg);
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    color: var(--color-primario);
+    z-index: 1005;
+  }
+
+  /* Reproduce la jerarquía de paneHeading / paneEyebrow de Calendario. */
+  .withMobileNavigation .menuDropdown > li.mobileMoreHeading {
+    display: block !important;
+    min-height: 0;
+    width: 100%;
+    padding: 0 0.2rem 0.65rem;
+    background: transparent;
+    border-bottom: 1px solid var(--border-strong);
+    margin: 0 0 0.55rem;
+    border-radius: 0;
+    text-align: left;
+    cursor: default;
+  }
+  .mobileMoreEyebrow {
+    display: block;
+    font-family: $fuente-titulos;
+    font-weight: 700;
+    font-size: 0.69rem;
+    text-transform: uppercase;
+    letter-spacing: 0.095em;
+    color: var(--color-logo2);
+  }
+  .mobileMoreHeading h2 {
+    margin: 0.25rem 0 0;
+    font-family: $fuente-titulos;
+    font-size: clamp(1.1rem, 1.6vw, 1.4rem);
+    line-height: 1.25;
+    font-weight: 800;
+    color: var(--color-primario);
+  }
+
+  .withMobileNavigation .menuDropdown li {
+    color: var(--color-primario);
+    gap: 0.85rem;
+    min-height: 52px;
+    padding: 0.7rem 0.85rem;
+    border-radius: 10px;
+    font-size: 0.94rem;
+    font-weight: 700;
+  }
+  .withMobileNavigation .menuDropdown li:hover {
+    background: var(--color-primario-fondo-claro);
+  }
+  .withMobileNavigation .menuDropdown .settingsIcon {
+    color: var(--color-logo3);
+    font-size: 1.2rem;
+    flex-shrink: 0;
+  }
+
+  .withMobileNavigation .menuDropdown .profileName {
+    font-size: 0.86rem;
+    color: var(--color-primario);
+    font-weight: 800;
+    min-height: 0;
+    padding: 0.8rem 0.85rem 0.15rem;
+    overflow-wrap: anywhere;
+    cursor: default;
+  }
+  .withMobileNavigation .menuDropdown .profileEmail {
+    font-size: 0.77rem;
+    color: var(--color-logo4);
+    font-weight: 500;
+    min-height: 0;
+    padding: 0.1rem 0.85rem 0.8rem;
+    overflow-wrap: anywhere;
+    cursor: default;
+    border-bottom: 1px solid var(--color-bordes-tabla);
+    border-radius: 0;
+    margin-bottom: 0.6rem;
+  }
+  .withMobileNavigation .menuDropdown .profileName:hover,
+  .withMobileNavigation .menuDropdown .profileEmail:hover {
+    background: transparent;
+  }
+  .withMobileNavigation .menuDropdown li.dividerAbove {
+    margin-top: 0.5rem;
+    border-top: 1px solid var(--color-bordes-tabla);
+    border-radius: 10px;
+    padding-top: 0.9rem;
+  }
+  .withMobileNavigation .menuDropdown li.bottomDivider {
+    border-bottom: 1px solid var(--color-bordes-tabla);
+    border-radius: 10px;
+  }
+}
+
+/* Separación simple entre grupos de Más: el borde está sólo encima
+   del siguiente grupo, sin duplicarse con el del botón anterior. */
+@media (max-width: 800px) {
+  .withMobileNavigation .menuDropdown li.bottomDivider {
+    border-bottom: 0;
+    margin-bottom: 0;
+    border-radius: 0;
+  }
+  .withMobileNavigation .menuDropdown li.dividerAbove {
+    border-radius: 0;
+  }
+}
+
+/* Si se amplía la ventana mientras está abierta la sección Más, el menú
+   mobile no aparece automáticamente como desplegable en escritorio. */
+@media (min-width: 801px) {
+  .menuDropdown.moreOnly { display: none; }
+}
+
+/* Filas del menú como botones nativos: teclado, foco y objetivos táctiles
+   sin cambiar ninguna de las funciones que invocan. */
+.menuDropdown > li:has(> .menuAction) { padding: 0; }
+.menuAction {
+  width: 100%;
+  min-height: 36px;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.menuAction:disabled { opacity: 0.55; cursor: default; }
+.menuAction:focus-visible {
+  outline: 2px solid var(--color-logo2);
+  outline-offset: -2px;
+}
+
+@media (max-width: 800px) {
+  .withMobileNavigation .menuDropdown > li:has(> .menuAction) {
+    padding: 0;
+    min-height: 0;
+    border-radius: 0;
+  }
+  .withMobileNavigation .menuDropdown .menuAction {
+    min-height: 54px;
+    gap: 0.85rem;
+    padding: 0.8rem 0.85rem;
+    border-radius: 0;
+  }
+}
+
+/* El desplegable de escritorio necesita espacio para los nombres completos
+   de las acciones; la pantalla móvil de "Más" conserva su propio ancho. */
+@media (min-width: 801px) {
+  .menuDropdown {
+    width: 320px;
+    box-sizing: border-box;
+  }
+
+  .menuDropdown .menuAction {
+    white-space: nowrap;
+  }
+}
+
+/* Selector accesible en Más (móvil) y en el desplegable desktop. */
+.menuDropdown .themePreferenceRow {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: default;
+}
+.themePreferenceLabel {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex: 1 1 auto;
+  min-width: 0;
+  white-space: nowrap;
+}
+.themePreferenceSelect {
+  flex: 0 0 auto;
+  width: 116px;
+  min-height: 38px;
+  padding: 0.35rem 0.4rem;
+  border: 1px solid var(--color-bordes-tabla);
+  border-radius: 9px;
+  background: var(--field-bg);
+  color: var(--field-fg);
+  font: inherit;
+  font-size: 0.82rem;
+  cursor: pointer;
+}
+.themePreferenceSelect:focus-visible { outline: 2px solid var(--color-logo1); outline-offset: 2px; }
+@media (max-width: 800px) {
+  .withMobileNavigation .menuDropdown .themePreferenceRow { min-height: 54px; }
+  .withMobileNavigation .themePreferenceSelect { min-height: 44px; width: 138px; }
+}
+/* La cuarta sección comparte exactamente la misma superficie que las demás. */
+@media (max-width: 800px) {
+  .withMobileNavigation .menuDropdown { background: var(--page-bg); color: var(--text-main); }
+}
+
+
+:global(html[data-theme='dark']) {
+  .menuDropdown { border-color: var(--color-bordes-tabla); }
+  .withMobileNavigation .menuDropdown li:hover { background: var(--surface-elevated); }
+  .withMobileNavigation .menuDropdown .profileEmail { color: var(--text-muted); }
 }

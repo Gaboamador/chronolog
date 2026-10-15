@@ -6,7 +6,7 @@
   padding: 1rem;
   display: grid;
   place-items: center;
-  background: $color-primario;
+  background: var(--color-primario);
 }
 
 .card {
@@ -17,8 +17,8 @@
   gap: 1rem;
   border: 1px solid rgba($color-secundario, 0.4);
   border-radius: 16px;
-  background: $color-primario-claro;
-  color: $color-texto-claro;
+  background: var(--color-primario-claro);
+  color: var(--color-texto-claro);
   box-shadow: 0 24px 60px rgba($color-primario-oscuro, 0.42);
   text-align: left;
 
@@ -29,7 +29,7 @@
 }
 
 .eyebrow {
-  color: $color-secundario;
+  color: var(--color-secundario);
   font-size: $font-size-xs;
   font-weight: 800;
   letter-spacing: 0.09em;
@@ -45,3 +45,8 @@
 .unassigned { display: flex; flex-direction: column; gap: 0.8rem; }
 .error { color: #ffb4ab; font-weight: 700; }
 .note { opacity: 0.72; font-size: $font-size-sm; text-align: center; }
+
+:global(html[data-theme='dark']) {
+  .wrapper { background: var(--page-bg); }
+  .card { background: var(--surface-elevated); color: var(--text-main); }
+}

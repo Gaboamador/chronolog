@@ -20,31 +20,6 @@
   font-size: clamp(0.8rem, 3.75vw, 1rem);
 }
 
-.syncStatus {
-  margin-left: auto;
-  font-size: 0.75rem;
-  color: rgba($color-primario, 0.7);
-  white-space: pre-wrap;
-}
-
-.title {
-  color: $color-primario;
-  text-transform: none;
-  font-weight: 700;
-}
-
-.average {
-  color: $color-primario;
-  font-family: $fuente-contenidos;
-  background: white;
-  border: 1px solid $color-bordes-tabla;
-  border-radius: 999px;
-  padding: 3px 9px;
-  font-weight: 700;
-  box-shadow: 0 4px 12px rgba($color-primario, 0.06);
-  white-space: nowrap;
-}
-
 .tableResponsive {
     width: 100%;
     max-width: var(--flow-content-max);
@@ -59,8 +34,8 @@
     border-collapse: separate;
     border-spacing: 0;
     margin: 0 auto;
-    background-color: white;
-    border: 1px solid $color-bordes-tabla;
+    background-color: var(--surface-bg);
+    border: 1px solid var(--color-bordes-tabla);
     border-radius: 12px;
     overflow: hidden;
     box-shadow: 0 10px 24px rgba($color-primario, 0.08);
@@ -76,7 +51,7 @@
 
   .editBreaks {
     margin-top: 1rem;
-    color: $color-texto-claro;
+    color: var(--modal-foreground, var(--text-main));
   }
 
   .editBreaksHeader,
@@ -112,7 +87,7 @@
     border: none;
     border-radius: 50%;
     background: rgba($color-danger, 0.18);
-    color: $color-texto-claro;
+    color: var(--color-danger);
     cursor: pointer;
     font-size: $font-size-lg;
 
@@ -123,8 +98,8 @@
   }
 
   .weeklySummaryTable th {
-    color: $color-texto-claro;
-    background-color: $color-primario;
+    color: var(--table-header-fg);
+    background-color: var(--table-header-bg);
     font-weight: 700;
     padding-top: 7px;
     padding-bottom: 7px;
@@ -135,7 +110,7 @@
     min-width: 0;
     padding: clamp(4px, 1.6vw, 8px);
     border: none;
-    border-bottom: 1px solid $color-bordes-tabla;
+    border-bottom: 1px solid var(--color-bordes-tabla);
   }
 
   .weeklySummaryTable th {
@@ -166,26 +141,20 @@
     text-align: left;
   }
   .weeklySummaryTable tr.selected {
-    background-color: $color-primario-fondo;
-  }
-
-  .weeklySummarySubfooter {
-    border-top: 1px solid $color-bordes-tabla;
-    background-color: $color-secundario-fondo;
-    font-weight: 700;
+    background-color: var(--color-primario-fondo);
   }
 
   .weeklySummarySecondaryRow td {
-    background: color.mix($color-secundario-fondo, white, 50%);
+    background: var(--color-secundario-fondo);
   }
 
   .observado {
-    color: $color-danger;
+    color: var(--color-danger);
     // background: rgba($color-danger, 0.2);
   }
 
   .mutedCell {
-    color: $color-logo4;
+    color: var(--color-logo4);
   }
 
   .diffBadge {
@@ -201,18 +170,18 @@
   }
 
   .diffPositive {
-    color: $color-logo2;
+    color: var(--color-logo2);
     background-color: rgba($color-logo1, 0.16);
   }
 
   .diffNegative {
-    color: $color-danger;
+    color: var(--color-danger);
     background-color: rgba($color-danger, 0.09);
   }
 
   .diffNeutral {
-    color: $color-primario-claro;
-    background-color: $color-primario-fondo-claro;
+    color: var(--color-primario-claro);
+    background-color: var(--color-primario-fondo-claro);
   }
 
   .actionsColumn {
@@ -254,15 +223,15 @@
     gap: 1rem;
     padding: .5rem;
     border-radius: 10px;
-    background-color: white;
-    border: 1px solid $color-bordes-tabla;
+    background-color: var(--surface-bg);
+    border: 1px solid var(--color-bordes-tabla);
   }
 
   .editButton {
     border: none;
     border-radius: 999px;
     background-color: transparent;
-    color: $color-primario;
+    color: var(--color-primario);
     cursor: pointer;
     display: inline-flex;
     align-items: center;
@@ -275,8 +244,8 @@
 
     &:hover,
     &:focus-visible {
-      background-color: $color-primario-fondo;
-      color: $color-logo2;
+      background-color: var(--color-primario-fondo);
+      color: var(--color-logo2);
       outline: none;
       transform: translateY(-1px);
     }
@@ -324,7 +293,7 @@
   width: 9px;
   height: 9px;
   border-radius: 50%;
-  background: $color-secundario;
+  background: var(--color-secundario);
   box-shadow: 0 0 0 2px white;
   pointer-events: none;
 }
@@ -333,9 +302,450 @@
   position: absolute;
   inset: -2px;
   border-radius: inherit;
-  border: 2px solid $color-danger;
-  background: $color-secundario;
+  border: 2px solid var(--color-danger);
+  background: var(--color-secundario);
   z-index: -1;
   pointer-events: none;
   
 }
+
+/* En desktop la tabla ocupa el ancho disponible, sin limitarse a 500 px. */
+.containerMain {
+  padding: 1rem;
+}
+
+.titleWrapper,
+.tableResponsive,
+.weeklySummaryTable {
+  max-width: none;
+}
+
+.titleWrapper {
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 0.9rem;
+}
+
+/* En teléfono el resumen conserva tarjetas, pero cada día se lee en dos
+   líneas compactas para poder consultar los cinco sin desplazamiento excesivo. */
+@media (max-width: 800px) {
+  .containerMain {
+    padding: 0.6rem;
+  }
+
+  .titleWrapper {
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin-bottom: 0.6rem;
+    padding: 0.15rem 0;
+    font-size: 0.86rem;
+  }
+
+  .tableResponsive {
+    width: 100%;
+    margin: 0;
+  }
+
+  .weeklySummaryTable,
+  .weeklySummaryTable tbody {
+    display: block;
+    width: 100%;
+    border: none;
+    background: transparent;
+    box-shadow: none;
+    overflow: visible;
+  }
+
+  .weeklySummaryTable thead {
+    display: none;
+  }
+
+  .weeklySummaryTable tbody {
+    display: grid;
+    gap: 0.4rem;
+  }
+
+  .weeklySummaryTable tbody tr {
+    display: grid;
+    position: relative;
+    grid-template-columns: minmax(55px, 0.85fr) repeat(2, minmax(0, 1fr)) 32px;
+    grid-template-rows: auto auto;
+    column-gap: 0.28rem;
+    row-gap: 0.22rem;
+    align-items: center;
+    padding: 0.53rem 0.55rem;
+    border: 1px solid var(--color-bordes-tabla);
+    border-radius: 11px;
+    background: var(--surface-bg);
+    box-shadow: 0 3px 11px rgba($color-primario, 0.04);
+  }
+
+  .weeklySummaryTable tbody tr.selected {
+    border-color: var(--color-logo2);
+    background: var(--color-primario-fondo);
+    box-shadow: 0 0 0 1px rgba($color-logo2, 0.1);
+  }
+
+  .weeklySummaryTable tbody td {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 0.1rem;
+    width: 100% !important;
+    min-width: 0;
+    min-height: 0;
+    padding: 0;
+    border: 0;
+    font-size: 0.8rem;
+    font-variant-numeric: tabular-nums;
+    line-height: 1.2;
+    text-align: left;
+    overflow-wrap: anywhere;
+  }
+
+  .weeklySummaryTable tbody td[data-label]:not([data-label='Día'], .actionsColumn)::before {
+    content: attr(data-label);
+    font-size: 0.56rem;
+    font-weight: 800;
+    color: var(--color-logo4);
+    text-transform: uppercase;
+    letter-spacing: 0.025em;
+    white-space: nowrap;
+  }
+
+  .weeklySummaryTable tbody td[data-label='Día'] {
+    grid-column: 1;
+    grid-row: 1 / 3;
+    font-family: $fuente-titulos;
+    font-size: 0.82rem;
+    font-weight: 800;
+    color: var(--color-primario);
+    overflow-wrap: normal;
+  }
+
+  .weeklySummaryTable tbody td[data-label='Ingreso'] {
+    grid-column: 2;
+    grid-row: 1;
+  }
+
+  .weeklySummaryTable tbody td[data-label='Salida'] {
+    grid-column: 3;
+    grid-row: 1;
+  }
+
+  .weeklySummaryTable tbody td[data-label='Fuera'] {
+    grid-column: 2;
+    grid-row: 2;
+  }
+
+  .weeklySummaryTable tbody td[data-label='Diferencia'] {
+    grid-column: 3;
+    grid-row: 2;
+  }
+
+  .weeklySummaryTable tbody td[data-label='Motivo'] {
+    grid-column: 2 / 4;
+    grid-row: 1;
+    font-size: 0.75rem;
+  }
+
+  /* Una ausencia conserva su motivo y la diferencia en la misma tarjeta. */
+  .weeklySummaryTable tbody td[data-label='Motivo'] + td[data-label='Diferencia'] {
+    grid-column: 2 / 4;
+    grid-row: 2;
+  }
+
+  .weeklySummaryTable tbody td.actionsColumn {
+    grid-column: 4;
+    grid-row: 1 / 3;
+    align-self: center;
+    justify-self: center;
+    width: 32px !important;
+    height: 36px;
+    padding: 0;
+  }
+
+  .editButton {
+    width: 32px;
+    height: 36px;
+    background: rgba($color-logo2, 0.09);
+  }
+
+  .diffBadge {
+    padding: 0.1rem 0.25rem;
+    font-size: 0.72rem;
+    letter-spacing: -0.015em;
+  }
+
+}
+
+/* En equipos bajos se prioriza mantener los cinco registros juntos. */
+@media (max-width: 800px) and (max-height: 740px) {
+  .weeklySummaryTable tbody {
+    gap: 0.3rem;
+  }
+
+  .weeklySummaryTable tbody tr {
+    padding-block: 0.4rem;
+    row-gap: 0.13rem;
+  }
+
+  .titleWrapper {
+    margin-bottom: 0.4rem;
+  }
+}
+
+/* Resumen ejecutivo: los indicadores mensuales ocupan la jerarquía principal.
+   Sin tarjeta exterior; el historial es una acción de consulta secundaria. */
+.titleWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0;
+  margin-bottom: 0.8rem;
+  text-align: left;
+}
+
+.monthOverview {
+  min-width: 0;
+}
+
+.monthOverviewHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.monthPeriod {
+  min-width: 0;
+}
+
+.monthEyebrow,
+.weekEyebrow {
+  display: block;
+  color: var(--text-muted);
+  font-size: 0.65rem;
+  font-weight: 800;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+}
+
+.monthTitle {
+  margin: 0.18rem 0 0;
+  color: var(--text-main);
+  font-family: $fuente-titulos;
+  font-size: clamp(1.1rem, 1.6vw, 1.35rem);
+  font-weight: 800;
+  line-height: 1.2;
+  text-transform: capitalize;
+}
+
+.monthAverageLink {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  gap: 0.2rem;
+  min-height: 44px;
+  padding: 0.35rem 0.25rem 0.35rem 0.65rem;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--text-muted);
+  font: inherit;
+  font-size: 0.76rem;
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: color 0.16s ease, background-color 0.16s ease;
+
+  svg {
+    width: 0.95rem;
+    height: 0.95rem;
+  }
+
+  &:hover {
+    color: var(--text-main);
+    background: var(--surface-elevated);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--calendar-accent);
+    outline-offset: 2px;
+  }
+}
+
+.monthMetrics {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 0;
+  margin: 0.85rem 0 1rem;
+}
+
+.monthMetric {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  min-width: 0;
+  gap: 0.25rem;
+}
+
+.monthMetric + .monthMetric {
+  border-left: 1px solid var(--border-subtle);
+  padding-left: clamp(0.75rem, 2vw, 1.4rem);
+}
+
+.metricLabel {
+  color: var(--text-muted);
+  font-size: clamp(0.72rem, 1.1vw, 0.8rem);
+  font-weight: 600;
+}
+
+.metricValue {
+  color: var(--text-main);
+  font-family: $fuente-contenidos;
+  font-size: clamp(1.4rem, 2.6vw, 2rem);
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.08;
+  white-space: nowrap;
+}
+
+.monthBalancePositive { color: var(--stat-positive); }
+.monthBalanceNegative { color: var(--stat-negative); }
+.monthBalanceNeutral { color: var(--text-main); }
+
+.metricDescription {
+  color: var(--text-muted);
+  font-size: 0.69rem;
+  line-height: 1.25;
+}
+
+.weekPeriod {
+  min-width: 0;
+  padding-top: 0.8rem;
+  border-top: 1px solid var(--border-strong);
+}
+
+.weekTitle {
+  margin: 0.18rem 0 0;
+  color: var(--text-main);
+  font-family: $fuente-titulos;
+  font-size: clamp(0.91rem, 1.3vw, 1.08rem);
+  font-weight: 800;
+  line-height: 1.3;
+}
+
+.weekHeading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.weekPeriodText {
+  min-width: 0;
+}
+
+.weekNavigation {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.weekNavButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 1px solid var(--border-subtle);
+  border-radius: 9px;
+  background: transparent;
+  color: var(--text-main);
+  font: inherit;
+  cursor: pointer;
+  transition: background-color 0.16s ease;
+
+  svg {
+    width: 1.1rem;
+    height: 1.1rem;
+  }
+
+  &:hover {
+    background: var(--surface-elevated);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--calendar-accent);
+    outline-offset: 2px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .monthAverageLink, .weekNavButton { transition: none; }
+}
+
+@media (max-width: 800px) {
+  .titleWrapper {
+    gap: 0;
+    margin-bottom: 0.65rem;
+    padding: 0;
+  }
+
+  .monthMetrics { margin: 0.7rem 0 0.75rem; }
+  .metricValue { font-size: clamp(1.3rem, 6vw, 1.75rem); }
+  .metricLabel { font-size: 0.72rem; }
+  .metricDescription { font-size: 0.64rem; }
+  .monthMetric + .monthMetric { padding-left: 0.8rem; }
+  .monthTitle { font-size: 1.2rem; }
+  .weekPeriod { padding-top: 0.65rem; }
+  .weekEyebrow { font-size: 0.59rem; }
+  .weekTitle { font-size: clamp(0.82rem, 3.7vw, 1rem); }
+  .monthAverageLink { font-size: 0.72rem; }
+
+  /* 44px de superficie táctil sin agrandar el texto del botón de edición. */
+  .weeklySummaryTable tbody tr {
+    grid-template-columns: minmax(49px, 0.85fr) repeat(2, minmax(0, 1fr)) 44px;
+    column-gap: 0.15rem;
+    padding-inline: 0.43rem;
+  }
+  .weeklySummaryTable tbody td.actionsColumn {
+    width: 44px !important;
+    height: 44px;
+  }
+  .editButton {
+    width: 44px;
+    height: 44px;
+  }
+}
+
+/* El Resumen móvil es parte del lienzo de la app. Cada día conserva su
+   tarjeta individual para distinguir las cinco jornadas sin una tabla. */
+@media (max-width: 800px) {
+  .containerMain { padding: 0.7rem 0 0.25rem; }
+  .weeklySummaryTable tbody tr {
+    box-shadow: none;
+    border-color: var(--border-subtle);
+    background: var(--color-primario-fondo-claro);
+  }
+  .weeklySummaryTable tbody tr.selected {
+    border-color: var(--color-logo2);
+    background: var(--color-primario-fondo);
+  }
+}
+
+
+:global(html[data-theme='dark']) {
+  .weeklySummaryTable tbody tr { color: var(--text-main); }
+  .weeklySummaryTable th { background: var(--header-bg); color: var(--header-fg); }
+  .weeklySummarySecondaryRow td { background: var(--color-primario-fondo); }
+  .weeklySummaryTable tbody td { color: var(--text-main); }
+  .diffPositive { color: #8fddbb; }
+  .diffNegative { color: #f3a09e; }
+}
+

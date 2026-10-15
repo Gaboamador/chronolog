@@ -1,3 +1,4 @@
+import { ABSENCE_REASONS, isJustifiedAbsenceEntry } from './entries/entriesStatus.js';
 import { getWorkedMinutes } from './entries/timeCalculations.js';
 
 function getEntryDate(entry, fallbackDate) {
@@ -126,4 +127,88 @@ export function calculateMonthlySummaries(entries, expectedDailyMinutes) {
       };
     })
     .sort((a, b) => b.monthKey.localeCompare(a.monthKey));
+}
+
+
+// Vista histórica de solo lectura. No altera calculateMonthlySummaries, sus
+// promedios ni sus balances: agrega las ausencias a los meses disponibles.
+export function calculateLaborHistory(entries, expectedDailyMinutes) {
+  const workedMonths = calculateMonthlySummaries(entries, expectedDailyMinutes);
+  const months = new Map(workedMonths.map((month) => [
+    month.monthKey,
+    {
+      ...month,
+      absenceDays: 0,
+      absenceCounts: Object.fromEntries(Object.values(ABSENCE_REASONS).map((reason) => [reason, 0])),
+    },
+  ]));
+
+  normalizeEntries(entries).forEach(({ entry, fallbackDate }) => {
+    // Un día sin carga no constituye una ausencia. También admitimos la
+    // marca histórica de ausencia si aparece en una exportación antigua.
+    if (!isJustifiedAbsenceEntry(entry) && entry?.justifiedAbsence !== true) return;
+
+    const date = getEntryDate(entry, fallbackDate);
+    if (!date) return;
+    const monthKey = date.slice(0, 7);
+
+    if (!months.has(monthKey)) {
+      months.set(monthKey, {
+        monthKey,
+        monthLabel: getMonthLabel(monthKey),
+        workedDays: 0,
+        totalWorkedMinutes: 0,
+        averageMinutes: null,
+        balanceMinutes: null,
+        totalWorkedLabel: formatMinutesAsHours(0),
+        averageLabel: '-',
+        balanceLabel: '-',
+        absenceDays: 0,
+        absenceCounts: Object.fromEntries(Object.values(ABSENCE_REASONS).map((reason) => [reason, 0])),
+      });
+    }
+
+    const month = months.get(monthKey);
+    const reason = Object.values(ABSENCE_REASONS).includes(entry.absenceReason)
+      ? entry.absenceReason
+      : ABSENCE_REASONS.OTHER;
+    month.absenceDays += 1;
+    month.absenceCounts[reason] += 1;
+  });
+
+  const years = new Map();
+  Array.from(months.values()).forEach((month) => {
+    const year = month.monthKey.slice(0, 4);
+    if (!years.has(year)) {
+      years.set(year, {
+        year,
+        months: [],
+        workedDays: 0,
+        totalWorkedMinutes: 0,
+        absenceDays: 0,
+        absenceCounts: Object.fromEntries(Object.values(ABSENCE_REASONS).map((reason) => [reason, 0])),
+      });
+    }
+    const yearly = years.get(year);
+    yearly.months.push(month);
+    yearly.workedDays += month.workedDays;
+    yearly.totalWorkedMinutes += month.totalWorkedMinutes;
+    yearly.absenceDays += month.absenceDays;
+    Object.values(ABSENCE_REASONS).forEach((reason) => {
+      yearly.absenceCounts[reason] += month.absenceCounts[reason];
+    });
+  });
+
+  return Array.from(years.values())
+    .map((yearly) => ({
+      ...yearly,
+      months: yearly.months.sort((a, b) => b.monthKey.localeCompare(a.monthKey)),
+      averageMinutes: yearly.workedDays
+        ? Math.round(yearly.totalWorkedMinutes / yearly.workedDays)
+        : null,
+      averageLabel: yearly.workedDays
+        ? formatMinutesAsHours(yearly.totalWorkedMinutes / yearly.workedDays)
+        : '-',
+    }))
+    .sort((a, b) => b.year.localeCompare(a.year));
 }

@@ -1,307 +1,300 @@
 .overlay {
   position: fixed;
   inset: 0;
-  z-index: 1000;
+  z-index: 1900;
   display: grid;
   place-items: center;
   padding: 24px;
-  background: rgba(15, 23, 42, 0.52);
+  background: rgba(0, 0, 0, 0.62);
   backdrop-filter: blur(6px);
 }
 
-.content {
-  min-height: 0;
-  overflow: auto;
-  overscroll-behavior: contain;
-  -webkit-overflow-scrolling: touch;
-}
-
 .modal {
-  width: min(920px, 100%);
-  max-height: min(82dvh, 760px);
-  overflow: hidden;
+  width: min(840px, 100%);
+  max-height: min(88dvh, 850px);
   display: flex;
   flex-direction: column;
-  border: 1px solid rgba(148, 163, 184, 0.28);
-  border-radius: 24px;
-  background:
-    linear-gradient(145deg, rgba(255, 255, 255, 0.98), rgba(248, 250, 252, 0.96)),
-    #ffffff;
-  box-shadow:
-    0 24px 70px rgba(15, 23, 42, 0.24),
-    0 8px 24px rgba(15, 23, 42, 0.12);
+  overflow: hidden;
+  border: 1px solid var(--border-strong);
+  border-radius: 22px;
+  background: var(--surface-bg);
+  color: var(--text-main);
+  box-shadow: 0 22px 64px rgba(0, 0, 0, 0.24);
 }
 
 .header {
+  flex: 0 0 auto;
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: space-between;
-  gap: 20px;
-  padding: 26px 28px 18px;
-  border-bottom: 1px solid rgba(148, 163, 184, 0.2);
+  gap: 16px;
+  padding: 22px 26px 18px;
+  border-bottom: 1px solid var(--border-strong);
 
   h2 {
-    margin: 2px 0 0;
-    font-size: clamp(1.45rem, 2.5vw, 2rem);
-    line-height: 1.1;
-    color: #0f172a;
+    margin: 3px 0 0;
+    font-size: clamp(1.3rem, 2.4vw, 1.75rem);
+    line-height: 1.2;
+    color: var(--text-main);
   }
 }
 
 .eyebrow {
   margin: 0;
-  font-size: 0.78rem;
-  font-weight: 800;
+  font-size: 0.72rem;
+  font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: #64748b;
+  color: var(--text-muted);
 }
 
 .closeButton {
-  width: 40px;
-  height: 40px;
-  flex: 0 0 auto;
+  display: grid;
+  flex: 0 0 44px;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 1px solid var(--border-subtle);
+  border-radius: 50%;
+  background: var(--surface-glass);
+  color: var(--text-main);
+  font-size: 1.45rem;
+  cursor: pointer;
+
+  &:hover { background: var(--surface-elevated); }
+  &:focus-visible { outline: 2px solid var(--calendar-accent); outline-offset: 2px; }
+}
+
+.content {
+  flex: 1 1 auto;
+  min-height: 0;
+  padding: 0 26px 22px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+}
+
+.yearToolbar {
+  position: sticky;
+  z-index: 2;
+  top: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 15px 0 10px;
+  background: var(--surface-bg);
+
+  h3 { margin: 0; font-size: 0.92rem; font-weight: 700; color: var(--text-main); }
+}
+
+.yearNavigation { display: flex; align-items: center; gap: 5px; }
+
+.yearArrow, .yearSelect {
+  min-height: 44px;
+  border: 1px solid var(--border-subtle);
+  border-radius: 8px;
+  background: var(--field-bg);
+  color: var(--field-fg);
+  font: inherit;
+  cursor: pointer;
+
+  &:focus-visible { outline: 2px solid var(--calendar-accent); outline-offset: 2px; }
+}
+
+.yearArrow {
   display: grid;
   place-items: center;
-  border: 1px solid rgba(148, 163, 184, 0.32);
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.88);
-  color: #334155;
-  font-size: 1.65rem;
-  line-height: 1;
-  cursor: pointer;
-  transition:
-    transform 0.16s ease,
-    background-color 0.16s ease,
-    border-color 0.16s ease,
-    color 0.16s ease;
+  width: 44px;
+  padding: 0;
+  font-size: 1.2rem;
 
-  &:hover {
-    transform: translateY(-1px);
-    background: #f8fafc;
-    border-color: rgba(100, 116, 139, 0.48);
-    color: #0f172a;
-  }
-
-  &:active {
-    transform: translateY(0);
-  }
+  &:hover:not(:disabled) { background: var(--surface-elevated); }
+  &:disabled { opacity: 0.3; cursor: not-allowed; }
 }
 
-.summaryCards {
+.yearSelect {
+  padding: 0 10px;
+  font-weight: 700;
+  text-align: center;
+}
+
+.yearMetrics {
   display: grid;
-  grid-template-columns: 1fr;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 12px;
-  padding: 20px 28px 10px;
-
+  padding: 13px 0 16px;
 }
 
-@media (min-width: 640px) {
-  .summaryCards {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-}
+.yearMetric {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
 
-.summaryCard {
-  padding: 16px;
-  border: 1px solid rgba(148, 163, 184, 0.22);
-  border-radius: 18px;
-  background: rgba(248, 250, 252, 0.86);
-
-  span {
-    display: block;
-    margin-bottom: 8px;
-    font-size: 0.82rem;
-    font-weight: 700;
-    color: #64748b;
-  }
-
+  span { color: var(--text-muted); font-size: 0.79rem; }
   strong {
-    display: block;
-    font-size: 1.35rem;
-    line-height: 1.1;
-    color: #0f172a;
+    color: var(--text-main);
+    font-size: clamp(1.25rem, 2.6vw, 1.65rem);
+    font-weight: 750;
+    line-height: 1.2;
+    font-variant-numeric: tabular-nums;
   }
 }
 
-.tableWrapper {
-  margin: 10px 28px 28px;
-  border: 1px solid rgba(148, 163, 184, 0.22);
-  border-radius: 18px;
-  overflow: auto;
+.yearAbsences {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px 18px;
+  padding: 13px 0 18px;
+  border-top: 1px solid var(--border-subtle);
 }
 
-.table {
+.absenceCounter {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 3px 8px;
+  min-width: 0;
+  font-size: 0.82rem;
+
+  span { color: var(--text-muted); }
+  strong { color: var(--text-main); font-size: 0.93rem; font-variant-numeric: tabular-nums; }
+}
+
+.monthsHeader {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 0 9px;
+  border-top: 1px solid var(--border-strong);
+
+  h3 { margin: 0; font-size: 0.98rem; color: var(--text-main); }
+  span { font-size: 0.78rem; color: var(--text-muted); }
+}
+
+.monthList { border-top: 1px solid var(--border-subtle); }
+.monthItem { border-bottom: 1px solid var(--border-subtle); }
+
+.monthTrigger {
+  display: block;
   width: 100%;
-  border-collapse: collapse;
-  background: #ffffff;
+  min-height: 65px;
+  padding: 11px 8px;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--text-main);
   text-align: left;
+  font: inherit;
+  cursor: pointer;
 
-  th,
-  td {
-    padding: 15px 16px;
-    border-bottom: 1px solid rgba(226, 232, 240, 0.9);
-    white-space: nowrap;
-  }
-
-  th {
-    position: sticky;
-    top: 0;
-    z-index: 1;
-    background: #f8fafc;
-    color: #475569;
-    font-size: 0.78rem;
-    font-weight: 800;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-  }
-
-  td {
-    color: #334155;
-    font-weight: 600;
-  }
-
-  tbody tr:last-child td {
-    border-bottom: 0;
-  }
-
-  tbody tr:hover {
-    background: rgba(241, 245, 249, 0.7);
-  }
+  &:hover { background: var(--surface-glass); }
+  &:focus-visible { outline: 2px solid var(--calendar-accent); outline-offset: -2px; }
 }
 
-.positive {
-  color: #047857 !important;
-  font-weight: 800 !important;
+.monthMain, .monthSecondary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
 }
+.monthMain { margin-bottom: 5px; }
+.monthName { font-size: 0.96rem; font-weight: 700; text-transform: capitalize; }
+.monthBalance { margin-left: auto; font-size: 0.93rem; font-weight: 700; font-variant-numeric: tabular-nums; }
+.monthSecondary {
+  justify-content: flex-start;
+  flex-wrap: wrap;
+  gap: 4px 8px;
+  color: var(--text-muted);
+  font-size: 0.79rem;
+}
+.secondaryDivider { color: var(--text-muted); }
+.monthChevron { margin-left: auto; flex-shrink: 0; font-size: 1.1rem; }
+.positive { color: var(--stat-positive); }
+.negative { color: var(--stat-negative); }
+.neutral { color: var(--text-muted); }
 
-.negative {
-  color: #b91c1c !important;
-  font-weight: 800 !important;
+.monthDetails {
+  margin: 0 0 12px;
+  padding: 15px 17px;
+  border: 1px solid var(--border-subtle);
+  border-radius: 12px;
+  background: var(--surface-glass);
 }
-
-.neutral {
-  color: #64748b !important;
-  font-weight: 800 !important;
+.monthStats {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px 20px;
+  margin: 0;
+  div { min-width: 0; }
+  dt { margin-bottom: 4px; font-size: 0.78rem; color: var(--text-muted); }
+  dd { margin: 0; font-weight: 700; color: var(--text-main); font-variant-numeric: tabular-nums; }
 }
+.absencesSection {
+  margin-top: 14px;
+  padding-top: 13px;
+  border-top: 1px solid var(--border-subtle);
+  h4 { margin: 0 0 10px; font-size: 0.85rem; font-weight: 700; color: var(--text-main); }
+  p { margin: 0; font-size: 0.82rem; color: var(--text-muted); }
+}
+.absenceDetails {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  div { display: flex; justify-content: space-between; gap: 12px; }
+  dt { color: var(--text-muted); font-size: 0.84rem; }
+  dd { margin: 0; font-weight: 700; font-variant-numeric: tabular-nums; }
+}
+.note { margin: 14px 0 0; color: var(--text-muted); font-size: 0.76rem; line-height: 1.4; }
 
 .emptyState {
-  margin: 20px 28px 28px;
-  padding: 28px;
-  border: 1px dashed rgba(148, 163, 184, 0.45);
-  border-radius: 20px;
-  background: rgba(248, 250, 252, 0.78);
+  margin: 22px 0;
+  padding: 25px;
+  border: 1px dashed var(--border-strong);
+  border-radius: 14px;
   text-align: center;
+  color: var(--text-main);
 
-  h3 {
-    margin: 0 0 8px;
-    color: #0f172a;
-    font-size: 1.2rem;
-  }
-
-  p {
-    max-width: 520px;
-    margin: 0 auto;
-    color: #64748b;
-    line-height: 1.5;
-  }
+  h3 { margin: 0 0 8px; font-size: 1.1rem; }
+  p { margin: 0; color: var(--text-muted); line-height: 1.5; }
 }
 
-@media (max-width: 720px) {
+@media (max-width: 800px) {
   .overlay {
-    padding: 14px;
-    align-items: end;
+    display: block;
+    padding: 0;
+    background: var(--page-bg);
+    backdrop-filter: none;
   }
-
   .modal {
-    max-height: 88vh;
-    border-radius: 22px;
+    width: 100%;
+    height: 100dvh;
+    max-height: 100dvh;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+    background: var(--page-bg);
   }
-
+  .header { padding: max(14px, env(safe-area-inset-top, 0px)) 18px 12px; }
   .content {
-    overflow: auto;
-    min-height: 0;
-    padding-bottom: env(safe-area-inset-bottom);
+    padding: 0 18px max(18px, env(safe-area-inset-bottom, 0px));
   }
-
-  .header {
-    padding: 22px 20px 14px;
-  }
-
-  .summaryCards {
-    grid-template-columns: 1fr;
-    padding: 16px 20px 8px;
-  }
-
-.tableWrapper {
-  margin: 8px 20px 22px;
-  border: 0;
-  overflow: visible;
+  .yearToolbar { background: var(--page-bg); }
 }
 
-  .table {
-    display: block;
-    background: transparent;
+@media (max-width: 480px) {
+  .yearMetrics { gap: 8px; }
+  .yearMetric span { font-size: 0.71rem; }
+  .yearMetric strong { font-size: clamp(1.13rem, 5vw, 1.45rem); }
+  .yearAbsences { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px 18px; }
+  .monthDetails { padding: 12px 13px; border-radius: 0; }
+  .monthTrigger { border-radius: 0; &.expanded { border: 1px solid var(--border-strong); border-bottom: none; background: var(--surface-glass) }}
+}
 
-    thead {
-      display: none;
-    }
-
-    tbody {
-      display: grid;
-      gap: 12px;
-    }
-
-    tr {
-      display: grid;
-      gap: 10px;
-      padding: 16px;
-      border: 1px solid rgba(148, 163, 184, 0.22);
-      border-radius: 18px;
-      background: #ffffff;
-      box-shadow: 0 10px 26px rgba(15, 23, 42, 0.06);
-    }
-
-    td {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 18px;
-      padding: 0;
-      border-bottom: 0;
-      white-space: normal;
-      text-align: right;
-
-      &::before {
-        content: attr(data-label);
-        color: #64748b;
-        font-size: 0.78rem;
-        font-weight: 800;
-        letter-spacing: 0.05em;
-        text-transform: uppercase;
-        text-align: left;
-      }
-
-      &:first-child {
-        display: block;
-        padding-bottom: 10px;
-        border-bottom: 1px solid rgba(226, 232, 240, 0.9);
-        font-size: 1.05rem;
-        text-align: left;
-
-        &::before {
-          display: none;
-        }
-      }
-    }
-
-    tbody tr:hover {
-      background: #ffffff;
-    }
-  }
-
-  .emptyState {
-    margin: 16px 20px 22px;
-    padding: 24px 18px;
-  }
+@media (prefers-reduced-motion: reduce) {
+  .closeButton, .monthTrigger { transition: none; }
 }

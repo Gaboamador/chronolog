@@ -26,8 +26,8 @@
   }
 
   &:disabled {
-    background-color: $color-logo4;
-    color: $color-texto-claro;
+    background-color: var(--button-disabled-bg);
+    color: var(--button-disabled-color);
     cursor: not-allowed;
     opacity: 0.55;
     transform: none;

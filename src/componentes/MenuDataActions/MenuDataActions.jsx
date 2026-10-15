@@ -114,24 +114,34 @@ const MenuDataActions = ({ onActionComplete }) => {
 
   return (
     <>
-      <li onClick={busy ? undefined : handleDownloadBackup}>
-        <LuDownload className={headerStyles.settingsIcon} /> Descargar backup
+      <li>
+        <button type="button" className={headerStyles.menuAction} disabled={busy} onClick={handleDownloadBackup}>
+          <LuDownload className={headerStyles.settingsIcon} /> Descargar backup
+        </button>
       </li>
-      <li onClick={() => !busy && fileInputRef.current?.click()}>
-        <LuUpload className={headerStyles.settingsIcon} /> Restaurar backup
+      <li>
+        <button type="button" className={headerStyles.menuAction} disabled={busy} onClick={() => fileInputRef.current?.click()}>
+          <LuUpload className={headerStyles.settingsIcon} /> Restaurar backup
+        </button>
       </li>
       {context.legacyPendingCount > 0 && (
-        <li onClick={importLegacy}>
-          <LuUpload className={headerStyles.settingsIcon} /> Importar cambios anteriores
+        <li>
+          <button type="button" className={headerStyles.menuAction} onClick={importLegacy}>
+            <LuUpload className={headerStyles.settingsIcon} /> Importar cambios anteriores
+          </button>
         </li>
       )}
       {context.legacyUnassignedCount > 0 && (
-        <li onClick={downloadUnassignedLegacy}>
-          <LuDownload className={headerStyles.settingsIcon} /> Descargar cambios sin asociar
+        <li>
+          <button type="button" className={headerStyles.menuAction} onClick={downloadUnassignedLegacy}>
+            <LuDownload className={headerStyles.settingsIcon} /> Descargar cambios sin asociar
+          </button>
         </li>
       )}
-      <li className={`${headerStyles.bottomDivider} ${headerStyles.danger}`} onClick={() => setConfirmClearOpen(true)}>
-        <LuTrash2 className={headerStyles.settingsIcon} /> Borrar registros
+      <li className={`${headerStyles.bottomDivider} ${headerStyles.danger}`}>
+        <button type="button" className={headerStyles.menuAction} onClick={() => setConfirmClearOpen(true)}>
+          <LuTrash2 className={headerStyles.settingsIcon} /> Borrar registros
+        </button>
       </li>
       <input ref={fileInputRef} type="file" accept=".json,application/json" hidden onChange={handleRestoreBackup} />
       <ConfirmModal

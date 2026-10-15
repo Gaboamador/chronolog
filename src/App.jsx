@@ -1,11 +1,13 @@
 import React, { useEffect, useState, useContext } from 'react';
 import Context from '@/context';
+import { ThemeProvider } from '@/context/ThemeContext';
 import './App.scss';
 import GlobalState from '@/globalState';
 import { sendEmailVerification } from 'firebase/auth';
 import Header from '@/componentes/Header';
 import FormularioHora from '@/componentes/FormularioHora';
 import ResumenSemana from '@/componentes/ResumenSemana';
+import MobileNavigation from '@/componentes/MobileNavigation';
 import Auth from '@/componentes/Auth';
 import Loader from '@/componentes/Loader';
 import HorarioPersonal from '@/componentes/HorarioPersonal';
@@ -21,6 +23,13 @@ function AppContent() {
   const [verificationSent, setVerificationSent] = useState(false);
   const [mostrarResumenMensual, setMostrarResumenMensual] = useState(false);
   const [historicalEntries, setHistoricalEntries] = useState([]);
+  // Estado de presentación exclusivamente: nunca desmontamos los formularios al navegar.
+  const [mobileView, setMobileView] = useState('jornada');
+
+  const handleMobileView = (view) => {
+    setMobileView(view);
+    window.scrollTo(0, 0);
+  };
 
 useEffect(() => {
     const enviarVerificacion = async () => {
@@ -171,36 +180,49 @@ const handleOpenMonthlySummary = async () => {
   }
 
    return (
-    <div className="App">
-      <Header />
-      <div className="body">
-
-      {context.mostrarModalHorario && (
-      <HorarioPersonal
-        onClose={() => {
-          context.setNecesitaConfigurarHorario(false);
-          context.setMostrarModalHorario(false);
-        }}
+    <div className="App AppWithMobileNav">
+      <Header
+        mobileNavigationEnabled
+        mobileMoreOpen={mobileView === 'mas'}
       />
-    )}
+      <div className="body">
+        {context.mostrarModalHorario && (
+          <HorarioPersonal
+            onClose={() => {
+              context.setNecesitaConfigurarHorario(false);
+              context.setMostrarModalHorario(false);
+            }}
+          />
+        )}
 
-    {!context.necesitaConfigurarHorario && (
-      <>
-        <FormularioHora />
-        <ResumenSemana />
-
-        <div className="monthlySummaryTriggerContainer">
-          <button
-            type="button"
-            className="monthly-summary-trigger"
-            onClick={handleOpenMonthlySummary}
-          >
-            Promedios por mes
-          </button>
-        </div>
-      </>
-    )}
+        {!context.necesitaConfigurarHorario && (
+          <main className="chronologDashboard" data-mobile-view={mobileView}>
+            <FormularioHora
+              onOpenCalendar={() => handleMobileView('calendario')}
+              onDateSelected={() => {
+                if (window.matchMedia('(max-width: 800px)').matches) {
+                  handleMobileView('jornada');
+                }
+              }}
+            />
+            <section className="summaryPanel" aria-label="Resumen y estadísticas">
+              <ResumenSemana
+                onSelectDate={() => {
+                  if (window.matchMedia('(max-width: 800px)').matches) {
+                    handleMobileView('jornada');
+                  }
+                }}
+                onOpenMonthlySummary={handleOpenMonthlySummary}
+              />
+            </section>
+          </main>
+        )}
       </div>
+
+      {!context.necesitaConfigurarHorario && <MobileNavigation
+        activeView={mobileView}
+        onViewChange={handleMobileView}
+      />}
 
       <MonthlySummaryModal
         isOpen={mostrarResumenMensual}
@@ -208,18 +230,19 @@ const handleOpenMonthlySummary = async () => {
         entries={historicalEntries}
         expectedWorkMinutes={context.expectedWorkMinutes}
       />
-
     </div>
   );
 }
 
 function App() {
   return (
-    <GlobalState>
-      <ToastProvider>
-        <AppContent />
-      </ToastProvider>
-    </GlobalState>
+    <ThemeProvider>
+      <GlobalState>
+        <ToastProvider>
+          <AppContent />
+        </ToastProvider>
+      </GlobalState>
+    </ThemeProvider>
   );
 }
 
